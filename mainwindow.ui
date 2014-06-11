@@ -23,10 +23,10 @@
    <widget class="QGraphicsView" name="graphicsView">
     <property name="geometry">
      <rect>
-      <x>50</x>
-      <y>40</y>
-      <width>551</width>
-      <height>381</height>
+      <x>10</x>
+      <y>0</y>
+      <width>800</width>
+      <height>600</height>
      </rect>
     </property>
     <property name="renderHints">
@@ -40,7 +40,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSimulated_Mice">

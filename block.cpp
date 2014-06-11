@@ -4,6 +4,7 @@
 
 Block::Block()
 {
+    setData(0, "Block");
 }
 
 QRectF Block::boundingRect() const

@@ -6,11 +6,18 @@
 QT_BEGIN_NAMESPACE
 class QGraphicsScene;
 class QGraphicsView;
+class QTimer;
 QT_END_NAMESPACE
 
 namespace Ui {
 class MainWindow;
 }
+
+namespace gamcs {
+class CSOSAgent;
+}
+
+class Mouse;
 
 class MainWindow : public QMainWindow
 {
@@ -38,11 +45,16 @@ private slots:
 
     void on_actionObstacle_toggled(bool arg1);
 
+    void step();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
     QGraphicsView *viewer;
     Tool tool;
+    Mouse *mouse;
+    gamcs::CSOSAgent *agent;
+    QTimer *timer;
 
 private:
     int initScene();

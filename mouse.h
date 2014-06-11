@@ -2,11 +2,18 @@
 #define MOUSE_H
 
 #include <QGraphicsItem>
+#include <gamcs/Avatar.h>
 
-class Spirit : public QGraphicsItem
+QT_BEGIN_NAMESPACE
+class QGraphicsScene;
+QT_END_NAMESPACE
+
+using namespace gamcs;
+
+class Mouse : public QGraphicsItem, public Avatar
 {
 public:
-    Spirit();
+    Mouse(QGraphicsScene *scene);
 
     QRectF boundingRect() const;
     QPainterPath shape() const;
@@ -16,6 +23,15 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+
+private:
+    Agent::State perceiveState();
+    void performAction(Agent::Action);
+    OSpace availableActions(Agent::State);
+    float originalPayoff(Agent::State);
+
+private:
+    QGraphicsScene *scene;
 };
 
 #endif // MOUSE_H

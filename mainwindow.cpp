@@ -2,14 +2,18 @@
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
 #include <QDebug>
+#include <QTimer>
+#include <gamcs/CSOSAgent.h>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "spirit.h"
+#include "mouse.h"
 #include "block.h"
+
+using namespace gamcs;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow), scene(NULL), viewer(NULL), tool(CURSOR)
+    ui(new Ui::MainWindow), scene(NULL), viewer(NULL), tool(CURSOR), mouse(NULL), timer(NULL)
 {
     ui->setupUi(this);
 
@@ -17,6 +21,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     viewer = ui->graphicsView;
     viewer->setScene(scene);
+
+    timer = new QTimer();
+    connect(timer, SIGNAL(timeout()), this, SLOT(step()));
+    timer->start(1000);
 }
 
 MainWindow::~MainWindow()
@@ -24,15 +32,22 @@ MainWindow::~MainWindow()
     delete ui;
     delete scene;
     delete viewer;
+    delete mouse;
+    delete agent;
+    delete timer;
 }
 
 int MainWindow::initScene()
 {
     scene = new QGraphicsScene(this);
 
-    // add spirit
-    Spirit *spirit = new Spirit();
-    scene->addItem(spirit);
+    // add mouse
+    CSOSAgent *agent = new CSOSAgent(0, 0.9, 0.01);
+
+    mouse = new Mouse(scene);
+    mouse->connectAgent(agent);
+    scene->addItem(mouse);
+    mouse->setPos(100, 100);
 
     // add the 4 walls
     int num;
@@ -95,4 +110,9 @@ void MainWindow::on_actionObstacle_toggled(bool arg1)
 {
     if (arg1 == true)
         tool = BLOCK;
+}
+
+void MainWindow::step()
+{
+    mouse->step();
 }

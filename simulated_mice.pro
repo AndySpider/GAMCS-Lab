@@ -11,21 +11,24 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = simulated_mice
 TEMPLATE = app
 
+QMAKE_CXXFLAGS += -std=c++0x
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    spirit.cpp \
     nail.cpp \
     cheese.cpp \
-    block.cpp
+    block.cpp \
+    mouse.cpp
 
 HEADERS  += mainwindow.h \
-    spirit.h \
     nail.h \
     cheese.h \
-    block.h
+    block.h \
+    mouse.h
 
 FORMS    += mainwindow.ui
 
 RESOURCES += \
     images.qrc
+
+unix:!macx|win32: LIBS += -lgamcs
