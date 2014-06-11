@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>cheese.png</file>
+        <file>eraser.png</file>
+        <file>nail.png</file>
+        <file>obstacle.png</file>
+    </qresource>
+</RCC>
