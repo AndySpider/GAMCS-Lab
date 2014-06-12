@@ -32,3 +32,6 @@ HEADERS  += mainwindow.h \
     config.h
 
 unix:!macx|win32: LIBS += -lgamcs
+
+RESOURCES += \
+    images.qrc

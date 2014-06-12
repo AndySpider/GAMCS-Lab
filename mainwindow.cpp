@@ -35,50 +35,50 @@ void MainWindow::initUi()
     actionCursor = new QAction(this);
     actionCursor->setText("cursor");
     actionCursor->setObjectName("actionCursor");
-//    actionCursor->setShortcut("Ctrl+U");
+    actionCursor->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_U));
     QIcon icon0;
-    icon0.addFile(QStringLiteral(":/cursor.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon0.addFile(QStringLiteral(":/images/cursor.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionCursor->setIcon(icon0);
     actionCursor->setCheckable(true);
     actionCursor->setChecked(true);
     toolGroup->addAction(actionCursor);
 
     actionEraser = new QAction(this);
-    actionEraser->setText("eraser");
+    actionEraser->setText("Eraser");
     actionEraser->setObjectName("actionEraser");
-//    actionCursor->setShortcut("Ctrl+E");
+    actionEraser->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_E));
     QIcon icon1;
-    icon1.addFile(QStringLiteral(":/eraser.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon1.addFile(QStringLiteral(":/images/eraser.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionEraser->setIcon(icon1);
     actionEraser->setCheckable(true);
     toolGroup->addAction(actionEraser);
 
     actionBlock = new QAction(this);
-    actionBlock->setText("block");
+    actionBlock->setText("Block");
     actionBlock->setObjectName("actionBlock");
-//    actionCursor->setShortcut("Ctrl+B");
+    actionBlock->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_B));
     QIcon icon2;
-    icon2.addFile(QStringLiteral(":/block.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon2.addFile(QStringLiteral(":/images/block.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionBlock->setIcon(icon2);
     actionBlock->setCheckable(true);
     toolGroup->addAction(actionBlock);
 
     actionCheese = new QAction(this);
-    actionCheese->setText("cheese");
+    actionCheese->setText("Cheese");
     actionCheese->setObjectName("actionCheese");
-//    actionCursor->setShortcut("Ctrl+C");
+    actionCheese->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_H));
     QIcon icon3;
-    icon3.addFile(QStringLiteral(":/cheese.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon3.addFile(QStringLiteral(":/images/cheese.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionCheese->setIcon(icon3);
     actionCheese->setCheckable(true);
     toolGroup->addAction(actionCheese);
 
     actionNail = new QAction(this);
-    actionNail->setText("nail");
+    actionNail->setText("Nail");
     actionNail->setObjectName("actionNail");
-//    actionCursor->setShortcut("Ctrl+N");
+    actionNail->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_N));
     QIcon icon4;
-    icon4.addFile(QStringLiteral(":/nail.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon4.addFile(QStringLiteral(":/images/nail.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionNail->setIcon(icon4);
     actionNail->setCheckable(true);
     toolGroup->addAction(actionNail);
@@ -86,9 +86,9 @@ void MainWindow::initUi()
     actionMouse = new QAction(this);
     actionMouse->setText("Mouse");
     actionMouse->setObjectName("actionMouse");
-//    actionCursor->setShortcut("Ctrl+M");
+    actionMouse->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_M));
     QIcon icon5;
-    icon5.addFile(QStringLiteral(":/mouse.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon5.addFile(QStringLiteral(":/images/mouse.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionMouse->setIcon(icon5);
     actionMouse->setCheckable(true);
     toolGroup->addAction(actionMouse);
@@ -96,9 +96,9 @@ void MainWindow::initUi()
     actionPause_Resume = new QAction(this);
     actionPause_Resume->setText("Pause/Resume");
     actionPause_Resume->setObjectName("actionPause_Resume");
-//    actionCursor->setShortcut("Ctrl+P");
+    actionPause_Resume->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_P));
     QIcon icon6;
-    icon6.addFile(QStringLiteral(":/pause_resume.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon6.addFile(QStringLiteral(":/images/resume.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionPause_Resume->setCheckable(true);
     actionPause_Resume->setIcon(icon6);
 
@@ -194,14 +194,20 @@ void MainWindow::on_actionMouse_triggered()
 
 void MainWindow::on_actionPause_Resume_toggled(bool arg1)
 {
+    QIcon icon;
+
     if (arg1)
     {
         qDebug() << "+++ pause mice";
+        icon.addFile(QStringLiteral(":/images/pause.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionPause_Resume->setIcon(icon);
         scene->pauseMice();
     }
     else
     {
         qDebug() << "+++ resume mice";
+        icon.addFile(QStringLiteral(":/images/resume.png"), QSize(), QIcon::Normal, QIcon::Off);
+        actionPause_Resume->setIcon(icon);
         scene->resumeMice();
     }
 }

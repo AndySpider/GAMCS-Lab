@@ -28,7 +28,7 @@ void Block::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     Q_UNUSED(widget);
 
     QColor fillColor;
-    fillColor = Qt::darkGray;
+    fillColor = QColor(186,95,38);
     if (option->state & QStyle::State_MouseOver)
         fillColor = fillColor.lighter();
 

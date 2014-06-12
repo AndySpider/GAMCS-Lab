@@ -46,7 +46,7 @@ void Mouse::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 {
     Q_UNUSED(widget);
 
-    QColor fillColor = Qt::blue;
+    QColor fillColor = QColor(89, 255, 89);
     if (option->state & QStyle::State_MouseOver)
         fillColor = fillColor.lighter();
 
@@ -74,6 +74,14 @@ void Mouse::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mouseReleaseEvent(event);
     update();
+}
+
+void Mouse::hoverEnterEvent(QGraphicsSceneMouseEvent *event)
+{
+    qDebug() << "mouse hover!!";
+    QString tips;
+    QTextStream(&tips) << "Id: " << id;
+    setToolTip(tips);
 }
 
 Agent::State Mouse::perceiveState()
@@ -125,6 +133,8 @@ void Mouse::performAction(Agent::Action act)
 
 OSpace Mouse::availableActions(Agent::State st)
 {
+    Q_UNUSED(st);
+
     OSpace acts;
     acts.add(1, 4, 1);
     return acts;
@@ -132,6 +142,8 @@ OSpace Mouse::availableActions(Agent::State st)
 
 float Mouse::originalPayoff(Agent::State st)
 {
+    Q_UNUSED(st);
+
     float pf = 0.0;
     QList<QGraphicsItem *> colliding_items = this->collidingItems(Qt::IntersectsItemShape);
 
@@ -145,12 +157,12 @@ float Mouse::originalPayoff(Agent::State st)
         QString item_name = colliding_items[0]->data(0).toString();
         if (item_name == "Cheese")
         {
-            qDebug() << "+++ eat cheese!!";
+            qDebug() << id << ": Wow! cheese!";
             pf = 1.0;
         }
         else if (item_name == "Nail")
         {
-            qDebug() << "+++ hit nail!!!";
+            qDebug() << id << ": Oops! nail!";
             pf = -1.0;
         }
         else

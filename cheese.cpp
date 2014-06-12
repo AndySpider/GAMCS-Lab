@@ -29,7 +29,7 @@ void Cheese::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
     Q_UNUSED(widget);
 
     QColor fillColor;
-    fillColor = Qt::yellow;
+    fillColor = QColor(255,204,0);
     if (option->state & QStyle::State_MouseOver)
         fillColor = fillColor.lighter();
 
