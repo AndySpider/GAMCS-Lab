@@ -5,7 +5,9 @@
 #include <QTransform>
 #include <QDebug>
 #include <QList>
+#include <QGraphicsSceneMouseEvent>
 #include "mouse.h"
+#include "scene.h"
 #include "config.h"
 
 // FIXME
@@ -44,11 +46,9 @@ void Mouse::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 {
     Q_UNUSED(widget);
 
-    QColor fillColor;
+    QColor fillColor = Qt::blue;
     if (option->state & QStyle::State_MouseOver)
-        fillColor = Qt::green;
-    else
-        fillColor = Qt::blue;
+        fillColor = fillColor.lighter();
 
     painter->setBrush(fillColor);
     painter->drawRect(0, 0, 10, 10);
@@ -64,7 +64,9 @@ void Mouse::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void Mouse::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    QGraphicsItem::mouseMoveEvent(event);
+    Scene *scene = dynamic_cast<Scene *>(this->scene());
+    QPoint pos = scene->gridPoint(event->scenePos());
+    this->setPos(pos);
     update();
 }
 
@@ -77,11 +79,10 @@ void Mouse::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 Agent::State Mouse::perceiveState()
 {
     // x : [0, SCENE_WIDTH / GRID_SIZE], y: [0, SCENE_HEIGHT / GRID_SIZE]
-    qreal st = this->x();
-    st += this->y() * SCENE_WIDTH / GRID_SIZE;
+    qreal st = this->x() / GRID_SIZE;
+    st += (this->y() * SCENE_WIDTH) / (GRID_SIZE * GRID_SIZE);
 
-    qDebug() << "State: " << st;
-    return (int) st;
+    return (long) st;
 }
 
 void Mouse::performAction(Agent::Action act)
@@ -159,6 +160,5 @@ float Mouse::originalPayoff(Agent::State st)
         }
     }
 
-    qDebug() << "payoff: " << pf;
     return pf;
 }

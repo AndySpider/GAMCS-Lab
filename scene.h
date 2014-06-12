@@ -4,7 +4,14 @@
 #include <QTimer>
 #include <QQueue>
 
+QT_BEGIN_NAMESPACE
+class QGraphicsSceneMouseEvent;
+QT_END_NAMESPACE
+
 class Mouse;
+class Cheese;
+class Block;
+class Nail;
 
 class Scene : public QGraphicsScene
 {
@@ -23,6 +30,11 @@ public:
         NAIL,
         MOUSE
     };
+
+    friend class Mouse;
+    friend class Cheese;
+    friend class Block;
+    friend class Nail;
 
     void startMice();
     void pauseMice();
@@ -49,6 +61,9 @@ private:
     void buildWalls();
     void eraseToolAt(const QPoint &);
     void addToolAt(QGraphicsItem *item, const QPoint &);
+    QPoint gridPoint(const QPointF &);
+
+    void mousePressEvent(QGraphicsSceneMouseEvent  *event);
 };
 
 #endif // SCENE_H

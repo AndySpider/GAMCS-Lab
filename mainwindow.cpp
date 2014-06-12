@@ -1,6 +1,11 @@
 #include <QDebug>
 #include "mainwindow.h"
 
+//FIXME
+const int SCENE_WIDTH = 800;
+const int SCENE_HEIGHT = 600;
+const int GRID_SIZE = 10;
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
@@ -18,7 +23,7 @@ void MainWindow::initUi()
     this->setObjectName("MainWindow");
 
     // size
-    this->resize(900, 700);
+    this->resize(SCENE_WIDTH + 70, SCENE_HEIGHT + 70);
     QSizePolicy sizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     sizePolicy.setHorizontalStretch(0);
     sizePolicy.setVerticalStretch(0);
@@ -100,19 +105,20 @@ void MainWindow::initUi()
     // viewer
     centralWidget = new QWidget(this);
     centralWidget->setObjectName("centralWidget");
-    centralWidget->resize(900, 700);
+    centralWidget->resize(SCENE_WIDTH + 50, SCENE_HEIGHT + 50);
     this->setCentralWidget(centralWidget);
 
     viewer = new Viewer(centralWidget);
     viewer->setObjectName("viewer");
-    viewer->setGeometry(QRect(0, 0, 800, 600));
-    viewer->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+    viewer->setGeometry(QRect(0, 0, SCENE_WIDTH + 30, SCENE_HEIGHT + 30));
     viewer->setRenderHints(QPainter::Antialiasing|QPainter::TextAntialiasing);
+    viewer->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    viewer->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
     // scene
     scene = new Scene(this);
     scene->setObjectName("scene");
-    viewer->attachScene(scene);		// attach scene
+    viewer->setScene(scene);		// attach scene
 
     // menubar
     menuBar = new QMenuBar(this);

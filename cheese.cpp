@@ -1,9 +1,13 @@
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
+#include <QGraphicsSceneMouseEvent>
+#include "scene.h"
 #include "cheese.h"
 
 Cheese::Cheese()
 {
+    setFlags(ItemIsSelectable | ItemIsMovable);
+    setAcceptHoverEvents(true);
     setData(0, "Cheese");
 }
 
@@ -26,6 +30,8 @@ void Cheese::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 
     QColor fillColor;
     fillColor = Qt::yellow;
+    if (option->state & QStyle::State_MouseOver)
+        fillColor = fillColor.lighter();
 
     painter->setBrush(fillColor);
     painter->drawRect(0, 0, 10, 10);
@@ -41,6 +47,9 @@ void Cheese::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void Cheese::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    Scene *scene = dynamic_cast<Scene *>(this->scene());
+    QPoint pos = scene->gridPoint(event->scenePos());
+    this->setPos(pos);
     update();
 }
 

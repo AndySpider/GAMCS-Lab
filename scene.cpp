@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QGraphicsSceneMouseEvent>
 #include "scene.h"
 #include "block.h"
 #include "cheese.h"
@@ -15,6 +16,7 @@ Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(NONE)
 {
     buildWalls();
 
+    this->setSceneRect(-10, -10, SCENE_WIDTH + 20, SCENE_HEIGHT + 20);
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(step()));
     timer->start(100);
@@ -161,4 +163,41 @@ void Scene::addToolAt(QGraphicsItem *item, const QPoint &pos)
         qDebug() << "add a mouse to mice!";
         mice.append(dynamic_cast<Mouse *>(item));
     }
+}
+
+/**
+ * @brief Snap to grid.
+ * @param pos
+ * @return
+ */
+QPoint Scene::gridPoint(const QPointF &pos)
+{
+    int x = (int) pos.x();
+    int y = (int) pos.y();
+
+    int half_grid = GRID_SIZE / 2;
+
+    int dx = x % GRID_SIZE;
+    if (dx > half_grid)
+        x = x - dx + GRID_SIZE;
+    else
+        x -= dx;
+
+    int dy = y % GRID_SIZE;
+    if (dy > half_grid)
+        y = y - dy + GRID_SIZE;
+    else
+        y -= dy;
+
+    return QPoint(x, y);
+}
+
+void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (event->button() == Qt::LeftButton)
+    {
+        this->useTool(gridPoint(event->scenePos()));
+    }
+
+    QGraphicsScene::mousePressEvent(event);
 }
