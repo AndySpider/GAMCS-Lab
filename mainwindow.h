@@ -2,62 +2,63 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
-QT_BEGIN_NAMESPACE
-class QGraphicsScene;
-class QGraphicsView;
-class QTimer;
-QT_END_NAMESPACE
-
-namespace Ui {
-class MainWindow;
-}
-
-namespace gamcs {
-class CSOSAgent;
-}
-
-class Mouse;
+#include <QWidget>
+#include <QAction>
+#include <QActionGroup>
+#include <QMenu>
+#include <QMenuBar>
+#include <QStatusBar>
+#include <QToolBar>
+#include "viewer.h"
+#include "scene.h"
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    enum Tool
-    {
-        CURSOR = 0,
-        ERASER,
-        NAIL,
-        CHEESE,
-        BLOCK
-    };
+private:
+    // tool actions
+    QAction *actionCursor;
+    QAction *actionEraser;
+    QAction *actionBlock;
+    QAction *actionCheese;
+    QAction *actionNail;
+    QAction *actionMouse;
+
+    QActionGroup *toolGroup;
+
+    // control actions
+    QAction *actionPause_Resume;
+
+    // menubar, toolbar, statusbar
+    QMenuBar *menuBar;
+    QMenu *menuNew;
+    QMenu *menuQuit;
+
+    QToolBar *toolBar;
+    QStatusBar *statusBar;
+
+    // viewer and scene
+    QWidget *centralWidget;
+    Viewer *viewer;
+    Scene *scene;
+
+    void initUi();
 
 private slots:
-    void on_actionEraser_toggled(bool arg1);
+    void on_actionCursor_triggered();
+    void on_actionEraser_triggered();
+    void on_actionBlock_triggered();
+    void on_actionCheese_triggered();
+    void on_actionNail_triggered();
+    void on_actionMouse_triggered();
 
-    void on_actionNail_toggled(bool arg1);
+    void on_actionPause_Resume_toggled(bool arg1);
 
-    void on_actionCheese_toggled(bool arg1);
-
-    void on_actionObstacle_toggled(bool arg1);
-
-    void step();
-
-private:
-    Ui::MainWindow *ui;
-    QGraphicsScene *scene;
-    QGraphicsView *viewer;
-    Tool tool;
-    Mouse *mouse;
-    gamcs::CSOSAgent *agent;
-    QTimer *timer;
-
-private:
-    int initScene();
 };
 
 #endif // MAINWINDOW_H

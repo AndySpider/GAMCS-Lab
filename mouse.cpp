@@ -4,13 +4,28 @@
 #include <QPointF>
 #include <QTransform>
 #include <QDebug>
+#include <QList>
 #include "mouse.h"
+#include "config.h"
 
-Mouse::Mouse(QGraphicsScene *s) : scene(s)
+// FIXME
+const int SCENE_WIDTH = 800;
+const int SCENE_HEIGHT = 600;
+const int GRID_SIZE = 10;
+
+Mouse::Mouse()
 {
     setFlags(ItemIsSelectable | ItemIsMovable);
     setAcceptHoverEvents(true);
     setData(0, "Mouse");
+
+    myagent = new CSOSAgent(id, 0.9, 0.01);
+    connectAgent(myagent);
+}
+
+Mouse::~Mouse()
+{
+    delete myagent;
 }
 
 QRectF Mouse::boundingRect() const
@@ -61,45 +76,46 @@ void Mouse::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 Agent::State Mouse::perceiveState()
 {
-    QPointF pos = this->pos();
+    // x : [0, SCENE_WIDTH / GRID_SIZE], y: [0, SCENE_HEIGHT / GRID_SIZE]
+    qreal st = this->x();
+    st += this->y() * SCENE_WIDTH / GRID_SIZE;
 
-    // x : [0, 80], y: [0, 60]
-    qreal st = pos.x();
-    st += pos.y() * 80;
-
+    qDebug() << "State: " << st;
     return (int) st;
 }
 
 void Mouse::performAction(Agent::Action act)
 {
-    QPointF pos = this->pos();
-    qreal x = pos.x();
-    qreal y = pos.y();
+    qreal x = this->x();
+    qreal y = this->y();
 
+    QGraphicsScene *scene = this->scene();
     QGraphicsItem *item = NULL;
+
+    int half_grid = GRID_SIZE / 2;
 
     switch (act)
     {
     case 1: // move up
         // check if there're blocks
-        item = scene->itemAt(x, y-10, QTransform());
+        item = scene->itemAt(x + half_grid, y - half_grid, QTransform());
         if (item == NULL || item->data(0).toString() != "Block")
-            y -= 10;
+            y -= GRID_SIZE;
         break;
     case 2: // move down
-        item = scene->itemAt(x, y+10, QTransform());
+        item = scene->itemAt(x + half_grid, y + GRID_SIZE + half_grid, QTransform());
         if (item == NULL || item->data(0).toString() != "Block")
-            y += 10;
+            y += GRID_SIZE;
         break;
     case 3: // move left
-        item = scene->itemAt(x-10, y,QTransform());
+        item = scene->itemAt(x - half_grid, y + half_grid,QTransform());
         if (item == NULL || item->data(0).toString() != "Block")
-            x -= 10;
+            x -= GRID_SIZE;
         break;
     case 4: // move right
-        item = scene->itemAt(x+10, y,QTransform());
+        item = scene->itemAt(x + GRID_SIZE + half_grid, y + half_grid,QTransform());
         if (item == NULL || item->data(0).toString() != "Block")
-            x += 10;
+            x += GRID_SIZE;
         break;
     }
 
@@ -115,5 +131,34 @@ OSpace Mouse::availableActions(Agent::State st)
 
 float Mouse::originalPayoff(Agent::State st)
 {
-    return 0;
+    float pf = 0.0;
+    QList<QGraphicsItem *> colliding_items = this->collidingItems(Qt::IntersectsItemShape);
+
+    if (colliding_items.empty())
+    {
+        pf = 0.0;
+    }
+    else
+    {
+    // only one can collide, check the first
+        QString item_name = colliding_items[0]->data(0).toString();
+        if (item_name == "Cheese")
+        {
+            qDebug() << "+++ eat cheese!!";
+            pf = 1.0;
+        }
+        else if (item_name == "Nail")
+        {
+            qDebug() << "+++ hit nail!!!";
+            pf = -1.0;
+        }
+        else
+        {
+            qDebug() << "+++ what's this, get out of my way!";
+            pf = 0.0;
+        }
+    }
+
+    qDebug() << "payoff: " << pf;
+    return pf;
 }

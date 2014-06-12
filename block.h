@@ -16,11 +16,6 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-
-signals:
-
-public slots:
-
 };
 
 #endif // BLOCK_H

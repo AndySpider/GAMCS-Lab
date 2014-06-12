@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2014-06-11T13:22:37
+# Project created by QtCreator 2014-06-12T10:08:06
 #
 #-------------------------------------------------
 
@@ -8,27 +8,27 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = simulated_mice
+TARGET = Simulated_Mice
 TEMPLATE = app
 
 QMAKE_CXXFLAGS += -std=c++0x
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    nail.cpp \
-    cheese.cpp \
+    scene.cpp \
+    viewer.cpp \
     block.cpp \
+    cheese.cpp \
+    nail.cpp \
     mouse.cpp
 
 HEADERS  += mainwindow.h \
-    nail.h \
-    cheese.h \
+    scene.h \
+    viewer.h \
     block.h \
-    mouse.h
-
-FORMS    += mainwindow.ui
-
-RESOURCES += \
-    images.qrc
+    cheese.h \
+    nail.h \
+    mouse.h \
+    config.h
 
 unix:!macx|win32: LIBS += -lgamcs

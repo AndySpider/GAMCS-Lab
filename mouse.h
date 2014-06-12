@@ -3,6 +3,7 @@
 
 #include <QGraphicsItem>
 #include <gamcs/Avatar.h>
+#include <gamcs/CSOSAgent.h>
 
 QT_BEGIN_NAMESPACE
 class QGraphicsScene;
@@ -13,7 +14,8 @@ using namespace gamcs;
 class Mouse : public QGraphicsItem, public Avatar
 {
 public:
-    Mouse(QGraphicsScene *scene);
+    Mouse();
+    ~Mouse();
 
     QRectF boundingRect() const;
     QPainterPath shape() const;
@@ -31,7 +33,7 @@ private:
     float originalPayoff(Agent::State);
 
 private:
-    QGraphicsScene *scene;
+    CSOSAgent *myagent;
 };
 
 #endif // MOUSE_H
