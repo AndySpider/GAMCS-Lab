@@ -6,5 +6,11 @@
 
 Viewer::Viewer(QWidget *parent) : QGraphicsView(parent)
 {
+    setRenderHints(QPainter::Antialiasing);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAsNeeded);
+
     setMouseTracking(true);	// mouse track on
+    setDragMode(QGraphicsView::ScrollHandDrag);
+    setViewportUpdateMode(BoundingRectViewportUpdate);
 }

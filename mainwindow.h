@@ -9,6 +9,7 @@
 #include <QMenuBar>
 #include <QStatusBar>
 #include <QToolBar>
+#include <QVBoxLayout>
 #include "viewer.h"
 #include "scene.h"
 
@@ -19,6 +20,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+public slots:
+    void miceNumChanged(int);
 
 private:
     // tool actions
@@ -33,16 +37,31 @@ private:
 
     // control actions
     QAction *actionPause_Resume;
+    QAction *actionSpeedUp;
+    QAction *actionSpeedDown;
 
     // menubar, toolbar, statusbar
     QMenuBar *menuBar;
-    QMenu *menuNew;
-    QMenu *menuQuit;
+
+    QMenu *menuFile;
+    QAction *actionNew;
+    QAction *actionOpen;
+    QAction *actionSave;
+    QAction *actionSave_as;
+    QAction *actionQuit;
+    QAction *actionRecent_Files;
+
+    QMenu *menuEdit;
+
+    QMenu *menuAbout;
+    QAction *actionAbout_Simulated_Mice;
+    QAction *actionAbout_GAMCS;
 
     QToolBar *toolBar;
     QStatusBar *statusBar;
 
     // viewer and scene
+    QVBoxLayout *verticalLayout;
     QWidget *centralWidget;
     Viewer *viewer;
     Scene *scene;
@@ -58,6 +77,8 @@ private slots:
     void on_actionMouse_triggered();
 
     void on_actionPause_Resume_toggled(bool arg1);
+    void on_actionSpeedUp_triggered();
+    void on_actionSpeedDown_triggered();
 
 };
 

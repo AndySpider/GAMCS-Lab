@@ -2,7 +2,7 @@
 #define SCENE_H
 #include <QGraphicsScene>
 #include <QTimer>
-#include <QQueue>
+#include <QList>
 
 QT_BEGIN_NAMESPACE
 class QGraphicsSceneMouseEvent;
@@ -36,13 +36,20 @@ public:
     friend class Block;
     friend class Nail;
 
-    void startMice();
-    void pauseMice();
-    void resumeMice();
-    void stopMice();
+    int open(const QString &file);
+    void save(const QString &file);
+
+    void pause();
+    void resume();
 
     void setCurTool(Tool);
-    void useTool(const QPoint &);
+    void speedUp();
+    void speedDown();
+
+    int miceNum();
+
+signals:
+    void miceNumChanged(int);
 
 private slots:
     void step();
@@ -52,18 +59,24 @@ private:
     Tool cur_tool;
 
     // mice
-    QQueue<Mouse *> mice;
+    QList<Mouse *> mice;
+    int mouse_id;
 
     // control
     QTimer *timer;
+    int timer_interval;
 
 private:
     void buildWalls();
+    void showGrids();
+
+    void useTool(const QPoint &);
     void eraseToolAt(const QPoint &);
     void addToolAt(QGraphicsItem *item, const QPoint &);
     QPoint gridPoint(const QPointF &);
 
     void mousePressEvent(QGraphicsSceneMouseEvent  *event);
+    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 };
 
 #endif // SCENE_H

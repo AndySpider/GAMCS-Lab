@@ -1,8 +1,8 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#ifndef CONFIGURATION_H
+#define CONFIGURATION_H
 
-const int SCENE_WIDTH = 800;
-const int SCENE_HEIGHT = 600;
 const int GRID_SIZE = 10;
+const int SCENE_WIDTH = 80; // unit GRID_SIZE
+const int SCENE_HEIGHT = 60;
 
-#endif // CONFIG_H
+#endif // CONFIGURATION_H

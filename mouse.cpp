@@ -8,20 +8,17 @@
 #include <QGraphicsSceneMouseEvent>
 #include "mouse.h"
 #include "scene.h"
+#include "cheese.h"
+#include "nail.h"
 #include "config.h"
 
-// FIXME
-const int SCENE_WIDTH = 800;
-const int SCENE_HEIGHT = 600;
-const int GRID_SIZE = 10;
-
-Mouse::Mouse()
+Mouse::Mouse(int id) : Avatar(id)
 {
     setFlags(ItemIsSelectable | ItemIsMovable);
     setAcceptHoverEvents(true);
     setData(0, "Mouse");
 
-    myagent = new CSOSAgent(id, 0.9, 0.01);
+    myagent = new CSOSAgent(id, 0.9, 0.001);
     connectAgent(myagent);
 }
 
@@ -32,13 +29,13 @@ Mouse::~Mouse()
 
 QRectF Mouse::boundingRect() const
 {
-    return QRectF(0, 0, 10, 10);    // the size of mouse
+    return QRectF(0, 0, GRID_SIZE, GRID_SIZE);    // the size of mouse
 }
 
 QPainterPath Mouse::shape() const
 {
     QPainterPath path;
-    path.addRect(0, 0, 10, 10);
+    path.addRect(0, 0, GRID_SIZE, GRID_SIZE);
     return path;
 }
 
@@ -51,7 +48,7 @@ void Mouse::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
         fillColor = fillColor.lighter();
 
     painter->setBrush(fillColor);
-    painter->drawRect(0, 0, 10, 10);
+    painter->drawRect(0, 0, GRID_SIZE, GRID_SIZE);
 
     return;
 }
@@ -76,11 +73,12 @@ void Mouse::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     update();
 }
 
-void Mouse::hoverEnterEvent(QGraphicsSceneMouseEvent *event)
+void Mouse::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    qDebug() << "mouse hover!!";
+    Q_UNUSED(event);
+
     QString tips;
-    QTextStream(&tips) << "Id: " << id;
+    QTextStream(&tips) << "id: " << id;
     setToolTip(tips);
 }
 
@@ -88,8 +86,9 @@ Agent::State Mouse::perceiveState()
 {
     // x : [0, SCENE_WIDTH / GRID_SIZE], y: [0, SCENE_HEIGHT / GRID_SIZE]
     qreal st = this->x() / GRID_SIZE;
-    st += (this->y() * SCENE_WIDTH) / (GRID_SIZE * GRID_SIZE);
+    st += (this->y() * SCENE_WIDTH) / GRID_SIZE;
 
+    qDebug() << "state:" << st;
     return (long) st;
 }
 
@@ -108,7 +107,7 @@ void Mouse::performAction(Agent::Action act)
     case 1: // move up
         // check if there're blocks
         item = scene->itemAt(x + half_grid, y - half_grid, QTransform());
-        if (item == NULL || item->data(0).toString() != "Block")
+        if (item == NULL || item->data(0).toString() != "Block")    // only Block can block
             y -= GRID_SIZE;
         break;
     case 2: // move down
@@ -126,6 +125,8 @@ void Mouse::performAction(Agent::Action act)
         if (item == NULL || item->data(0).toString() != "Block")
             x += GRID_SIZE;
         break;
+    case 5: // no move
+        break;
     }
 
     this->setPos(x, y);
@@ -136,7 +137,7 @@ OSpace Mouse::availableActions(Agent::State st)
     Q_UNUSED(st);
 
     OSpace acts;
-    acts.add(1, 4, 1);
+    acts.add(1, 5, 1);
     return acts;
 }
 
@@ -153,24 +154,43 @@ float Mouse::originalPayoff(Agent::State st)
     }
     else
     {
-    // only one can collide, check the first
-        QString item_name = colliding_items[0]->data(0).toString();
-        if (item_name == "Cheese")
+        // find the first valid tool
+        QString item_name = "";
+        QList<QGraphicsItem *>::iterator it;
+        for (it = colliding_items.begin(); it != colliding_items.end(); ++it)
         {
-            qDebug() << id << ": Wow! cheese!";
-            pf = 1.0;
+            item_name = (*it)->data(0).toString();
+            if (item_name == "")    // not a valid tool, continue
+                continue;
+            else
+                break;      // break if found
         }
-        else if (item_name == "Nail")
+
+        if (it == colliding_items.end())    // no valid tool found
         {
-            qDebug() << id << ": Oops! nail!";
-            pf = -1.0;
+            pf = 0.0;
         }
         else
         {
-            qDebug() << "+++ what's this, get out of my way!";
-            pf = 0.0;
+            if (item_name == "Cheese")
+            {
+                qDebug() << "Mouse" << id << ": Wow! cheese!";
+                Cheese *cheese = dynamic_cast<Cheese *>(*it);
+                pf = cheese->getAmount();
+                cheese->eaten();
+            }
+            else if (item_name == "Nail")
+            {
+                qDebug() << "Mouse" << id << ": Oops! nail!";
+                Nail *nail = dynamic_cast<Nail *>(*it);
+                pf = - (nail->getPins());
+            }
+            else    // some tool get in the way
+            {
+                pf = 0.0;
+            }
         }
     }
 
-    return pf;
+        return pf;
 }

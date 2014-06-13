@@ -7,19 +7,17 @@
 #include "mouse.h"
 #include "config.h"
 
-// FIXME
-const int SCENE_WIDTH = 800;
-const int SCENE_HEIGHT = 600;
-const int GRID_SIZE = 10;
-
-Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(NONE)
+Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(NONE), mouse_id(0), timer_interval(100)
 {
+    setItemIndexMethod(BspTreeIndex);   // NoIndex is slow!
+
+    showGrids();
     buildWalls();
 
-    this->setSceneRect(-10, -10, SCENE_WIDTH + 20, SCENE_HEIGHT + 20);
+    this->setSceneRect(-10, -10, SCENE_WIDTH *GRID_SIZE + 20, SCENE_HEIGHT * GRID_SIZE + 20);
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(step()));
-    timer->start(100);
+    timer->start(timer_interval);
 }
 
 Scene::~Scene()
@@ -29,38 +27,37 @@ Scene::~Scene()
 
 void Scene::step()
 {
-    for (QQueue<Mouse *>::iterator it = mice.begin(); it != mice.end(); ++it)
+    for (QList<Mouse *>::iterator it = mice.begin(); it != mice.end(); ++it)
     {
         (*it)->step();
     }
+    timer->start(timer_interval);
 }
 
-void Scene::startMice()
+int Scene::open(const QString &file)
 {
-    timer->start(100);
+
 }
 
-void Scene::pauseMice()
+void Scene::save(const QString &file)
 {
-    timer->stop();
+
 }
 
-void Scene::resumeMice()
-{
-    timer->start(100);
-}
-
-void Scene::stopMice()
+void Scene::pause()
 {
     timer->stop();
+}
+
+void Scene::resume()
+{
+    timer->start(timer_interval);
 }
 
 void Scene::buildWalls()
 {
-    int num;
     // the left wall, [0, 0] ~ [0, h-10]
-    num = SCENE_HEIGHT / GRID_SIZE;
-    for (int i =0; i< num; i++)
+    for (int i =0; i< SCENE_HEIGHT; i++)
     {
         Block *block = new Block();
         block->setPos(0 , i*GRID_SIZE);
@@ -68,16 +65,15 @@ void Scene::buildWalls()
     }
 
     // the right wall, [w-5, 5] ~ [w-5, h-5]
-    for (int i=0; i< num; i++)
+    for (int i=0; i< SCENE_HEIGHT; i++)
     {
         Block *block = new Block();
-        block->setPos(SCENE_WIDTH - GRID_SIZE, i*GRID_SIZE);
+        block->setPos((SCENE_WIDTH - 1) * GRID_SIZE, i*GRID_SIZE);
         this->addItem(block);
     }
 
     // the up wall, [15, 5] ~ [w-15, 5]
-    num = (SCENE_WIDTH - 2 * GRID_SIZE) / GRID_SIZE;
-    for (int i=0; i < num; i++)
+    for (int i=0; i < SCENE_WIDTH - 2; i++)
     {
         Block *block = new Block();
         block->setPos((i + 1) * GRID_SIZE, 0);
@@ -85,12 +81,31 @@ void Scene::buildWalls()
     }
 
     // the bottom wall, [15, h-5] ~ [w-15, h-5]
-    for (int i = 0; i < num; i++)
+    for (int i = 0; i < SCENE_WIDTH - 2; i++)
     {
         Block *block = new Block();
-        block->setPos((i + 1) * GRID_SIZE, SCENE_HEIGHT - GRID_SIZE);
+        block->setPos((i + 1) * GRID_SIZE, (SCENE_HEIGHT - 1) * GRID_SIZE);
         this->addItem(block);
     }
+}
+
+void Scene::showGrids()
+{
+    QRectF dot_sz = QRectF(0, 0, 0.2, 0.2);
+    QPen pen = QPen(Qt::black);
+    QBrush brush = QBrush(Qt::SolidPattern);
+    QGraphicsEllipseItem *dot = NULL;
+
+     for (int i = 0; i < SCENE_HEIGHT; i++)
+     {
+         for (int j = 0; j < SCENE_WIDTH; j++)
+         {
+             dot = this->addEllipse(dot_sz, pen, brush);
+             dot->setZValue(-10000);     // at the most background!
+             dot->setPos(j * GRID_SIZE, i * GRID_SIZE);
+             dot->setEnabled(false);    // no need to be enabled
+         }
+     }
 }
 
 void Scene::setCurTool(Tool t)
@@ -99,35 +114,107 @@ void Scene::setCurTool(Tool t)
     qDebug() << "+++ Scene - change tool to " << cur_tool;
 }
 
+void Scene::speedUp()
+{
+    switch (timer_interval)
+    {
+    case 1000:
+        timer_interval = 500;
+        break;
+    case 500:
+        timer_interval = 200;
+        break;
+    case 200:
+        timer_interval = 100;
+        break;
+    case 100:
+        timer_interval = 50;
+        break;
+    case 50:
+        timer_interval = 20;
+        break;
+    case 20:
+        timer_interval = 10;
+        break;
+    case 10:
+        timer_interval = 5;
+        break;
+    case 5:
+        timer_interval = 1;
+        break;
+    case 1:
+        qDebug() << "It's the maximum speed!";
+        break;
+    default:
+        qWarning() << "!!! The timer interval is out of control!";
+    }
+}
+
+void Scene::speedDown()
+{
+    switch (timer_interval)
+    {
+    case 1:
+        timer_interval = 5;
+        break;
+    case 5:
+        timer_interval = 10;
+        break;
+    case 10:
+        timer_interval = 20;
+        break;
+    case 20:
+        timer_interval = 50;
+        break;
+    case 50:
+        timer_interval = 100;
+        break;
+    case 100:
+        timer_interval = 200;
+        break;
+    case 200:
+        timer_interval = 500;
+        break;
+    case 500:
+        timer_interval = 1000;
+        break;
+    case 1000:
+        qDebug() << "It's the minimum speed!";
+        break;
+    default:
+        qWarning() << "!!! The timer interval is out of control!";
+    }
+}
+
+int Scene::miceNum()
+{
+    return mice.size();
+}
+
 void Scene::useTool(const QPoint &pos)
 {
     if (cur_tool == ERASER)
     {
-        qDebug() << "use Eraser";
         eraseToolAt(pos);
     }
     else if (cur_tool == BLOCK)
     {
-        qDebug() << "use Block";
         Block *block = new Block();
         addToolAt(block, pos);
     }
     else if (cur_tool == CHEESE)
     {
-        qDebug() << "use Cheese";
         Cheese *cheese = new Cheese();
         addToolAt(cheese, pos);
     }
     else if (cur_tool == NAIL)
     {
-        qDebug() << "use Nail";
         Nail *nail = new Nail();
         addToolAt(nail, pos);
     }
     else if (cur_tool == MOUSE)
     {
-        qDebug() << "use Mouse";
-        Mouse *mouse = new Mouse();
+        Mouse *mouse = new Mouse(mouse_id++);
         addToolAt(mouse, pos);
     }
     else if (cur_tool == NONE)
@@ -139,13 +226,19 @@ void Scene::useTool(const QPoint &pos)
 void Scene::eraseToolAt(const QPoint &pos)
 {
     QGraphicsItem *item = this->itemAt(pos.x(), pos.y(), QTransform());
-    if (item != NULL)	// has item
+
+    if (item == NULL || item->data(0).toString() == "") // not exits or not a valid tool
+    {
+        return;
+    }
+    else    // found a tool
     {
         if (item->data(0).toString() == "Mouse")	// it's a mouse
         {
-            bool val = mice.removeOne(dynamic_cast<Mouse *>(item));	// remove the mouse from queue
-            qDebug() << "remove a mouse from mice: " << val;
+            mice.removeOne(dynamic_cast<Mouse *>(item));	// remove the mouse from queue
+            emit miceNumChanged(miceNum());
         }
+
         // remove item from scene
         this->removeItem(item);
     }
@@ -158,10 +251,17 @@ void Scene::addToolAt(QGraphicsItem *item, const QPoint &pos)
     item->setPos(pos);
     this->addItem(item);
 
-    if (item->data(0).toString() == "Mouse")
+    QString item_name = item->data(0).toString();
+
+    if (item_name == "Mouse")
     {
-        qDebug() << "add a mouse to mice!";
         mice.append(dynamic_cast<Mouse *>(item));
+        emit miceNumChanged(miceNum());
+    }
+    else if (item_name == "Cheese" || item_name == "Nail")
+    {
+        item->setZValue(-10);  // stack after other tools
+
     }
 }
 
@@ -175,19 +275,11 @@ QPoint Scene::gridPoint(const QPointF &pos)
     int x = (int) pos.x();
     int y = (int) pos.y();
 
-    int half_grid = GRID_SIZE / 2;
-
     int dx = x % GRID_SIZE;
-    if (dx > half_grid)
-        x = x - dx + GRID_SIZE;
-    else
-        x -= dx;
-
     int dy = y % GRID_SIZE;
-    if (dy > half_grid)
-        y = y - dy + GRID_SIZE;
-    else
-        y -= dy;
+
+    x -= dx;
+    y -= dy;
 
     return QPoint(x, y);
 }
@@ -200,4 +292,14 @@ void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
 
     QGraphicsScene::mousePressEvent(event);
+}
+
+void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    if (event->modifiers() == Qt::CTRL)    // ctrl + move
+    {
+        this->useTool(gridPoint(event->scenePos()));
+    }
+
+    QGraphicsScene::mouseMoveEvent(event);
 }

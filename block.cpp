@@ -3,6 +3,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include "scene.h"
 #include "block.h"
+#include "config.h"
 
 Block::Block()
 {
@@ -13,13 +14,13 @@ Block::Block()
 
 QRectF Block::boundingRect() const
 {
-    return QRectF(0, 0, 10, 10);    // the size of block
+    return QRectF(0, 0, GRID_SIZE, GRID_SIZE);    // the size of block
 }
 
 QPainterPath Block::shape() const
 {
     QPainterPath path;
-    path.addRect(0, 0, 10, 10);
+    path.addRect(0, 0, GRID_SIZE, GRID_SIZE);
     return path;
 }
 
@@ -34,7 +35,7 @@ void Block::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
 
 
     painter->setBrush(fillColor);
-    painter->drawRect(0, 0, 10, 10);
+    painter->drawRect(0, 0, GRID_SIZE, GRID_SIZE);
 
     return;
 }

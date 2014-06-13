@@ -1,26 +1,48 @@
 #include <QPainter>
 #include <QStyleOptionGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
+#include <QGraphicsScene>
+#include <QDebug>
 #include "scene.h"
 #include "cheese.h"
+#include "config.h"
 
-Cheese::Cheese()
+Cheese::Cheese() : amount(3)
 {
     setFlags(ItemIsSelectable | ItemIsMovable);
     setAcceptHoverEvents(true);
     setData(0, "Cheese");
 }
 
+int Cheese::eaten()
+{
+    mutex.lock();
+    amount--;
+    if (amount <= 0)    // eaten up, remove the cheese
+    {
+        qDebug() << "cheese is eaten up!!";
+        QGraphicsScene *myscene = this->scene();
+        myscene->removeItem(this);
+    }
+    mutex.unlock();
+
+    return amount;
+}
+
+int Cheese::getAmount()
+{
+    return amount;
+}
 
 QRectF Cheese::boundingRect() const
 {
-    return QRectF(0, 0, 10, 10);    // the size of Cheese
+    return QRectF(0, 0, GRID_SIZE, GRID_SIZE);    // the size of Cheese
 }
 
 QPainterPath Cheese::shape() const
 {
     QPainterPath path;
-    path.addRect(0, 0, 10, 10);
+    path.addRect(0, 0, GRID_SIZE, GRID_SIZE);
     return path;
 }
 
@@ -34,7 +56,7 @@ void Cheese::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
         fillColor = fillColor.lighter();
 
     painter->setBrush(fillColor);
-    painter->drawRect(0, 0, 10, 10);
+    painter->drawRect(0, 0, GRID_SIZE, GRID_SIZE);
 
     return;
 }
@@ -59,3 +81,11 @@ void Cheese::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     update();
 }
 
+void Cheese::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    Q_UNUSED(event);
+
+    QString tips;
+    QTextStream(&tips) << "amount: " << amount;
+    setToolTip(tips);
+}

@@ -6,6 +6,8 @@ class Scene;
 
 class Viewer : public QGraphicsView
 {
+    Q_OBJECT
+
 public:
     Viewer(QWidget *parent);
 

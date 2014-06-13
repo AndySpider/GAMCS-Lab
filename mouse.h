@@ -14,7 +14,7 @@ using namespace gamcs;
 class Mouse : public QGraphicsItem, public Avatar
 {
 public:
-    Mouse();
+    Mouse(int id);
     ~Mouse();
 
     QRectF boundingRect() const;
@@ -25,7 +25,8 @@ protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    void hoverEnterEvent(QGraphicsSceneMouseEvent *event);
+
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
 
 private:
     Agent::State perceiveState();
