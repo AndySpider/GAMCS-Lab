@@ -12,6 +12,7 @@ class Mouse;
 class Cheese;
 class Block;
 class Nail;
+class Cat;
 
 class Scene : public QGraphicsScene
 {
@@ -28,13 +29,15 @@ public:
         BLOCK,
         CHEESE,
         NAIL,
-        MOUSE
+        MOUSE,
+        CAT
     };
 
     friend class Mouse;
     friend class Cheese;
     friend class Block;
     friend class Nail;
+    friend class Cat;
 
     int open(const QString &file);
     void save(const QString &file);
@@ -47,9 +50,11 @@ public:
     void speedDown();
 
     int miceNum();
+    int catsNum();
 
 signals:
     void miceNumChanged(int);
+    void catsNumChanged(int);
 
 private slots:
     void step();
@@ -62,6 +67,10 @@ private:
     QList<Mouse *> mice;
     int mouse_id;
 
+    // cats
+    QList<Cat *> cats;
+    int cat_id;
+
     // control
     QTimer *timer;
     int timer_interval;
@@ -72,8 +81,20 @@ private:
 
     void useTool(const QPoint &);
     void eraseToolAt(const QPoint &);
-    void addToolAt(QGraphicsItem *item, const QPoint &);
+    void addToolAt(Tool tool, const QPoint &);
     QPoint gridPoint(const QPointF &);
+    QPoint findAvatarNewPos(const QPoint &pos, bool *found);
+
+    Block *addBlockAt(const QPoint &);
+    Cheese *addCheeseAt(const QPoint &);
+    Nail *addNailAt(const QPoint &);
+    Mouse *addMouseAt(const QPoint &);
+    Cat *addCatAt(const QPoint &);
+    void eraseBlock(QGraphicsItem *block);
+    void eraseCheese(QGraphicsItem *cheese);
+    void eraseNail(QGraphicsItem *nail);
+    void eraseMouse(QGraphicsItem *mouse);
+    void eraseCat(QGraphicsItem *cat);
 
     void mousePressEvent(QGraphicsSceneMouseEvent  *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);

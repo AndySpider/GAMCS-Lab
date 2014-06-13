@@ -91,6 +91,16 @@ void MainWindow::initUi()
     actionMouse->setCheckable(true);
     toolGroup->addAction(actionMouse);
 
+    actionCat = new QAction(this);
+    actionCat->setText("Cat");
+    actionCat->setObjectName("actionCat");
+    actionCat->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_7));
+    QIcon iconCat;
+    iconCat.addFile(QStringLiteral(":/images/cat.png"), QSize(), QIcon::Normal, QIcon::Off);
+    actionCat->setIcon(iconCat);
+    actionCat->setCheckable(true);
+    toolGroup->addAction(actionCat);
+
     actionPause_Resume = new QAction(this);
     actionPause_Resume->setText("Pause/Resume");
     actionPause_Resume->setObjectName("actionPause_Resume");
@@ -216,6 +226,7 @@ void MainWindow::initUi()
     toolBar->addAction(actionCheese);
     toolBar->addAction(actionNail);
     toolBar->addAction(actionMouse);
+    toolBar->addAction(actionCat);
     toolBar->addSeparator();
     toolBar->addAction(actionPause_Resume);
     toolBar->addAction(actionSpeedUp);
@@ -266,6 +277,11 @@ void MainWindow::on_actionNail_triggered()
 void MainWindow::on_actionMouse_triggered()
 {
     scene->setCurTool(Scene::MOUSE);
+}
+
+void MainWindow::on_actionCat_triggered()
+{
+    scene->setCurTool(Scene::CAT);
 }
 
 void MainWindow::on_actionPause_Resume_toggled(bool arg1)

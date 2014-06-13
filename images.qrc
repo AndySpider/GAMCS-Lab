@@ -8,5 +8,8 @@
         <file>images/nail.png</file>
         <file>images/pause.png</file>
         <file>images/resume.png</file>
+        <file>images/speeddown.png</file>
+        <file>images/speedup.png</file>
+        <file>images/cat.png</file>
     </qresource>
 </RCC>

@@ -2,13 +2,15 @@
 #define NAIL_H
 
 #include <QGraphicsItem>
+#include "amount.h"
 
 class Nail : public QGraphicsItem
 {
 public:
     Nail();
+    ~Nail();
 
-    int getPins();
+    Amount *amount;
 
     QRectF boundingRect() const;
     QPainterPath shape() const;
@@ -20,9 +22,6 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-
-private:
-    int pins;
 };
 
 #endif // NAIL_H

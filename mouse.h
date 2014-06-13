@@ -4,10 +4,7 @@
 #include <QGraphicsItem>
 #include <gamcs/Avatar.h>
 #include <gamcs/CSOSAgent.h>
-
-QT_BEGIN_NAMESPACE
-class QGraphicsScene;
-QT_END_NAMESPACE
+#include "amount.h"
 
 using namespace gamcs;
 
@@ -16,6 +13,8 @@ class Mouse : public QGraphicsItem, public Avatar
 public:
     Mouse(int id);
     ~Mouse();
+
+    Amount *amount;
 
     QRectF boundingRect() const;
     QPainterPath shape() const;

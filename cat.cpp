@@ -13,41 +13,41 @@
 #include "cat.h"
 #include "config.h"
 
-Mouse::Mouse(int id) : Avatar(id)
+Cat::Cat(int id) : Avatar(id)
 {
     setFlags(ItemIsSelectable | ItemIsMovable);
     setAcceptHoverEvents(true);
-    setData(0, "Mouse");
+    setData(0, "Cat");
 
     myagent = new CSOSAgent(id, 0.8, 0.001);
     connectAgent(myagent);
 
-    amount = new Amount(this, 30);	// bite by cat 30 times til dead
+    amount = new Amount(this, 50);
 }
 
-Mouse::~Mouse()
+Cat::~Cat()
 {
     delete myagent;
     delete amount;
 }
 
-QRectF Mouse::boundingRect() const
+QRectF Cat::boundingRect() const
 {
     return QRectF(0, 0, GRID_SIZE, GRID_SIZE);    // the size of mouse
 }
 
-QPainterPath Mouse::shape() const
+QPainterPath Cat::shape() const
 {
     QPainterPath path;
     path.addRect(0, 0, GRID_SIZE, GRID_SIZE);
     return path;
 }
 
-void Mouse::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+void Cat::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(widget);
 
-    QColor fillColor = QColor(89, 255, 89);
+    QColor fillColor = QColor(250, 81, 143);
     if (option->state & QStyle::State_MouseOver)
         fillColor = fillColor.lighter();
 
@@ -57,13 +57,13 @@ void Mouse::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWi
     return;
 }
 
-void Mouse::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void Cat::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mousePressEvent(event);
     update();
 }
 
-void Mouse::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+void Cat::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     Scene *scene = dynamic_cast<Scene *>(this->scene());
     QPoint pos = scene->gridPoint(event->scenePos());
@@ -71,13 +71,13 @@ void Mouse::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     update();
 }
 
-void Mouse::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void Cat::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mouseReleaseEvent(event);
     update();
 }
 
-void Mouse::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+void Cat::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     Q_UNUSED(event);
 
@@ -86,7 +86,7 @@ void Mouse::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     setToolTip(tips);
 }
 
-Agent::State Mouse::perceiveState()
+Agent::State Cat::perceiveState()
 {
     qreal st = this->x() / GRID_SIZE;
     st += (this->y() * SCENE_WIDTH) / GRID_SIZE;
@@ -94,7 +94,7 @@ Agent::State Mouse::perceiveState()
     return (long) st;
 }
 
-void Mouse::performAction(Agent::Action act)
+void Cat::performAction(Agent::Action act)
 {
     qreal x = this->x();
     qreal y = this->y();
@@ -134,7 +134,7 @@ void Mouse::performAction(Agent::Action act)
     this->setPos(x, y);
 }
 
-OSpace Mouse::availableActions(Agent::State st)
+OSpace Cat::availableActions(Agent::State st)
 {
     Q_UNUSED(st);
 
@@ -143,7 +143,7 @@ OSpace Mouse::availableActions(Agent::State st)
     return acts;
 }
 
-float Mouse::originalPayoff(Agent::State st)
+float Cat::originalPayoff(Agent::State st)
 {
     Q_UNUSED(st);
 
@@ -176,23 +176,26 @@ float Mouse::originalPayoff(Agent::State st)
         {
             if (item_name == "Cheese")
             {
-                qDebug() << "Mouse" << id << ": Wow! cheese!";
+                qDebug() << "Cat" << id << ": Wow! cheese!";
                 Cheese *cheese = dynamic_cast<Cheese *>(*it);
                 pf = 1;
                 cheese->amount->decrease(1);
-                this->amount->increase(0.5);
+                this->amount->increase(0.3);
             }
             else if (item_name == "Nail")
             {
-                qDebug() << "Mouse" << id << ": Oops! nail!";
+                qDebug() << "Cat" << id << ": Oops! nail!";
                 Nail *nail = dynamic_cast<Nail *>(*it);
-                pf = -1;
-                this->amount->decrease(0.5);
+                pf = - (nail->amount->amount());
+                this->amount->decrease(0.3);
             }
-            else if (item_name == "Cat")
+            else if (item_name == "Mouse")
             {
-                qDebug() << "Mouse" << id << ": Cat! My GOD!";
-                pf = -5.0;
+                qDebug() << "Cat" << id << ": Mouse! my favorite!";
+                Mouse *mouse = dynamic_cast<Mouse *>(*it);
+                pf = 5;	// mouse is very delicious
+                mouse->amount->decrease(1);
+                this->amount->increase(0.5);
             }
             else    // some tool get in the way
             {

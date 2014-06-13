@@ -20,7 +20,9 @@ SOURCES += main.cpp\
     block.cpp \
     cheese.cpp \
     nail.cpp \
-    mouse.cpp
+    mouse.cpp \
+    cat.cpp \
+    amount.cpp
 
 HEADERS  += mainwindow.h \
     scene.h \
@@ -29,7 +31,9 @@ HEADERS  += mainwindow.h \
     cheese.h \
     nail.h \
     mouse.h \
-    config.h
+    config.h \
+    cat.h \
+    amount.h
 
 unix:!macx|win32: LIBS += -lgamcs
 

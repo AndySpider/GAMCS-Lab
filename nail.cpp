@@ -6,17 +6,20 @@
 #include "scene.h"
 #include "nail.h"
 #include "config.h"
+#include "amount.h"
 
-Nail::Nail() : pins(1)
+Nail::Nail()
 {
     setFlags(ItemIsSelectable | ItemIsMovable);
     setAcceptHoverEvents(true);
     setData(0, "Nail");
+
+    amount = new Amount(this, 10);
 }
 
-int Nail::getPins()
+Nail::~Nail()
 {
-    return pins;
+    delete amount;
 }
 
 QRectF Nail::boundingRect() const
@@ -71,6 +74,6 @@ void Nail::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     Q_UNUSED(event);
 
     QString tips;
-    QTextStream(&tips) << "pins: " << pins;
+    QTextStream(&tips) << "amount: " << amount->amount();
     setToolTip(tips);
 }

@@ -5,9 +5,10 @@
 #include "cheese.h"
 #include "nail.h"
 #include "mouse.h"
+#include "cat.h"
 #include "config.h"
 
-Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(NONE), mouse_id(0), timer_interval(100)
+Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(NONE), mouse_id(0), cat_id(0), timer_interval(100)
 {
     setItemIndexMethod(BspTreeIndex);   // NoIndex is slow!
 
@@ -16,6 +17,7 @@ Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(NONE), mouse_id
 
     this->setSceneRect(-10, -10, SCENE_WIDTH *GRID_SIZE + 20, SCENE_HEIGHT * GRID_SIZE + 20);
     timer = new QTimer(this);
+    timer->setSingleShot(true);
     connect(timer, SIGNAL(timeout()), this, SLOT(step()));
     timer->start(timer_interval);
 }
@@ -27,10 +29,17 @@ Scene::~Scene()
 
 void Scene::step()
 {
+    // mice
     for (QList<Mouse *>::iterator it = mice.begin(); it != mice.end(); ++it)
     {
         (*it)->step();
     }
+    // cats
+    for (QList<Cat *>::iterator it = cats.begin(); it != cats.end(); ++it)
+    {
+        (*it)->step();
+    }
+
     timer->start(timer_interval);
 }
 
@@ -61,6 +70,7 @@ void Scene::buildWalls()
     {
         Block *block = new Block();
         block->setPos(0 , i*GRID_SIZE);
+        block->setEnabled(false);
         this->addItem(block);
     }
 
@@ -69,6 +79,7 @@ void Scene::buildWalls()
     {
         Block *block = new Block();
         block->setPos((SCENE_WIDTH - 1) * GRID_SIZE, i*GRID_SIZE);
+        block->setEnabled(false);
         this->addItem(block);
     }
 
@@ -77,6 +88,7 @@ void Scene::buildWalls()
     {
         Block *block = new Block();
         block->setPos((i + 1) * GRID_SIZE, 0);
+        block->setEnabled(false);
         this->addItem(block);
     }
 
@@ -85,6 +97,7 @@ void Scene::buildWalls()
     {
         Block *block = new Block();
         block->setPos((i + 1) * GRID_SIZE, (SCENE_HEIGHT - 1) * GRID_SIZE);
+        block->setEnabled(false);
         this->addItem(block);
     }
 }
@@ -148,6 +161,9 @@ void Scene::speedUp()
     default:
         qWarning() << "!!! The timer interval is out of control!";
     }
+
+    if (timer->isActive())
+        timer->start(timer_interval);
 }
 
 void Scene::speedDown()
@@ -184,11 +200,19 @@ void Scene::speedDown()
     default:
         qWarning() << "!!! The timer interval is out of control!";
     }
+
+    if (timer->isActive())
+        timer->start(timer_interval);
 }
 
 int Scene::miceNum()
 {
     return mice.size();
+}
+
+int Scene::catsNum()
+{
+    return cats.size();
 }
 
 void Scene::useTool(const QPoint &pos)
@@ -199,23 +223,23 @@ void Scene::useTool(const QPoint &pos)
     }
     else if (cur_tool == BLOCK)
     {
-        Block *block = new Block();
-        addToolAt(block, pos);
+        addToolAt(BLOCK, pos);
     }
     else if (cur_tool == CHEESE)
     {
-        Cheese *cheese = new Cheese();
-        addToolAt(cheese, pos);
+        addToolAt(CHEESE, pos);
     }
     else if (cur_tool == NAIL)
     {
-        Nail *nail = new Nail();
-        addToolAt(nail, pos);
+        addToolAt(NAIL, pos);
     }
     else if (cur_tool == MOUSE)
     {
-        Mouse *mouse = new Mouse(mouse_id++);
-        addToolAt(mouse, pos);
+        addToolAt(MOUSE, pos);
+    }
+    else if (cur_tool == CAT)
+    {
+        addToolAt(CAT, pos);
     }
     else if (cur_tool == NONE)
     {
@@ -233,36 +257,334 @@ void Scene::eraseToolAt(const QPoint &pos)
     }
     else    // found a tool
     {
-        if (item->data(0).toString() == "Mouse")	// it's a mouse
-        {
-            mice.removeOne(dynamic_cast<Mouse *>(item));	// remove the mouse from queue
-            emit miceNumChanged(miceNum());
-        }
+        QString item_name = item->data(0).toString();
 
-        // remove item from scene
-        this->removeItem(item);
+        if (item_name == "Block")
+        {
+            eraseBlock(item);
+        }
+        else if (item_name == "Mouse")
+        {
+            eraseMouse(item);
+        }
+        else if (item_name == "Cheese")
+        {
+            eraseCheese(item);
+        }
+        else if (item_name == "Nail")
+        {
+            eraseNail(item);
+        }
+        else if (item_name == "Cat")
+        {
+            eraseCat(item);
+        }
+        // other tools come here
     }
 }
 
-void Scene::addToolAt(QGraphicsItem *item, const QPoint &pos)
+void Scene::addToolAt(Tool tool, const QPoint &pos)
 {
-    eraseToolAt(pos);	// erase first
-
-    item->setPos(pos);
-    this->addItem(item);
-
-    QString item_name = item->data(0).toString();
-
-    if (item_name == "Mouse")
+    // check if there's some tool already at pos
+    QGraphicsItem *old_item = this->itemAt(pos.x(), pos.y(), QTransform());
+    if (old_item == NULL) // no tool at pos, add directly
     {
-        mice.append(dynamic_cast<Mouse *>(item));
-        emit miceNumChanged(miceNum());
+        if (tool == BLOCK)
+        {
+            addBlockAt(pos);
+        }
+        else if (tool == CHEESE)
+        {
+            addCheeseAt(pos);
+        }
+        else if (tool == NAIL)
+        {
+            addNailAt(pos);
+        }
+        else if (tool == MOUSE)
+        {
+            addMouseAt(pos);
+        }
+        else if (tool == CAT)
+        {
+            addCatAt(pos);
+        }
+        else
+        {
+            qWarning() << "Unknown tool:" << tool;
+        }
+        // other tools come here
     }
-    else if (item_name == "Cheese" || item_name == "Nail")
+    else 	// some tool is at pos
     {
-        item->setZValue(-10);  // stack after other tools
+        QString old_item_name = old_item->data(0).toString();
+        if (old_item_name == "Block")
+        {
+            qDebug() << "can not add tools on a Block, erase it first!";
+        }
+        else if (old_item_name == "Cheese")
+        {
+            if (tool == BLOCK)	// erase cheese
+            {
+                eraseCheese(old_item);
 
+                addBlockAt(pos);
+            }
+            else if (tool == CHEESE)	// supply
+            {
+                Cheese *cheese  = addCheeseAt(pos);
+                cheese->amount->increase(dynamic_cast<Cheese *>(old_item)->amount->amount());
+                eraseCheese(old_item);
+            }
+            else if (tool == NAIL)	// erase cheese
+            {
+                eraseCheese(old_item);
+
+                addNailAt(pos);
+            }
+            else if (tool == MOUSE)	// add without erase
+            {
+                addMouseAt(pos);
+            }
+            else if (tool == CAT)	// add direct
+            {
+                addCatAt(pos);
+            }
+            // other tools come here
+        }
+        else if (old_item_name == "Nail")
+        {
+            if (tool == BLOCK)	// erase nail
+            {
+                eraseNail(old_item);
+                addBlockAt(pos);
+            }
+            else if (tool == CHEESE)	// erase nail
+            {
+                eraseNail(old_item);
+                addCheeseAt(pos);
+            }
+            else if (tool == NAIL)	// supply
+            {
+                Nail *nail = addNailAt(pos);
+                nail->amount->increase(dynamic_cast<Nail *>(old_item)->amount->amount());
+                eraseNail(old_item);
+            }
+            else if (tool == MOUSE) // add directly
+            {
+                addMouseAt(pos);
+            }
+            else if (tool == CAT)	// add directly
+            {
+                addCatAt(pos);
+            }
+            // other tools come here
+        }
+        else if (old_item_name == "Mouse")
+        {
+            if (tool == BLOCK)	// move mouse
+            {
+                bool found;
+                QPoint npos = findAvatarNewPos(pos, &found);
+                if (found)
+                {
+                    old_item->setPos(npos);
+                }
+                else
+                {
+                    eraseMouse(old_item);
+                }
+
+                addBlockAt(pos);
+            }
+            else if (tool == CHEESE)	// add directly
+            {
+                addCheeseAt(pos);
+            }
+            else if (tool == NAIL)	// add directly
+            {
+                addNailAt(pos);
+            }
+            else if (tool == MOUSE)	// do nothing
+            {
+                qDebug() << "can not add a mouse on a mouse, erase it first!";
+            }
+            else if (tool == CAT)	// add directly, cat likes mouse
+            {
+                addCatAt(pos);
+            }
+            // other tools come here
+        }
+        else if (old_item_name == "Cat")
+        {
+            if (tool == BLOCK)	// move cat
+            {
+                bool found;
+                QPoint npos = findAvatarNewPos(pos, &found);
+                if (found)
+                {
+                    old_item->setPos(npos);
+                }
+                else
+                {
+                    eraseCat(old_item);
+                }
+
+                addBlockAt(pos);
+            }
+            else if (tool == CHEESE)	// add directly
+            {
+                addCheeseAt(pos);
+            }
+            else if (tool == NAIL)	// add directly
+            {
+                addNailAt(pos);
+            }
+            else if (tool == MOUSE)	 // add directly
+            {
+                addMouseAt(pos);
+            }
+            else if (tool == CAT)	// do nothing
+            {
+                qDebug() << "can not add a cat on a cat, erase it first!";
+            }
+            // other tools come here
+        }
+        // other tools come here
     }
+}
+
+QPoint Scene::findAvatarNewPos(const QPoint &pos, bool *found)
+{
+    QGraphicsItem *item = NULL;
+    QString item_name;
+    int half_grid = GRID_SIZE / 2;
+    *found = false;
+    int x = pos.x();
+    int y = pos.y();
+    // check if there's space above
+    item = this->itemAt(x + half_grid, y - half_grid, QTransform());
+    item_name = item->data(0).toString();
+    if (item == NULL || item_name == "" || item_name == "Cheese" || item_name == "Nail")	// not exit or invalid or Cheese or Nail, FIXME: Mouse vs Cat
+    {
+        *found = true;
+        return QPoint(pos.x(), pos.y() - GRID_SIZE);
+    }
+
+    // check below
+    item = this->itemAt(x + half_grid, y + GRID_SIZE + half_grid, QTransform());
+    item_name = item->data(0).toString();
+    if (item == NULL || item_name == "" || item_name == "Cheese" || item_name == "Nail")	// not exit or invalid or Cheese or Nail
+    {
+        *found = true;
+        return QPoint(pos.x(), pos.y() + GRID_SIZE);
+    }
+
+    // check left
+    item = this->itemAt(x - half_grid, y + half_grid,QTransform());
+    item_name = item->data(0).toString();
+    if (item == NULL || item_name == "" || item_name == "Cheese" || item_name == "Nail")	// not exit or invalid or Cheese or Nail
+    {
+        *found = true;
+        return QPoint(pos.x() - GRID_SIZE, pos.y());
+    }
+
+    // check right
+    item = this->itemAt(x + GRID_SIZE + half_grid, y + half_grid,QTransform());
+    item_name = item->data(0).toString();
+    if (item == NULL || item_name == "" || item_name == "Cheese" || item_name == "Nail")	// not exit or invalid or Cheese or Nail
+    {
+        *found = true;
+        return QPoint(pos.x() + GRID_SIZE, pos.y());
+    }
+
+    // not found
+    *found = false;
+    return QPoint();
+}
+
+Block *Scene::addBlockAt(const QPoint &pos)
+{
+    Block *block = new Block();
+    block->setPos(pos);
+    this->addItem(block);
+
+    return block;
+}
+
+Cheese *Scene::addCheeseAt(const QPoint &pos)
+{
+    Cheese *cheese = new Cheese();
+    cheese->setPos(pos);
+    this->addItem(cheese);
+
+    return cheese;
+}
+
+Nail *Scene::addNailAt(const QPoint &pos)
+{
+    Nail *nail = new Nail();
+    nail->setPos(pos);
+    this->addItem(nail);
+
+    return nail;
+}
+
+Mouse *Scene::addMouseAt(const QPoint &pos)
+{
+    Mouse *mouse = new Mouse(mouse_id++);
+    mouse->setPos(pos);
+    this->addItem(mouse);
+
+    mouse->setZValue(1);	// stack before other tools
+    mice.append(mouse);
+    emit miceNumChanged(miceNum());
+
+    return mouse;
+}
+
+Cat *Scene::addCatAt(const QPoint &pos)
+{
+    Cat *cat = new Cat(cat_id++);
+    cat->setPos(pos);
+    this->addItem(cat);
+
+    cat->setZValue(2);	// before mouse
+    cats.append(cat);
+    emit catsNumChanged(catsNum());
+
+    return cat;
+}
+
+void Scene::eraseBlock(QGraphicsItem *block)
+{
+    this->removeItem(block);
+}
+
+void Scene::eraseCheese(QGraphicsItem *cheese)
+{
+    this->removeItem(cheese);
+}
+
+void Scene::eraseNail(QGraphicsItem *nail)
+{
+    this->removeItem(nail);
+}
+
+void Scene::eraseMouse(QGraphicsItem *mouse)
+{
+    this->removeItem(mouse);
+
+    mice.removeOne(dynamic_cast<Mouse *>(mouse));	// remove the mouse from list
+    emit miceNumChanged(miceNum());
+}
+
+void Scene::eraseCat(QGraphicsItem *cat)
+{
+    this->removeItem(cat);
+
+    cats.removeOne(dynamic_cast<Cat *>(cat));
+    emit catsNumChanged(catsNum());
 }
 
 /**

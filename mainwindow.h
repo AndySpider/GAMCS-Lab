@@ -32,6 +32,7 @@ private:
     QAction *actionCheese;
     QAction *actionNail;
     QAction *actionMouse;
+    QAction *actionCat;
 
     QActionGroup *toolGroup;
 
@@ -75,6 +76,7 @@ private slots:
     void on_actionCheese_triggered();
     void on_actionNail_triggered();
     void on_actionMouse_triggered();
+    void on_actionCat_triggered();
 
     void on_actionPause_Resume_toggled(bool arg1);
     void on_actionSpeedUp_triggered();

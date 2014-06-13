@@ -6,32 +6,20 @@
 #include "scene.h"
 #include "cheese.h"
 #include "config.h"
+#include "amount.h"
 
-Cheese::Cheese() : amount(3)
+Cheese::Cheese()
 {
     setFlags(ItemIsSelectable | ItemIsMovable);
     setAcceptHoverEvents(true);
     setData(0, "Cheese");
+
+    amount = new Amount(this, 10);
 }
 
-int Cheese::eaten()
+Cheese::~Cheese()
 {
-    mutex.lock();
-    amount--;
-    if (amount <= 0)    // eaten up, remove the cheese
-    {
-        qDebug() << "cheese is eaten up!!";
-        QGraphicsScene *myscene = this->scene();
-        myscene->removeItem(this);
-    }
-    mutex.unlock();
-
-    return amount;
-}
-
-int Cheese::getAmount()
-{
-    return amount;
+    delete amount;
 }
 
 QRectF Cheese::boundingRect() const
@@ -86,6 +74,6 @@ void Cheese::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     Q_UNUSED(event);
 
     QString tips;
-    QTextStream(&tips) << "amount: " << amount;
+    QTextStream(&tips) << "amount: " << amount->amount();
     setToolTip(tips);
 }

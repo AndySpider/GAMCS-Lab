@@ -1,15 +1,22 @@
-#ifndef CHEESE_H
-#define CHEESE_H
+#ifndef CAT_H
+#define CAT_H
 
 #include <QGraphicsItem>
-#include <QMutex>
+#include <gamcs/Avatar.h>
+#include <gamcs/CSOSAgent.h>
 #include "amount.h"
 
-class Cheese : public QGraphicsItem
+using namespace gamcs;
+
+class Mouse;
+class Cheese;
+class Nail;
+
+class Cat : public QGraphicsItem, public Avatar
 {
 public:
-    Cheese();
-    ~Cheese();
+    Cat(int id);
+    ~Cat();
 
     Amount *amount;
 
@@ -23,6 +30,15 @@ protected:
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
 
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+
+private:
+    Agent::State perceiveState();
+    void performAction(Agent::Action);
+    OSpace availableActions(Agent::State);
+    float originalPayoff(Agent::State);
+
+private:
+    CSOSAgent *myagent;
 };
 
-#endif // CHEESE_H
+#endif // CAT_H
