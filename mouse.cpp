@@ -1,80 +1,24 @@
-#include <QStyleOptionGraphicsItem>
-#include <QGraphicsScene>
-#include <QPainter>
-#include <QPointF>
-#include <QTransform>
-#include <QDebug>
+#include <QTextStream>
 #include <QList>
+#include <QDebug>
 #include <QGraphicsSceneMouseEvent>
-#include "mouse.h"
 #include "scene.h"
-#include "cheese.h"
-#include "nail.h"
-#include "cat.h"
 #include "config.h"
+#include "mouse.h"
 
 Mouse::Mouse(int id) : Avatar(id)
 {
-    setFlags(ItemIsSelectable | ItemIsMovable);
-    setAcceptHoverEvents(true);
-    setData(0, "Mouse");
+    _type = MOUSE;
+    _color = QColor(89, 255, 89);
+    _life = 30;
 
-    myagent = new CSOSAgent(id, 0.8, 0.001);
+    myagent = new CSOSAgent(id, 0.9, 0.01);
     connectAgent(myagent);
-
-    amount = new Amount(this, 30);	// bite by cat 30 times til dead
 }
 
 Mouse::~Mouse()
 {
     delete myagent;
-    delete amount;
-}
-
-QRectF Mouse::boundingRect() const
-{
-    return QRectF(0, 0, GRID_SIZE, GRID_SIZE);    // the size of mouse
-}
-
-QPainterPath Mouse::shape() const
-{
-    QPainterPath path;
-    path.addRect(0, 0, GRID_SIZE, GRID_SIZE);
-    return path;
-}
-
-void Mouse::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    Q_UNUSED(widget);
-
-    QColor fillColor = QColor(89, 255, 89);
-    if (option->state & QStyle::State_MouseOver)
-        fillColor = fillColor.lighter();
-
-    painter->setBrush(fillColor);
-    painter->drawRect(0, 0, GRID_SIZE, GRID_SIZE);
-
-    return;
-}
-
-void Mouse::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    QGraphicsItem::mousePressEvent(event);
-    update();
-}
-
-void Mouse::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    Scene *scene = dynamic_cast<Scene *>(this->scene());
-    QPoint pos = scene->gridPoint(event->scenePos());
-    this->setPos(pos);
-    update();
-}
-
-void Mouse::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    QGraphicsItem::mouseReleaseEvent(event);
-    update();
 }
 
 void Mouse::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
@@ -82,56 +26,42 @@ void Mouse::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     Q_UNUSED(event);
 
     QString tips;
-    QTextStream(&tips) << "id:" << id << "amount:" << amount->amount();
+    QTextStream(&tips) << "id:" << id << ", life:" << _life;
     setToolTip(tips);
+}
+
+void Mouse::act()
+{
+    Avatar::step();
 }
 
 Agent::State Mouse::perceiveState()
 {
-    qreal st = this->x() / GRID_SIZE;
-    st += (this->y() * SCENE_WIDTH) / GRID_SIZE;
+    int st = grid_x;
+    st += grid_y * SCENE_WIDTH;
 
-    return (long) st;
+    return st;
 }
 
 void Mouse::performAction(Agent::Action act)
 {
-    qreal x = this->x();
-    qreal y = this->y();
-
-    QGraphicsScene *scene = this->scene();
-    QGraphicsItem *item = NULL;
-
-    int half_grid = GRID_SIZE / 2;
-
     switch (act)
     {
     case 1: // move up
-        // check if there're blocks
-        item = scene->itemAt(x + half_grid, y - half_grid, QTransform());
-        if (item == NULL || item->data(0).toString() != "Block")    // only Block can block
-            y -= GRID_SIZE;
+        moveUp();
         break;
     case 2: // move down
-        item = scene->itemAt(x + half_grid, y + GRID_SIZE + half_grid, QTransform());
-        if (item == NULL || item->data(0).toString() != "Block")
-            y += GRID_SIZE;
+        moveDown();
         break;
     case 3: // move left
-        item = scene->itemAt(x - half_grid, y + half_grid,QTransform());
-        if (item == NULL || item->data(0).toString() != "Block")
-            x -= GRID_SIZE;
+        moveLeft();
         break;
     case 4: // move right
-        item = scene->itemAt(x + GRID_SIZE + half_grid, y + half_grid,QTransform());
-        if (item == NULL || item->data(0).toString() != "Block")
-            x += GRID_SIZE;
+        moveRight();
         break;
     case 5: // no move
         break;
     }
-
-    this->setPos(x, y);
 }
 
 OSpace Mouse::availableActions(Agent::State st)
@@ -148,58 +78,40 @@ float Mouse::originalPayoff(Agent::State st)
     Q_UNUSED(st);
 
     float pf = 0.0;
-    QList<QGraphicsItem *> colliding_items = this->collidingItems(Qt::IntersectsItemShape);
-
-    if (colliding_items.empty())
+    QList<Spirit *> colliding_spirits = collidingSpirits();
+    if (colliding_spirits.empty())
     {
         pf = 0.0;
     }
-    else
+    else	// integrated all the colliding spirits
     {
-        // find the first valid tool
-        QString item_name = "";
-        QList<QGraphicsItem *>::iterator it;
-        for (it = colliding_items.begin(); it != colliding_items.end(); ++it)
+        for (QList<Spirit *>::iterator it = colliding_spirits.begin(); it != colliding_spirits.end(); ++it)
         {
-            item_name = (*it)->data(0).toString();
-            if (item_name == "")    // not a valid tool, continue
-                continue;
-            else
-                break;      // break if found
-        }
-
-        if (it == colliding_items.end())    // no valid tool found
-        {
-            pf = 0.0;
-        }
-        else
-        {
-            if (item_name == "Cheese")
+            if ((*it)->spiritType() == CHEESE)
             {
                 qDebug() << "Mouse" << id << ": Wow! cheese!";
-                Cheese *cheese = dynamic_cast<Cheese *>(*it);
-                pf = 1;
-                cheese->amount->decrease(1);
-                this->amount->increase(0.5);
+                this->healed(0.5);
+                pf += 1.0;
             }
-            else if (item_name == "Nail")
+            else if ((*it)->spiritType() == NAIL)
             {
                 qDebug() << "Mouse" << id << ": Oops! nail!";
-                Nail *nail = dynamic_cast<Nail *>(*it);
-                pf = -1;
-                this->amount->decrease(0.5);
+                this->injured(0.5);
+                pf += -1.0;
             }
-            else if (item_name == "Cat")
+            else if ((*it)->spiritType() == CAT)
             {
                 qDebug() << "Mouse" << id << ": Cat! My GOD!";
-                pf = -5.0;
+                this->injured(1);
+                pf += -2.0;
             }
-            else    // some tool get in the way
+            else
             {
-                pf = 0.0;
+                qDebug() << "Mouse" << id << ": What's this, get out of my way!";
+                pf += 0.0;
             }
         }
     }
 
-        return pf;
+    return pf;
 }

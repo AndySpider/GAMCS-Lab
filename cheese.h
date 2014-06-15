@@ -1,28 +1,16 @@
 #ifndef CHEESE_H
 #define CHEESE_H
 
-#include <QGraphicsItem>
-#include <QMutex>
-#include "amount.h"
+#include "spirit.h"
 
-class Cheese : public QGraphicsItem
+class Cheese : public Spirit
 {
 public:
     Cheese();
     ~Cheese();
 
-    Amount *amount;
-
-    QRectF boundingRect() const;
-    QPainterPath shape() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-
-protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+private:
+    void act();
 };
 
 #endif // CHEESE_H

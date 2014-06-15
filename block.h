@@ -1,21 +1,12 @@
 #ifndef BLOCK_H
 #define BLOCK_H
 
-#include <QGraphicsItem>
+#include "spirit.h"
 
-class Block : public QGraphicsItem
+class Block : public Spirit
 {
 public:
-    explicit Block();
-
-    QRectF boundingRect() const;
-    QPainterPath shape() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-
-protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    Block();
 };
 
 #endif // BLOCK_H

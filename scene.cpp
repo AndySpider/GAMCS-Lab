@@ -1,14 +1,15 @@
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
-#include "scene.h"
 #include "block.h"
 #include "cheese.h"
 #include "nail.h"
 #include "mouse.h"
 #include "cat.h"
+#include "scene.h"
 #include "config.h"
 
-Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(NONE), mouse_id(0), cat_id(0), timer_interval(100)
+Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(T_NONE), mouse_id(0), cat_id(0), timer_interval(100),
+    num_blocks(0), num_cheeses(0), num_nails(0), num_mice(0), num_cats(0)
 {
     setItemIndexMethod(BspTreeIndex);   // NoIndex is slow!
 
@@ -29,15 +30,23 @@ Scene::~Scene()
 
 void Scene::step()
 {
-    // mice
-    for (QList<Mouse *>::iterator it = mice.begin(); it != mice.end(); ++it)
+    QList<Spirit *> dead_spirits;
+
+    for (QList<Spirit *>::iterator it = spirits.begin(); it != spirits.end(); ++it)
     {
-        (*it)->step();
+        (*it)->act();
+
+        if ((*it)->life() <= 0)	// remove spirit if it's dead
+        {
+            qDebug() << "spirit died!";
+            dead_spirits.append(*it);
+        }
     }
-    // cats
-    for (QList<Cat *>::iterator it = cats.begin(); it != cats.end(); ++it)
+
+    // remove dead spirits
+    for (QList<Spirit *>::iterator it = dead_spirits.begin(); it != dead_spirits.end(); ++it)
     {
-        (*it)->step();
+        removeSpirit(*it);
     }
 
     timer->start(timer_interval);
@@ -45,7 +54,7 @@ void Scene::step()
 
 int Scene::open(const QString &file)
 {
-
+    return 0;
 }
 
 void Scene::save(const QString &file)
@@ -205,297 +214,289 @@ void Scene::speedDown()
         timer->start(timer_interval);
 }
 
-int Scene::miceNum()
+QList<SpiritInfo> Scene::statistics()
 {
-    return mice.size();
+    QList<SpiritInfo> infos;
+
+    SpiritInfo blocks_info;
+    SpiritInfo cheeses_info;
+    SpiritInfo nails_info;
+    SpiritInfo mice_info;
+    SpiritInfo cats_info;
+
+    blocks_info.name = "Block";
+    blocks_info.num = num_blocks;
+    infos.append(blocks_info);
+
+    cheeses_info.name = "Cheese";
+    cheeses_info.num = num_cheeses;
+    infos.append(cheeses_info);
+
+    nails_info.name = "Nail";
+    nails_info.num = num_nails;
+    infos.append(nails_info);
+
+    mice_info.name = "Mouse";
+    mice_info.num = num_mice;
+    infos.append(mice_info);
+
+    cats_info.name = "Cat";
+    cats_info.num = num_cats;
+    infos.append(cats_info);
+
+    return infos;
 }
 
-int Scene::catsNum()
+void Scene::useToolAt(const QPoint &pos)
 {
-    return cats.size();
-}
-
-void Scene::useTool(const QPoint &pos)
-{
-    if (cur_tool == ERASER)
+    if (cur_tool == T_ERASER)
     {
-        eraseToolAt(pos);
+        removeSpiritAt(pos);
     }
-    else if (cur_tool == BLOCK)
+    else if (cur_tool == T_BLOCK)
     {
-        addToolAt(BLOCK, pos);
+        addSpiritAt(Spirit::BLOCK, pos);
     }
-    else if (cur_tool == CHEESE)
+    else if (cur_tool == T_CHEESE)
     {
-        addToolAt(CHEESE, pos);
+        addSpiritAt(Spirit::CHEESE, pos);
     }
-    else if (cur_tool == NAIL)
+    else if (cur_tool == T_NAIL)
     {
-        addToolAt(NAIL, pos);
+        addSpiritAt(Spirit::NAIL, pos);
     }
-    else if (cur_tool == MOUSE)
+    else if (cur_tool == T_MOUSE)
     {
-        addToolAt(MOUSE, pos);
+        addSpiritAt(Spirit::MOUSE, pos);
     }
-    else if (cur_tool == CAT)
+    else if (cur_tool == T_CAT)
     {
-        addToolAt(CAT, pos);
+        addSpiritAt(Spirit::CAT, pos);
     }
-    else if (cur_tool == NONE)
+    else if (cur_tool == T_NONE)
     {
         //
     }
 }
 
-void Scene::eraseToolAt(const QPoint &pos)
+void Scene::removeSpiritAt(const QPoint &pos)
 {
-    QGraphicsItem *item = this->itemAt(pos.x(), pos.y(), QTransform());
+    Spirit *spt = this->getSpiritAt(pos.x(), pos.y());
 
-    if (item == NULL || item->data(0).toString() == "") // not exits or not a valid tool
+    if (spt == NULL) // not exist
     {
         return;
     }
     else    // found a tool
     {
-        QString item_name = item->data(0).toString();
-
-        if (item_name == "Block")
-        {
-            eraseBlock(item);
-        }
-        else if (item_name == "Mouse")
-        {
-            eraseMouse(item);
-        }
-        else if (item_name == "Cheese")
-        {
-            eraseCheese(item);
-        }
-        else if (item_name == "Nail")
-        {
-            eraseNail(item);
-        }
-        else if (item_name == "Cat")
-        {
-            eraseCat(item);
-        }
-        // other tools come here
+        removeSpirit(spt);
     }
 }
 
-void Scene::addToolAt(Tool tool, const QPoint &pos)
+void Scene::addSpiritAt(Spirit::SType type, const QPoint &pos)
 {
-    // check if there's some tool already at pos
-    QGraphicsItem *old_item = this->itemAt(pos.x(), pos.y(), QTransform());
-    if (old_item == NULL) // no tool at pos, add directly
+    // check if there's some type already at pos
+    Spirit *old_spirit = getSpiritAt(pos.x(), pos.y());
+    if (old_spirit == NULL) // no spirit at pos, add directly
     {
-        if (tool == BLOCK)
+        if (type == Spirit::BLOCK)
         {
-            addBlockAt(pos);
+            newSpiritAt(Spirit::BLOCK, pos);
         }
-        else if (tool == CHEESE)
+        else if (type == Spirit::CHEESE)
         {
-            addCheeseAt(pos);
+            newSpiritAt(Spirit::CHEESE, pos);
         }
-        else if (tool == NAIL)
+        else if (type == Spirit::NAIL)
         {
-            addNailAt(pos);
+            newSpiritAt(Spirit::NAIL, pos);
         }
-        else if (tool == MOUSE)
+        else if (type == Spirit::MOUSE)
         {
-            addMouseAt(pos);
+            newSpiritAt(Spirit::MOUSE, pos);
         }
-        else if (tool == CAT)
+        else if (type == Spirit::CAT)
         {
-            addCatAt(pos);
+            newSpiritAt(Spirit::CAT, pos);
         }
         else
         {
-            qWarning() << "Unknown tool:" << tool;
+            qWarning() << "Unknown type:" << type;
         }
-        // other tools come here
+        // other types come here
     }
-    else 	// some tool is at pos
+    else 	// some type is at pos
     {
-        QString old_item_name = old_item->data(0).toString();
-        if (old_item_name == "Block")
+        Spirit::SType old_spirit_type = old_spirit->spiritType();
+        if (old_spirit_type == Spirit::BLOCK)
         {
-            qDebug() << "can not add tools on a Block, erase it first!";
+            qDebug() << "can not add types on a Block, erase it first!";
         }
-        else if (old_item_name == "Cheese")
+        else if (old_spirit_type == Spirit::CHEESE)
         {
-            if (tool == BLOCK)	// erase cheese
+            if (type == Spirit::BLOCK)	// erase cheese
             {
-                eraseCheese(old_item);
+                removeSpirit(old_spirit);
 
-                addBlockAt(pos);
+                newSpiritAt(Spirit::BLOCK, pos);
             }
-            else if (tool == CHEESE)	// supply
+            else if (type == Spirit::CHEESE)	// supply
             {
-                Cheese *cheese  = addCheeseAt(pos);
-                cheese->amount->increase(dynamic_cast<Cheese *>(old_item)->amount->amount());
-                eraseCheese(old_item);
+                Spirit *spt = newSpiritAt(Spirit::CHEESE, pos);
+                spt->healed(old_spirit->life());
+                removeSpirit(old_spirit);
             }
-            else if (tool == NAIL)	// erase cheese
+            else if (type == Spirit::NAIL)	// erase cheese
             {
-                eraseCheese(old_item);
-
-                addNailAt(pos);
+                removeSpirit(old_spirit);
+                newSpiritAt(Spirit::NAIL, pos);
             }
-            else if (tool == MOUSE)	// add without erase
+            else if (type == Spirit::MOUSE)	// add without erase
             {
-                addMouseAt(pos);
+                newSpiritAt(Spirit::MOUSE, pos);
             }
-            else if (tool == CAT)	// add direct
+            else if (type == Spirit::CAT)	// add direct
             {
-                addCatAt(pos);
+                newSpiritAt(Spirit::CAT, pos);
             }
-            // other tools come here
+            // other types come here
         }
-        else if (old_item_name == "Nail")
+        else if (old_spirit_type == Spirit::NAIL)
         {
-            if (tool == BLOCK)	// erase nail
+            if (type == Spirit::BLOCK)	// erase nail
             {
-                eraseNail(old_item);
-                addBlockAt(pos);
+                removeSpirit(old_spirit);
+                newSpiritAt(Spirit::BLOCK, pos);
             }
-            else if (tool == CHEESE)	// erase nail
+            else if (type == Spirit::CHEESE)	// erase nail
             {
-                eraseNail(old_item);
-                addCheeseAt(pos);
+                removeSpirit(old_spirit);
+                newSpiritAt(Spirit::CHEESE, pos);
             }
-            else if (tool == NAIL)	// supply
+            else if (type == Spirit::NAIL)	// supply
             {
-                Nail *nail = addNailAt(pos);
-                nail->amount->increase(dynamic_cast<Nail *>(old_item)->amount->amount());
-                eraseNail(old_item);
+                Spirit *spt = newSpiritAt(Spirit::NAIL, pos);
+                spt->healed(old_spirit->life());
+                removeSpirit(old_spirit);
             }
-            else if (tool == MOUSE) // add directly
+            else if (type == Spirit::MOUSE) // add directly
             {
-                addMouseAt(pos);
+                newSpiritAt(Spirit::MOUSE, pos);
             }
-            else if (tool == CAT)	// add directly
+            else if (type == Spirit::CAT)	// add directly
             {
-                addCatAt(pos);
+                newSpiritAt(Spirit::CAT, pos);
             }
-            // other tools come here
+            // other types come here
         }
-        else if (old_item_name == "Mouse")
+        else if (old_spirit_type == Spirit::MOUSE)
         {
-            if (tool == BLOCK)	// move mouse
+            if (type == Spirit::BLOCK)	// move mouse
             {
                 bool found;
-                QPoint npos = findAvatarNewPos(pos, &found);
+                QPoint npos = findSpiritNewPos(pos, &found);
                 if (found)
                 {
-                    old_item->setPos(npos);
+                    old_spirit->setPos(npos);
                 }
                 else
                 {
-                    eraseMouse(old_item);
+                    removeSpirit(old_spirit);
                 }
 
-                addBlockAt(pos);
+                newSpiritAt(Spirit::BLOCK, pos);
             }
-            else if (tool == CHEESE)	// add directly
+            else if (type == Spirit::CHEESE)	// add directly
             {
-                addCheeseAt(pos);
+                newSpiritAt(Spirit::CHEESE, pos);
             }
-            else if (tool == NAIL)	// add directly
+            else if (type == Spirit::NAIL)	// add directly
             {
-                addNailAt(pos);
+                newSpiritAt(Spirit::NAIL, pos);
             }
-            else if (tool == MOUSE)	// do nothing
+            else if (type == Spirit::MOUSE)	// do nothing
             {
                 qDebug() << "can not add a mouse on a mouse, erase it first!";
             }
-            else if (tool == CAT)	// add directly, cat likes mouse
+            else if (type == Spirit::CAT)	// add directly, cat likes mouse
             {
-                addCatAt(pos);
+                newSpiritAt(Spirit::CAT, pos);
             }
-            // other tools come here
+            // other types come here
         }
-        else if (old_item_name == "Cat")
+        else if (old_spirit_type == Spirit::CAT)
         {
-            if (tool == BLOCK)	// move cat
+            if (type == Spirit::BLOCK)	// move cat
             {
                 bool found;
-                QPoint npos = findAvatarNewPos(pos, &found);
+                QPoint npos = findSpiritNewPos(pos, &found);
                 if (found)
                 {
-                    old_item->setPos(npos);
+                    old_spirit->setPos(npos);
                 }
                 else
                 {
-                    eraseCat(old_item);
+                    removeSpirit(old_spirit);
                 }
 
-                addBlockAt(pos);
+                newSpiritAt(Spirit::BLOCK, pos);
             }
-            else if (tool == CHEESE)	// add directly
+            else if (type == Spirit::CHEESE)	// add directly
             {
-                addCheeseAt(pos);
+                newSpiritAt(Spirit::CHEESE, pos);
             }
-            else if (tool == NAIL)	// add directly
+            else if (type == Spirit::NAIL)	// add directly
             {
-                addNailAt(pos);
+                newSpiritAt(Spirit::NAIL, pos);
             }
-            else if (tool == MOUSE)	 // add directly
+            else if (type == Spirit::MOUSE)	 // add directly
             {
-                addMouseAt(pos);
+                newSpiritAt(Spirit::MOUSE, pos);
             }
-            else if (tool == CAT)	// do nothing
+            else if (type == Spirit::CAT)	// do nothing
             {
                 qDebug() << "can not add a cat on a cat, erase it first!";
             }
-            // other tools come here
+            // other types come here
         }
-        // other tools come here
+        // other types come here
     }
 }
 
-QPoint Scene::findAvatarNewPos(const QPoint &pos, bool *found)
+QPoint Scene::findSpiritNewPos(const QPoint &pos, bool *found)
 {
-    QGraphicsItem *item = NULL;
-    QString item_name;
-    int half_grid = GRID_SIZE / 2;
+    Spirit *spt = NULL;
     *found = false;
-    int x = pos.x();
-    int y = pos.y();
     // check if there's space above
-    item = this->itemAt(x + half_grid, y - half_grid, QTransform());
-    item_name = item->data(0).toString();
-    if (item == NULL || item_name == "" || item_name == "Cheese" || item_name == "Nail")	// not exit or invalid or Cheese or Nail, FIXME: Mouse vs Cat
+    spt = this->getSpiritAt(pos.x(), pos.y() - GRID_SIZE);
+    if (spt == NULL || spt->spiritType() != Spirit::BLOCK)	// not exit or not block
     {
         *found = true;
         return QPoint(pos.x(), pos.y() - GRID_SIZE);
     }
 
+    // check right
+    spt = this->getSpiritAt(pos.x() + GRID_SIZE, pos.y());
+    if (spt == NULL || spt->spiritType() != Spirit::BLOCK)	// not exit or not block
+    {
+        *found = true;
+        return QPoint(pos.x() + GRID_SIZE, pos.y());
+    }
+
     // check below
-    item = this->itemAt(x + half_grid, y + GRID_SIZE + half_grid, QTransform());
-    item_name = item->data(0).toString();
-    if (item == NULL || item_name == "" || item_name == "Cheese" || item_name == "Nail")	// not exit or invalid or Cheese or Nail
+    spt = this->getSpiritAt(pos.x(), pos.y() + GRID_SIZE);
+    if (spt == NULL || spt->spiritType() != Spirit::BLOCK)	// not exit or not block
     {
         *found = true;
         return QPoint(pos.x(), pos.y() + GRID_SIZE);
     }
 
     // check left
-    item = this->itemAt(x - half_grid, y + half_grid,QTransform());
-    item_name = item->data(0).toString();
-    if (item == NULL || item_name == "" || item_name == "Cheese" || item_name == "Nail")	// not exit or invalid or Cheese or Nail
+    spt = this->getSpiritAt(pos.x() - GRID_SIZE, pos.y());
+    if (spt == NULL || spt->spiritType() != Spirit::BLOCK)	// not exit or not block
     {
         *found = true;
         return QPoint(pos.x() - GRID_SIZE, pos.y());
-    }
-
-    // check right
-    item = this->itemAt(x + GRID_SIZE + half_grid, y + half_grid,QTransform());
-    item_name = item->data(0).toString();
-    if (item == NULL || item_name == "" || item_name == "Cheese" || item_name == "Nail")	// not exit or invalid or Cheese or Nail
-    {
-        *found = true;
-        return QPoint(pos.x() + GRID_SIZE, pos.y());
     }
 
     // not found
@@ -503,88 +504,86 @@ QPoint Scene::findAvatarNewPos(const QPoint &pos, bool *found)
     return QPoint();
 }
 
-Block *Scene::addBlockAt(const QPoint &pos)
+Spirit *Scene::newSpiritAt(Spirit::SType type, const QPoint &pos)
 {
-    Block *block = new Block();
-    block->setPos(pos);
-    this->addItem(block);
+    Spirit *spt = NULL;
+    int *num = NULL;
 
-    return block;
+    if (type == Spirit::BLOCK)
+    {
+        spt = new Block();
+        num = &num_blocks;
+    }
+    else if (type == Spirit::CHEESE)
+    {
+        spt = new Cheese();
+        num = &num_cheeses;
+    }
+    else if (type == Spirit::NAIL)
+    {
+        spt = new Nail();
+        num = &num_nails;
+    }
+    else if (type == Spirit::MOUSE)
+    {
+        spt = new Mouse(mouse_id++);
+        num = &num_mice;
+        spt->setZValue(1);
+    }
+    else if (type == Spirit::CAT)
+    {
+        spt = new Cat(cat_id);
+        num = &num_cats;
+        spt->setZValue(2);
+    }
+
+    spt->setPos(pos);
+    this->addItem(spt);
+    int i = spt->initialize();		// initialize spirit
+    if (i != 0)	// init failed
+    {
+        qDebug() << "Scene: failed to new Spirit at" << pos;
+        this->removeItem(spt);
+        return NULL;
+    }
+
+    spirits.append(spt);
+    (*num)++;
+    emit spiritsNumChanged(spirits.size());
+
+    return spt;
 }
 
-Cheese *Scene::addCheeseAt(const QPoint &pos)
+void Scene::removeSpirit(Spirit *spt)
 {
-    Cheese *cheese = new Cheese();
-    cheese->setPos(pos);
-    this->addItem(cheese);
+    Spirit::SType type = spt->spiritType();
+    int *num = NULL;
 
-    return cheese;
-}
+    if (type == Spirit::BLOCK)
+    {
+        num = &num_blocks;
+    }
+    else if (type == Spirit::CHEESE)
+    {
+        num = &num_cheeses;
+    }
+    else if (type == Spirit::NAIL)
+    {
+        num = &num_nails;
+    }
+    else if (type == Spirit::MOUSE)
+    {
+        num = &num_mice;
+    }
+    else if (type == Spirit::CAT)
+    {
+        num = &num_cats;
+    }
 
-Nail *Scene::addNailAt(const QPoint &pos)
-{
-    Nail *nail = new Nail();
-    nail->setPos(pos);
-    this->addItem(nail);
-
-    return nail;
-}
-
-Mouse *Scene::addMouseAt(const QPoint &pos)
-{
-    Mouse *mouse = new Mouse(mouse_id++);
-    mouse->setPos(pos);
-    this->addItem(mouse);
-
-    mouse->setZValue(1);	// stack before other tools
-    mice.append(mouse);
-    emit miceNumChanged(miceNum());
-
-    return mouse;
-}
-
-Cat *Scene::addCatAt(const QPoint &pos)
-{
-    Cat *cat = new Cat(cat_id++);
-    cat->setPos(pos);
-    this->addItem(cat);
-
-    cat->setZValue(2);	// before mouse
-    cats.append(cat);
-    emit catsNumChanged(catsNum());
-
-    return cat;
-}
-
-void Scene::eraseBlock(QGraphicsItem *block)
-{
-    this->removeItem(block);
-}
-
-void Scene::eraseCheese(QGraphicsItem *cheese)
-{
-    this->removeItem(cheese);
-}
-
-void Scene::eraseNail(QGraphicsItem *nail)
-{
-    this->removeItem(nail);
-}
-
-void Scene::eraseMouse(QGraphicsItem *mouse)
-{
-    this->removeItem(mouse);
-
-    mice.removeOne(dynamic_cast<Mouse *>(mouse));	// remove the mouse from list
-    emit miceNumChanged(miceNum());
-}
-
-void Scene::eraseCat(QGraphicsItem *cat)
-{
-    this->removeItem(cat);
-
-    cats.removeOne(dynamic_cast<Cat *>(cat));
-    emit catsNumChanged(catsNum());
+    this->removeItem(spt);
+    spirits.removeOne(spt);
+    (*num)--;
+    emit spiritsNumChanged(spirits.size());
 }
 
 /**
@@ -606,11 +605,29 @@ QPoint Scene::gridPoint(const QPointF &pos)
     return QPoint(x, y);
 }
 
+Spirit *Scene::getSpiritAt(int grid_x, int grid_y)
+{
+    qreal half_grid = GRID_SIZE / 2;
+    qreal x = grid_x + half_grid;
+    qreal y = grid_y + half_grid;
+
+    QGraphicsItem *item = this->itemAt(x, y, QTransform());	 // the topmost item
+    if (item == NULL)
+    {
+        return NULL;
+    }
+    else
+    {
+        Spirit *spt = qgraphicsitem_cast<Spirit *>(item);	// 0 if it's not a Spirit
+        return spt;
+    }
+}
+
 void Scene::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->button() == Qt::LeftButton)
     {
-        this->useTool(gridPoint(event->scenePos()));
+        this->useToolAt(gridPoint(event->scenePos()));
     }
 
     QGraphicsScene::mousePressEvent(event);
@@ -620,7 +637,7 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     if (event->modifiers() == Qt::CTRL)    // ctrl + move
     {
-        this->useTool(gridPoint(event->scenePos()));
+        this->useToolAt(gridPoint(event->scenePos()));
     }
 
     QGraphicsScene::mouseMoveEvent(event);

@@ -144,7 +144,7 @@ void MainWindow::initUi()
     // scene
     scene = new Scene(this);
     scene->setObjectName("scene");
-    connect(scene, SIGNAL(miceNumChanged(int)), this, SLOT(miceNumChanged(int)));
+    connect(scene, SIGNAL(spiritsNumChanged(int)), this, SLOT(spiritsNumChanged(int)));
 
     viewer->setScene(scene);		// attach scene
 
@@ -242,46 +242,53 @@ void MainWindow::initUi()
     QMetaObject::connectSlotsByName(this);
 }
 
-void MainWindow::miceNumChanged(int num)
+void MainWindow::spiritsNumChanged(int num)
 {
+    QList<SpiritInfo> spirits_info = scene->statistics();
+
     QString msg;
-    QTextStream(&msg) << "Mice number: " << num;
+    QTextStream(&msg) << "Spirits number: " << num;
+    for (QList<SpiritInfo>::iterator it = spirits_info.begin(); it != spirits_info.end(); ++it)
+    {
+        QTextStream(&msg) << ", " << it->name << ":" << it->num;
+    }
+
     statusBar->showMessage(msg);
 }
 
 void MainWindow::on_actionCursor_triggered()
 {
-    scene->setCurTool(Scene::NONE);
+    scene->setCurTool(Scene::T_NONE);
 }
 
 void MainWindow::on_actionEraser_triggered()
 {
-    scene->setCurTool(Scene::ERASER);
+    scene->setCurTool(Scene::T_ERASER);
 }
 
 void MainWindow::on_actionBlock_triggered()
 {
-    scene->setCurTool(Scene::BLOCK);
+    scene->setCurTool(Scene::T_BLOCK);
 }
 
 void MainWindow::on_actionCheese_triggered()
 {
-    scene->setCurTool(Scene::CHEESE);
+    scene->setCurTool(Scene::T_CHEESE);
 }
 
 void MainWindow::on_actionNail_triggered()
 {
-    scene->setCurTool(Scene::NAIL);
+    scene->setCurTool(Scene::T_NAIL);
 }
 
 void MainWindow::on_actionMouse_triggered()
 {
-    scene->setCurTool(Scene::MOUSE);
+    scene->setCurTool(Scene::T_MOUSE);
 }
 
 void MainWindow::on_actionCat_triggered()
 {
-    scene->setCurTool(Scene::CAT);
+    scene->setCurTool(Scene::T_CAT);
 }
 
 void MainWindow::on_actionPause_Resume_toggled(bool arg1)

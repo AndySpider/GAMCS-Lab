@@ -1,31 +1,20 @@
 #ifndef MOUSE_H
 #define MOUSE_H
 
-#include <QGraphicsItem>
 #include <gamcs/Avatar.h>
 #include <gamcs/CSOSAgent.h>
-#include "amount.h"
 
 using namespace gamcs;
 
-class Mouse : public QGraphicsItem, public Avatar
+class Mouse : public Spirit, public Avatar
 {
 public:
     Mouse(int id);
     ~Mouse();
 
-    Amount *amount;
-
-    QRectF boundingRect() const;
-    QPainterPath shape() const;
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-
 protected:
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    void act();
 
 private:
     Agent::State perceiveState();

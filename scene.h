@@ -3,16 +3,13 @@
 #include <QGraphicsScene>
 #include <QTimer>
 #include <QList>
+#include "spirit.h"
 
 QT_BEGIN_NAMESPACE
 class QGraphicsSceneMouseEvent;
 QT_END_NAMESPACE
 
-class Mouse;
-class Cheese;
-class Block;
-class Nail;
-class Cat;
+class SpiritInfo;
 
 class Scene : public QGraphicsScene
 {
@@ -24,20 +21,14 @@ public:
 
     enum Tool
     {
-        NONE = -1,
-        ERASER,
-        BLOCK,
-        CHEESE,
-        NAIL,
-        MOUSE,
-        CAT
+        T_NONE = -1,
+        T_ERASER,
+        T_BLOCK,
+        T_CHEESE,
+        T_NAIL,
+        T_MOUSE,
+        T_CAT
     };
-
-    friend class Mouse;
-    friend class Cheese;
-    friend class Block;
-    friend class Nail;
-    friend class Cat;
 
     int open(const QString &file);
     void save(const QString &file);
@@ -49,12 +40,13 @@ public:
     void speedUp();
     void speedDown();
 
-    int miceNum();
-    int catsNum();
+    QList<SpiritInfo> statistics();
+
+    QPoint gridPoint(const QPointF &);
+    Spirit *getSpiritAt(int grid_x, int grid_y);
 
 signals:
-    void miceNumChanged(int);
-    void catsNumChanged(int);
+    void spiritsNumChanged(int);
 
 private slots:
     void step();
@@ -64,11 +56,9 @@ private:
     Tool cur_tool;
 
     // mice
-    QList<Mouse *> mice;
-    int mouse_id;
+    QList<Spirit *> spirits;
 
-    // cats
-    QList<Cat *> cats;
+    int mouse_id;
     int cat_id;
 
     // control
@@ -76,28 +66,31 @@ private:
     int timer_interval;
 
 private:
+    int num_blocks;
+    int num_cheeses;
+    int num_nails;
+    int num_mice;
+    int num_cats;
+
     void buildWalls();
     void showGrids();
 
-    void useTool(const QPoint &);
-    void eraseToolAt(const QPoint &);
-    void addToolAt(Tool tool, const QPoint &);
-    QPoint gridPoint(const QPointF &);
-    QPoint findAvatarNewPos(const QPoint &pos, bool *found);
+    void useToolAt(const QPoint &);
+    void addSpiritAt(Spirit::SType type, const QPoint &);
+    void removeSpiritAt(const QPoint &);
+    QPoint findSpiritNewPos(const QPoint &pos, bool *found);
 
-    Block *addBlockAt(const QPoint &);
-    Cheese *addCheeseAt(const QPoint &);
-    Nail *addNailAt(const QPoint &);
-    Mouse *addMouseAt(const QPoint &);
-    Cat *addCatAt(const QPoint &);
-    void eraseBlock(QGraphicsItem *block);
-    void eraseCheese(QGraphicsItem *cheese);
-    void eraseNail(QGraphicsItem *nail);
-    void eraseMouse(QGraphicsItem *mouse);
-    void eraseCat(QGraphicsItem *cat);
+    Spirit *newSpiritAt(Spirit::SType type, const QPoint &);
+    void removeSpirit(Spirit *spt);
 
     void mousePressEvent(QGraphicsSceneMouseEvent  *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+};
+
+struct SpiritInfo
+{
+    QString name;
+    int num;
 };
 
 #endif // SCENE_H

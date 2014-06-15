@@ -22,7 +22,7 @@ public:
     ~MainWindow();
 
 public slots:
-    void miceNumChanged(int);
+    void spiritsNumChanged(int);
 
 private:
     // tool actions
