@@ -535,29 +535,32 @@ Spirit *Scene::newSpiritAt(Spirit::SType type, const QPoint &pos)
     if (type == Spirit::BLOCK)
     {
         spt = new Block();
+        spt->setZValue(Spirit::BLOCK_Z);
         num = &num_blocks;
     }
     else if (type == Spirit::CHEESE)
     {
         spt = new Cheese();
+        spt->setZValue(Spirit::CHEESE_Z);
         num = &num_cheeses;
     }
     else if (type == Spirit::NAIL)
     {
         spt = new Nail();
+        spt->setZValue(Spirit::NAIL_Z);
         num = &num_nails;
     }
     else if (type == Spirit::MOUSE)
     {
         spt = new Mouse(mouse_id++);
         num = &num_mice;
-        spt->setZValue(1);
+        spt->setZValue(Spirit::MOUSE_Z);
     }
     else if (type == Spirit::CAT)
     {
         spt = new Cat(cat_id);
         num = &num_cats;
-        spt->setZValue(2);
+        spt->setZValue(Spirit::CAT_Z);
     }
 
     spt->setPos(pos);

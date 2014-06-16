@@ -23,6 +23,13 @@ public:
         CAT
     };
 
+    // stack priority, or z value
+    static const int CAT_Z = 2;
+    static const int MOUSE_Z = 1;
+    static const int NAIL_Z = 0;
+    static const int BLOCK_Z = 0;
+    static const int CHEESE_Z = 0;
+
     // QGraphicsItem type
     enum { Type = UserType + 1};
 

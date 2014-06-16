@@ -14,6 +14,7 @@ public:
 
 protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     void act();
 
 private:
@@ -24,6 +25,7 @@ private:
 
 private:
     CSOSAgent *myagent;
+    Agent::Mode learning_mode;
 };
 
 #endif // MOUSE_H

@@ -2,17 +2,20 @@
 #include <QList>
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
+#include <QMenu>
+#include <QAction>
 #include "scene.h"
 #include "config.h"
 #include "mouse.h"
 
-Mouse::Mouse(int id) : Avatar(id)
+Mouse::Mouse(int id) : Avatar(id), learning_mode(Agent::ONLINE)
 {
     _type = MOUSE;
     _color = QColor(89, 255, 89);
     _life = 30;
 
     myagent = new CSOSAgent(id, 0.9, 0.01);
+    myagent->setMode(learning_mode);
     connectAgent(myagent);
 }
 
@@ -26,8 +29,46 @@ void Mouse::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     Q_UNUSED(event);
 
     QString tips;
-    QTextStream(&tips) << "id:" << id << ", life:" << _life;
+    QTextStream(&tips) << "id:" << id << ", life:" << _life << ", Mode" << learning_mode;
     setToolTip(tips);
+}
+
+// popup menu
+void Mouse::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+    QMenu menu;
+
+    QMenu *lmode = menu.addMenu("Learning Mode");
+    QAction *online = lmode->addAction("Online mode");
+    online->setCheckable(true);
+    QAction *explore = lmode->addAction("Explore mode");
+    explore->setCheckable(true);
+    if (learning_mode == Agent::ONLINE)
+        online->setChecked(true);
+    else
+        explore->setChecked(true);
+
+    QAction *setting = menu.addAction("Setting");
+
+    QAction *selectedAction = menu.exec(event->screenPos());
+
+    // judge selected action
+    if (selectedAction == online)
+    {
+        qDebug() << "mouse change mode to ONLINE";
+        myagent->setMode(Agent::ONLINE);
+        learning_mode = Agent::ONLINE;
+    }
+    else if (selectedAction == explore)
+    {
+        qDebug() << "mouse change mode to EXPLORE";
+        myagent->setMode(Agent::EXPLORE);
+        learning_mode = Agent::EXPLORE;
+    }
+    else if (selectedAction == setting)
+    {
+        qDebug() << "Setting dialog...";
+    }
 }
 
 void Mouse::act()
@@ -41,7 +82,7 @@ Agent::State Mouse::perceiveState()
 //    st += grid_y * SCENE_WIDTH;
 
 //    // perceive the spirits at four directions
-    int stype0, stype1, stype2, stype3, stype4;
+    int stype0 = 0, stype1 = 0, stype2 = 0, stype3 = 0, stype4 = 0;
 
     // current pos
     QList<Spirit *> colliding_spirits = collidingSpirits();
