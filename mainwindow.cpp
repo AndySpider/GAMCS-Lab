@@ -1,4 +1,7 @@
 #include <QDebug>
+#include <QFileDialog>
+#include <QMessageBox>
+#include <QCloseEvent>
 #include "mainwindow.h"
 #include "config.h"
 
@@ -319,4 +322,106 @@ void MainWindow::on_actionSpeedUp_triggered()
 void MainWindow::on_actionSpeedDown_triggered()
 {
     scene->speedDown();
+}
+
+void MainWindow::on_actionNew_triggered()
+{
+    if (saveScene())
+    {
+        scene->init();
+        setCurrentFileName(QString());
+    }
+}
+
+void MainWindow::on_actionOpen_triggered()
+{
+    QString fn = QFileDialog::getOpenFileName(this, tr("Open Scene..."), QString(),
+                                              tr("Scene Files (*.scene);;All Files(*)"));
+    if (!fn.isEmpty())
+    {
+        int re = scene->load(fn);
+        if (re == 0)    // load successfully
+            setCurrentFileName(fn);
+    }
+}
+
+void MainWindow::on_actionSave_triggered()
+{
+    if (filename.isEmpty())
+        on_actionSave_as_triggered();
+    else
+        scene->save(filename);
+}
+
+void MainWindow::on_actionSave_as_triggered()
+{
+    QString fn = QFileDialog::getSaveFileName(this, tr("Save as..."), QString(),
+                                              tr("Scene Files (*.scene);;All Files(*)"));
+    if (!fn.isEmpty())
+    {
+       if (!fn.endsWith(".scene", Qt::CaseInsensitive))
+           fn += ".scene";  // default
+    }
+
+    scene->save(fn);
+}
+
+void MainWindow::on_actionQuit_triggered()
+{
+    close();
+}
+
+void MainWindow::on_actionRecent_Files_triggered()
+{
+
+}
+
+void MainWindow::on_actionAbout_Simulated_Mice_triggered()
+{
+    QMessageBox::about(this, tr("About"), tr("This application demonstrates the use of GAMCS to create multipul autonomaous avatars."));
+}
+
+void MainWindow::on_actionAbout_GAMCS_triggered()
+{
+    QMessageBox::about(this, tr("About GAMCS"), tr("Generalized Agent Model and Computer Simulation."));
+}
+
+bool MainWindow::saveScene()
+{
+    QMessageBox::StandardButton ret;
+    ret = QMessageBox::warning(this, tr("Save Scene..."),
+                                        tr("Do you want to save your scene?"),
+                                        QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+    if (ret == QMessageBox::Save)
+    {
+        on_actionSave_triggered();
+    }
+    else if (ret == QMessageBox::Cancel)
+    {
+        return false;
+    }
+
+    return true;    // saved
+}
+
+void MainWindow::setCurrentFileName(const QString &file)
+{
+    this->filename = file;
+
+    QString showName;
+    if (filename.isEmpty())
+        showName = "untitled.scene";
+    else
+        showName = QFileInfo(filename).fileName();
+
+    setWindowTitle(tr("%1[*] [%2]").arg(showName).arg(tr("Simulated Mice --- powered by GAMCS")));
+    setWindowModified(false);
+}
+
+void MainWindow::closeEvent(QCloseEvent *e)
+{
+    if (saveScene())
+        e->accept();
+    else
+        e->ignore();
 }

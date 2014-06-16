@@ -1,5 +1,6 @@
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
+#include <QFile>
 #include "block.h"
 #include "cheese.h"
 #include "nail.h"
@@ -13,10 +14,9 @@ Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(T_NONE), mouse_
 {
     setItemIndexMethod(BspTreeIndex);   // NoIndex is slow!
 
-    showGrids();
-    buildWalls();
-
     this->setSceneRect(-10, -10, SCENE_WIDTH *GRID_SIZE + 20, SCENE_HEIGHT * GRID_SIZE + 20);
+    this->init();
+
     timer = new QTimer(this);
     timer->setSingleShot(true);
     connect(timer, SIGNAL(timeout()), this, SLOT(step()));
@@ -52,14 +52,37 @@ void Scene::step()
     timer->start(timer_interval);
 }
 
-int Scene::open(const QString &file)
+int Scene::load(const QString &file)
 {
+    if (!QFile::exists(file))
+        return -1;
+
+
     return 0;
 }
 
 void Scene::save(const QString &file)
 {
 
+}
+
+void Scene::init()
+{
+    spirits.clear(); // clear spirits
+    this->clear();  // clear items
+
+    num_blocks = 0;
+    num_cats = 0;
+    num_cheeses = 0;
+    num_mice = 0;
+    num_nails = 0;
+
+    mouse_id = 0;
+    cat_id = 0;
+
+    // build scene
+    showGrids();
+    buildWalls();
 }
 
 void Scene::pause()

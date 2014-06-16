@@ -30,8 +30,10 @@ public:
         T_CAT
     };
 
-    int open(const QString &file);
+    int load(const QString &file);
     void save(const QString &file);
+
+    void init();
 
     void pause();
     void resume();

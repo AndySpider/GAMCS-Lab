@@ -69,6 +69,9 @@ private:
 
     void initUi();
 
+protected:
+    virtual void closeEvent(QCloseEvent *e);
+
 private slots:
     void on_actionCursor_triggered();
     void on_actionEraser_triggered();
@@ -81,6 +84,22 @@ private slots:
     void on_actionPause_Resume_toggled(bool arg1);
     void on_actionSpeedUp_triggered();
     void on_actionSpeedDown_triggered();
+
+    void on_actionNew_triggered();
+    void on_actionOpen_triggered();
+    void on_actionSave_triggered();
+    void on_actionSave_as_triggered();
+    void on_actionQuit_triggered();
+    void on_actionRecent_Files_triggered();
+
+    void on_actionAbout_Simulated_Mice_triggered();
+    void on_actionAbout_GAMCS_triggered();
+
+private:
+    QString filename;
+
+    bool saveScene();
+    void setCurrentFileName(const QString &file);
 
 };
 

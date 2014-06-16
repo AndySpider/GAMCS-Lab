@@ -37,9 +37,90 @@ void Mouse::act()
 
 Agent::State Mouse::perceiveState()
 {
-    int st = grid_x;
-    st += grid_y * SCENE_WIDTH;
+//    int st = grid_x;
+//    st += grid_y * SCENE_WIDTH;
 
+//    // perceive the spirits at four directions
+    int stype0, stype1, stype2, stype3, stype4;
+
+    // current pos
+    QList<Spirit *> colliding_spirits = collidingSpirits();
+    if (colliding_spirits.empty())
+        stype0 = 0;
+    else if (colliding_spirits[0]->spiritType() == BLOCK)
+        stype0 = 1;
+    else if (colliding_spirits[0]->spiritType() == CHEESE)
+        stype0 = 2;
+    else if (colliding_spirits[0]->spiritType() == NAIL)
+        stype0 = 3;
+    else if (colliding_spirits[0]->spiritType() == MOUSE)
+        stype0 = 4;
+    else if (colliding_spirits[0]->spiritType() == CAT)
+        stype0 = 5;
+
+    // above
+    Spirit *spt = myscene->getSpiritAt(grid_x, grid_y - GRID_SIZE);
+    if (spt == NULL)
+        stype1 = 0;
+    else if (spt->spiritType() == BLOCK)
+        stype1 = 1;
+    else if (spt->spiritType() == CHEESE)
+        stype1 = 2;
+    else if (spt->spiritType() == NAIL)
+        stype1 = 3;
+    else if (spt->spiritType() == MOUSE)
+        stype1 = 4;
+    else if (spt->spiritType() == CAT)
+        stype1 = 5;
+
+    // down
+    spt = myscene->getSpiritAt(grid_x, grid_y + GRID_SIZE);
+    if (spt == NULL)
+        stype2 = 0;
+    else if (spt->spiritType() == BLOCK)
+        stype2 = 1;
+    else if (spt->spiritType() == CHEESE)
+        stype2 = 2;
+    else if (spt->spiritType() == NAIL)
+        stype2 = 3;
+    else if (spt->spiritType() == MOUSE)
+        stype2 = 4;
+    else if (spt->spiritType() == CAT)
+        stype2 = 5;
+
+    // left
+    spt = myscene->getSpiritAt(grid_x - GRID_SIZE, grid_y);
+    if (spt == NULL)
+        stype3 = 0;
+    else if (spt->spiritType() == BLOCK)
+        stype3 = 1;
+    else if (spt->spiritType() == CHEESE)
+        stype3 = 2;
+    else if (spt->spiritType() == NAIL)
+        stype3 = 3;
+    else if (spt->spiritType() == MOUSE)
+        stype3 = 4;
+    else if (spt->spiritType() == CAT)
+        stype3 = 5;
+
+    // right
+    spt = myscene->getSpiritAt(grid_x + GRID_SIZE, grid_y);
+    if (spt == NULL)
+        stype4 = 0;
+    else if (spt->spiritType() == BLOCK)
+        stype4 = 1;
+    else if (spt->spiritType() == CHEESE)
+        stype4 = 2;
+    else if (spt->spiritType() == NAIL)
+        stype4 = 3;
+    else if (spt->spiritType() == MOUSE)
+        stype4 = 4;
+    else if (spt->spiritType() == CAT)
+        stype4 = 5;
+
+    int st = stype0 + stype1 * 6 + stype2 * 36 + stype3 * 216 + stype4 * 1296;
+
+    qDebug() << "State:" << st;
     return st;
 }
 
