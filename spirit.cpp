@@ -237,10 +237,8 @@ bool Spirit::collidesWithItem(const QGraphicsItem *other, Qt::ItemSelectionMode 
     const Spirit *spt = qgraphicsitem_cast<const Spirit *>(other);
     if (spt == NULL)
         return false;   // only collide with another spirit
-    else if (spt->grid_x == this->grid_x && spt->grid_y == this->grid_y)
-        return true;    // collide if at the same grid
     else
-        return false;
+        return (spt->grid_x == this->grid_x && spt->grid_y == this->grid_y); // collide if at the same grid
 }
 
 void Spirit::mousePressEvent(QGraphicsSceneMouseEvent *event)
