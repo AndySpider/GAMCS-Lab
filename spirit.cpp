@@ -8,7 +8,8 @@
 #include "spirit.h"
 #include "config.h"
 
-Spirit::Spirit() : _life(1), _type(BLOCK), _color(Qt::black), myscene(NULL), grid_x(-1), grid_y(-1)
+Spirit::Spirit() : _life(1), _type(BLOCK), _color(Qt::black), myscene(NULL), grid_x(-1), grid_y(-1),
+    tmp_delta_grid_x(0), tmp_delta_grid_y(0), is_awake(true), is_marked(false)
 {
     setFlags(ItemIsSelectable | ItemIsMovable);
     setAcceptHoverEvents(true);
@@ -29,7 +30,7 @@ int Spirit::initialize()
     }
     else
     {
-        QPoint pos = myscene->gridPoint(this->scenePos());	// set the initialized grid pos
+        QPoint pos = myscene->calGridPos(this->scenePos());	// set the initialized grid pos
         grid_x = pos.x();
         grid_y = pos.y();
 
@@ -61,6 +62,45 @@ void Spirit::healed(float l)
     _life_mutex.unlock();
 }
 
+QPoint Spirit::gridPos()
+{
+    return QPoint(grid_x, grid_y);
+}
+
+QPoint Spirit::doMove()
+{
+    grid_x += tmp_delta_grid_x;
+    grid_y += tmp_delta_grid_y;
+
+    QPoint new_grid_pos = QPoint(grid_x, grid_y);
+
+    this->setPos(new_grid_pos * GRID_SIZE);
+
+    tmp_delta_grid_x = tmp_delta_grid_y = 0;    // clear tmp values
+
+    return new_grid_pos;
+}
+
+void Spirit::setAwake(bool val)
+{
+    is_awake = val;
+}
+
+bool Spirit::isAwake()
+{
+    return is_awake;
+}
+
+void Spirit::setMarked(bool val)
+{
+    is_marked = val;
+}
+
+bool Spirit::isMarked()
+{
+    return is_marked;
+}
+
 QList<Spirit *> Spirit::collidingSpirits()
 {
     QList<Spirit *> colliding_spirits;
@@ -88,49 +128,45 @@ void Spirit::act()
 void Spirit::moveUp()
 {
     // check if there are blocks
-    Spirit *spt = myscene->getSpiritAt(grid_x, grid_y - GRID_SIZE);
+    Spirit *spt = myscene->getSpiritAt(grid_x, grid_y - 1);
     if (spt == NULL || spt->spiritType() != BLOCK)
     {
-        grid_y -= GRID_SIZE;	// update grid pos
+        tmp_delta_grid_x = 0;   // use tmp pos
+        tmp_delta_grid_y = -1;
     }
-
-    this->setPos(grid_x, grid_y);
 }
 
 void Spirit::moveDown()
 {
     // check if there are blocks
-    Spirit *spt = myscene->getSpiritAt(grid_x, grid_y + GRID_SIZE);
+    Spirit *spt = myscene->getSpiritAt(grid_x, grid_y + 1);
     if (spt == NULL || spt->spiritType() != BLOCK)
     {
-        grid_y += GRID_SIZE;
+        tmp_delta_grid_x = 0;
+        tmp_delta_grid_y = 1;
     }
-
-    this->setPos(grid_x, grid_y);
 }
 
 void Spirit::moveLeft()
 {
     // check if there are blocks
-    Spirit *spt = myscene->getSpiritAt(grid_x - GRID_SIZE, grid_y);
+    Spirit *spt = myscene->getSpiritAt(grid_x - 1, grid_y);
     if (spt == NULL || spt->spiritType() != BLOCK)
     {
-        grid_x -= GRID_SIZE;
+        tmp_delta_grid_x = -1;
+        tmp_delta_grid_y = 0;
     }
-
-    this->setPos(grid_x, grid_y);
 }
 
 void Spirit::moveRight()
 {
     // check if there are blocks
-    Spirit *spt = myscene->getSpiritAt(grid_x + GRID_SIZE, grid_y);
+    Spirit *spt = myscene->getSpiritAt(grid_x + 1, grid_y);
     if (spt == NULL || spt->spiritType() != BLOCK)
     {
-        grid_x += GRID_SIZE;
+        tmp_delta_grid_x = 1;
+        tmp_delta_grid_y = 0;
     }
-
-    this->setPos(grid_x, grid_y);
 }
 
 QRectF Spirit::boundingRect() const
@@ -149,6 +185,7 @@ void Spirit::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 {
     Q_UNUSED(widget);
 
+    // draw the spirit
     QColor fillColor;
     if (option->state & QStyle::State_MouseOver)
         fillColor = _color.lighter();
@@ -157,6 +194,31 @@ void Spirit::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
 
     painter->setBrush(fillColor);
     painter->drawRect(0, 0, GRID_SIZE, GRID_SIZE);
+
+    // draw decorations
+    if (is_marked)
+    {
+        int len = GRID_SIZE / 2;
+        painter->setBrush(Qt::yellow);
+        static const QPointF points[3] = {  // triangle
+            QPointF(0, -len),
+            QPointF(0.87*len, 0.5*len),
+            QPointF(-0.87*len, 0.5*len)
+        };
+
+        painter->drawConvexPolygon(points, 3);   // draw at origin point
+    }
+
+    if (!is_awake)  // sleep
+    {
+        painter->setPen(Qt::darkGray);
+        QPainterPath path(QPointF(GRID_SIZE * 0.25, GRID_SIZE * 0.25));
+        path.lineTo(GRID_SIZE * 0.75, GRID_SIZE * 0.25);
+        path.lineTo(GRID_SIZE * 0.25, GRID_SIZE * 0.75);
+        path.lineTo(GRID_SIZE * 0.75, GRID_SIZE * 0.75);
+        painter->setBrush(Qt::NoBrush);
+        painter->drawPath(path);
+    }
 
     return;
 }
@@ -167,6 +229,20 @@ int Spirit::type() const
     return Type;
 }
 
+bool Spirit::collidesWithItem(const QGraphicsItem *other, Qt::ItemSelectionMode mode) const
+{
+//    qDebug() << "call collidesWithItem!!";
+    Q_UNUSED(mode);
+
+    const Spirit *spt = qgraphicsitem_cast<const Spirit *>(other);
+    if (spt == NULL)
+        return false;   // only collide with another spirit
+    else if (spt->grid_x == this->grid_x && spt->grid_y == this->grid_y)
+        return true;    // collide if at the same grid
+    else
+        return false;
+}
+
 void Spirit::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mousePressEvent(event);
@@ -175,13 +251,13 @@ void Spirit::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void Spirit::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    QPoint pos = myscene->gridPoint(event->scenePos());
+    QPoint pos = myscene->calGridPos(event->scenePos());
 
     // update grid pos
     grid_x = pos.x();
     grid_y = pos.y();
-    this->setPos(grid_x, grid_y);
 
+    this->setPos(grid_x * GRID_SIZE, grid_y * GRID_SIZE);
     update();
 }
 
@@ -198,5 +274,6 @@ void Spirit::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     QString tips;
     QTextStream(&tips) << "life:" << _life;
     setToolTip(tips);
-}
 
+    update();
+}

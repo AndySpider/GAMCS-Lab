@@ -190,11 +190,20 @@ void MainWindow::initUi()
     menuFile->addSeparator();
     menuFile->addAction(actionQuit);
 
-    // Edit Menu
-    menuEdit = new QMenu(menuBar);
-    menuEdit->setObjectName("menuEdit");
-    menuEdit->setTitle("Edit");
-    // Edit actions
+    // Options Menu
+    menuOptions = new QMenu(menuBar);
+    menuOptions->setObjectName("menuOptions");
+    menuOptions->setTitle("Options");
+
+    menuGameMode = menuOptions->addMenu("Game Mode");
+    // Options actions
+    actionGameMode_Dead = menuGameMode->addAction("Enable Dead");
+    actionGameMode_Dead->setObjectName("actionGameMode_Dead");
+    actionGameMode_Dead->setCheckable(true);
+    actionGameMode_Dead->setChecked(true);
+    actionGameMode_Undead = menuGameMode->addAction("Disable Dead");
+    actionGameMode_Undead->setObjectName("actionGameMode_Undead");
+    actionGameMode_Undead->setCheckable(true);
 
     // About Menu
     menuAbout = new QMenu(menuBar);
@@ -213,7 +222,7 @@ void MainWindow::initUi()
 
     // add to menuBar
     menuBar->addAction(menuFile->menuAction());
-    menuBar->addAction(menuEdit->menuAction());
+    menuBar->addAction(menuOptions->menuAction());
     menuBar->addAction(menuAbout->menuAction());
     this->setMenuBar(menuBar);
 
@@ -424,4 +433,18 @@ void MainWindow::closeEvent(QCloseEvent *e)
         e->accept();
     else
         e->ignore();
+}
+
+void MainWindow::on_actionGameMode_Dead_triggered()
+{
+    scene->setGameMode(Scene::DEAD);
+    actionGameMode_Dead->setChecked(true);
+    actionGameMode_Undead->setChecked(false);
+}
+
+void MainWindow::on_actionGameMode_Undead_triggered()
+{
+    scene->setGameMode(Scene::UNDEAD);
+    actionGameMode_Undead->setChecked(true);
+    actionGameMode_Dead->setChecked(false);
 }

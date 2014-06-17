@@ -3,11 +3,13 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QMenu>
 #include <QAction>
+#include <QFileDialog>
+#include <gamcs/Sqlite.h>   // FIXME: check existing
 #include "scene.h"
 #include "config.h"
 #include "cat.h"
 
-Cat::Cat(int id) : Avatar(id), learning_mode(Agent::ONLINE)
+Cat::Cat(int id) : Avatar(id), storage(""), learning_mode(Agent::ONLINE)
 {
     _type = CAT;
     _color = QColor(250, 81, 143);
@@ -28,14 +30,27 @@ void Cat::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     Q_UNUSED(event);
 
     QString tips;
-    QTextStream(&tips) << "id:" << id << ", life:" << _life;
+    QTextStream(&tips) << "id:" << id << ", life:" << _life << ", Mode" << learning_mode;
     setToolTip(tips);
+    update();
 }
 
 // popup menu
 void Cat::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     QMenu menu;
+
+    QAction *toggle_mark;
+    if (isMarked())
+        toggle_mark = menu.addAction("Unmark");
+    else
+        toggle_mark = menu.addAction("Mark");
+
+    QAction *toggle_awake;
+    if (isAwake())
+        toggle_awake = menu.addAction("Sleep");
+    else
+        toggle_awake = menu.addAction("Wake up");
 
     QMenu *lmode = menu.addMenu("Learning Mode");
     QAction *online = lmode->addAction("Online mode");
@@ -47,12 +62,22 @@ void Cat::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     else
         explore->setChecked(true);
 
-    QAction *setting = menu.addAction("Setting");
+    QMenu *memory = menu.addMenu("Memory");
+    QAction *save = memory->addAction("Save...");
+    QAction *load = memory->addAction("Load...");
 
     QAction *selectedAction = menu.exec(event->screenPos());
 
     // judge selected action
-    if (selectedAction == online)
+    if (selectedAction == toggle_mark)
+    {
+        this->setMarked(!this->isMarked());
+    }
+    else if (selectedAction == toggle_awake)
+    {
+        this->setAwake(!this->isAwake());
+    }
+    else if (selectedAction == online)
     {
         qDebug() << "mouse change mode to ONLINE";
         myagent->setMode(Agent::ONLINE);
@@ -64,10 +89,41 @@ void Cat::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
         myagent->setMode(Agent::EXPLORE);
         learning_mode = Agent::EXPLORE;
     }
-    else if (selectedAction == setting)
+    else if (selectedAction == save)
     {
-        qDebug() << "Setting dialog...";
+        if (storage.isEmpty())
+        {
+            storage = QFileDialog::getSaveFileName(NULL, QObject::tr("Save memory..."), QString(),
+                                                   QObject::tr("Sqlite3 database (*.slt);; All Files(*)"));
+        }
+
+        if (!storage.endsWith(".slt", Qt::CaseInsensitive))
+            storage += ".slt";
+
+        // save memory to storage
+        Sqlite db(storage.toStdString());
+        bool status = this->isAwake();
+        this->setAwake(false);  // put to sleep for saving memory
+        myagent->dumpMemoryToStorage(&db);
+        this->setAwake(status);   // restore old status
     }
+    else if (selectedAction == load)
+    {
+        storage = QFileDialog::getOpenFileName(NULL, QObject::tr("Load memory..."), QString(),
+                                               QObject::tr("Sqlite3 database (*.slt);; All Files(*)"));
+
+        if (!storage.isEmpty())
+        {
+            // load memory from storage
+            Sqlite db(storage.toStdString());
+            bool status = this->isAwake();
+            this->setAwake(false);  // put to sleep for loading memory
+            myagent->loadMemoryFromStorage(&db);
+            this->setAwake(status);   // restore old status
+        }
+    }
+
+    update();
 }
 
 void Cat::act()
@@ -99,7 +155,7 @@ Agent::State Cat::perceiveState()
         stype0 = 5;
 
     // above
-    Spirit *spt = myscene->getSpiritAt(grid_x, grid_y - GRID_SIZE);
+    Spirit *spt = myscene->getSpiritAt(grid_x, grid_y - 1);
     if (spt == NULL)
         stype1 = 0;
     else if (spt->spiritType() == BLOCK)
@@ -114,7 +170,7 @@ Agent::State Cat::perceiveState()
         stype1 = 5;
 
     // down
-    spt = myscene->getSpiritAt(grid_x, grid_y + GRID_SIZE);
+    spt = myscene->getSpiritAt(grid_x, grid_y + 1);
     if (spt == NULL)
         stype2 = 0;
     else if (spt->spiritType() == BLOCK)
@@ -129,7 +185,7 @@ Agent::State Cat::perceiveState()
         stype2 = 5;
 
     // left
-    spt = myscene->getSpiritAt(grid_x - GRID_SIZE, grid_y);
+    spt = myscene->getSpiritAt(grid_x - 1, grid_y);
     if (spt == NULL)
         stype3 = 0;
     else if (spt->spiritType() == BLOCK)
@@ -144,7 +200,7 @@ Agent::State Cat::perceiveState()
         stype3 = 5;
 
     // right
-    spt = myscene->getSpiritAt(grid_x + GRID_SIZE, grid_y);
+    spt = myscene->getSpiritAt(grid_x + 1, grid_y);
     if (spt == NULL)
         stype4 = 0;
     else if (spt->spiritType() == BLOCK)
@@ -160,7 +216,6 @@ Agent::State Cat::perceiveState()
 
     int st = stype0 + stype1 * 6 + stype2 * 36 + stype3 * 216 + stype4 * 1296;
 
-    qDebug() << "State:" << st;
     return st;
 }
 

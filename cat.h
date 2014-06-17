@@ -25,6 +25,7 @@ private:
 
 private:
     CSOSAgent *myagent;
+    QString storage;
     Agent::Mode learning_mode;
 };
 

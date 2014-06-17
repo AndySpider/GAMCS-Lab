@@ -12,5 +12,5 @@ Viewer::Viewer(QWidget *parent) : QGraphicsView(parent)
 
     setMouseTracking(true);	// mouse track on
     setDragMode(QGraphicsView::ScrollHandDrag);
-    setViewportUpdateMode(BoundingRectViewportUpdate);
+    setViewportUpdateMode(FullViewportUpdate);
 }

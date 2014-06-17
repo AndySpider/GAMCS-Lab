@@ -30,6 +30,12 @@ public:
         T_CAT
     };
 
+    enum GameMode
+    {
+        DEAD = 0,
+        UNDEAD
+    };
+
     int load(const QString &file);
     void save(const QString &file);
 
@@ -41,10 +47,11 @@ public:
     void setCurTool(Tool);
     void speedUp();
     void speedDown();
+    void setGameMode(GameMode);
 
     QList<SpiritInfo> statistics();
 
-    QPoint gridPoint(const QPointF &);
+    QPoint calGridPos(const QPointF &);
     Spirit *getSpiritAt(int grid_x, int grid_y);
 
 signals:
@@ -73,16 +80,17 @@ private:
     int num_nails;
     int num_mice;
     int num_cats;
+    GameMode game_mode;
 
     void buildWalls();
     void showGrids();
 
-    void useToolAt(const QPoint &);
-    void addSpiritAt(Spirit::SType type, const QPoint &);
-    void removeSpiritAt(const QPoint &);
-    QPoint findSpiritNewPos(const QPoint &pos, bool *found);
+    void useToolAt(const QPoint &grid_pos);
+    void addSpiritAt(Spirit::SType type, const QPoint &grid_pos);
+    void removeSpiritAt(const QPoint &grid_pos);
+    QPoint findSpiritNewPos(const QPoint &grid_pos, bool *found);
 
-    Spirit *newSpiritAt(Spirit::SType type, const QPoint &);
+    Spirit *newSpiritAt(Spirit::SType type, const QPoint &grid_pos);
     void removeSpirit(Spirit *spt);
 
     void mousePressEvent(QGraphicsSceneMouseEvent  *event);

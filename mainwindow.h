@@ -52,7 +52,10 @@ private:
     QAction *actionQuit;
     QAction *actionRecent_Files;
 
-    QMenu *menuEdit;
+    QMenu *menuOptions;
+    QMenu *menuGameMode;
+    QAction *actionGameMode_Undead;
+    QAction *actionGameMode_Dead;
 
     QMenu *menuAbout;
     QAction *actionAbout_Simulated_Mice;
@@ -91,6 +94,9 @@ private slots:
     void on_actionSave_as_triggered();
     void on_actionQuit_triggered();
     void on_actionRecent_Files_triggered();
+
+    void on_actionGameMode_Dead_triggered();
+    void on_actionGameMode_Undead_triggered();
 
     void on_actionAbout_Simulated_Mice_triggered();
     void on_actionAbout_GAMCS_triggered();

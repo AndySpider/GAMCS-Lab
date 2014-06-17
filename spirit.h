@@ -39,6 +39,12 @@ public:
     float life();
     void injured(float l);
     void healed(float l);
+    QPoint gridPos();
+    QPoint doMove();
+    void setAwake(bool val);
+    bool isAwake();
+    void setMarked(bool val);
+    bool isMarked();
 
     virtual void act();
 
@@ -46,6 +52,7 @@ public:
     virtual QPainterPath shape() const;
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     virtual int type() const;
+    bool collidesWithItem(const QGraphicsItem * other, Qt::ItemSelectionMode mode = Qt::IntersectsItemShape) const;
 
 protected:
     void moveUp();
@@ -61,13 +68,20 @@ protected:
 
 protected:
     float _life;
-    QMutex _life_mutex;
     SType _type;
     QColor _color;
 
     Scene *myscene;
     int grid_x;
     int grid_y;
+
+private:
+    QMutex _life_mutex;
+    int tmp_delta_grid_x;   // this is used to postporn the moving action
+    int tmp_delta_grid_y;
+    bool is_awake;
+    bool is_marked;
+
 };
 
 #endif // SPIRIT_H
