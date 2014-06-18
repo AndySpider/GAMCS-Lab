@@ -195,15 +195,18 @@ void MainWindow::initUi()
     menuOptions->setObjectName("menuOptions");
     menuOptions->setTitle("Options");
 
-    menuGameMode = menuOptions->addMenu("Game Mode");
+    menuDeadMode = menuOptions->addMenu("Dead Mode");
     // Options actions
-    actionGameMode_Dead = menuGameMode->addAction("Enable Dead");
-    actionGameMode_Dead->setObjectName("actionGameMode_Dead");
-    actionGameMode_Dead->setCheckable(true);
-    actionGameMode_Dead->setChecked(true);
-    actionGameMode_Undead = menuGameMode->addAction("Disable Dead");
-    actionGameMode_Undead->setObjectName("actionGameMode_Undead");
-    actionGameMode_Undead->setCheckable(true);
+    actionDeadMode_Dead = menuDeadMode->addAction("Dead");
+    actionDeadMode_Dead->setObjectName("actionDeadMode_Dead");
+    actionDeadMode_Dead->setCheckable(true);
+    actionDeadMode_Dead->setChecked(true);
+    actionDeadMode_Undead = menuDeadMode->addAction("Undead");
+    actionDeadMode_Undead->setObjectName("actionDeadMode_Undead");
+    actionDeadMode_Undead->setCheckable(true);
+
+    actionGenRand = menuOptions->addAction("Generate Random Spirits");
+    actionGenRand->setObjectName("actionGenRand");
 
     // About Menu
     menuAbout = new QMenu(menuBar);
@@ -435,16 +438,21 @@ void MainWindow::closeEvent(QCloseEvent *e)
         e->ignore();
 }
 
-void MainWindow::on_actionGameMode_Dead_triggered()
+void MainWindow::on_actionDeadMode_Dead_triggered()
 {
     scene->setGameMode(Scene::DEAD);
-    actionGameMode_Dead->setChecked(true);
-    actionGameMode_Undead->setChecked(false);
+    actionDeadMode_Dead->setChecked(true);
+    actionDeadMode_Undead->setChecked(false);
 }
 
-void MainWindow::on_actionGameMode_Undead_triggered()
+void MainWindow::on_actionDeadMode_Undead_triggered()
 {
     scene->setGameMode(Scene::UNDEAD);
-    actionGameMode_Undead->setChecked(true);
-    actionGameMode_Dead->setChecked(false);
+    actionDeadMode_Undead->setChecked(true);
+    actionDeadMode_Dead->setChecked(false);
+}
+
+void MainWindow::on_actionGenRand_triggered()
+{
+    scene->genRandSpirit(30);
 }

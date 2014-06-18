@@ -53,9 +53,10 @@ private:
     QAction *actionRecent_Files;
 
     QMenu *menuOptions;
-    QMenu *menuGameMode;
-    QAction *actionGameMode_Undead;
-    QAction *actionGameMode_Dead;
+    QMenu *menuDeadMode;
+    QAction *actionDeadMode_Undead;
+    QAction *actionDeadMode_Dead;
+    QAction *actionGenRand;
 
     QMenu *menuAbout;
     QAction *actionAbout_Simulated_Mice;
@@ -95,8 +96,10 @@ private slots:
     void on_actionQuit_triggered();
     void on_actionRecent_Files_triggered();
 
-    void on_actionGameMode_Dead_triggered();
-    void on_actionGameMode_Undead_triggered();
+    void on_actionDeadMode_Dead_triggered();
+    void on_actionDeadMode_Undead_triggered();
+
+    void on_actionGenRand_triggered();
 
     void on_actionAbout_Simulated_Mice_triggered();
     void on_actionAbout_GAMCS_triggered();

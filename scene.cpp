@@ -258,6 +258,28 @@ void Scene::setGameMode(GameMode mode)
     qDebug() << "+++ Scene - change game mode to " << game_mode;
 }
 
+void Scene::genRandSpirit(int num)
+{
+    bool timer_status = timer->isActive();  // save status
+    pause();    // pause the scene
+
+    while (num > 0)
+    {
+        // find a random grid position inside SCENE
+        int gx = qrand() % SCENE_WIDTH;
+        int gy = qrand() % SCENE_HEIGHT;
+        int type = qrand() % Spirit::SPIRIT_NUM;
+
+        addSpiritAt((Spirit::SType) type, QPoint(gx, gy));
+        usleep(100 * 1000);
+
+        num--;
+    }
+
+    if (timer_status == true)   // restore status
+        resume();
+}
+
 QList<SpiritInfo> Scene::statistics()
 {
     QList<SpiritInfo> infos;

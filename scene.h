@@ -49,6 +49,8 @@ public:
     void speedDown();
     void setGameMode(GameMode);
 
+    void genRandSpirit(int num);
+
     QList<SpiritInfo> statistics();
 
     QPoint calGridPos(const QPointF &);

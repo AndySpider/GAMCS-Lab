@@ -30,6 +30,8 @@ public:
     static const int BLOCK_Z = 0;
     static const int CHEESE_Z = 0;
 
+    static const int SPIRIT_NUM = 5;
+
     // QGraphicsItem type
     enum { Type = UserType + 1};
 
