@@ -47,6 +47,7 @@ public:
     bool isAwake();
     void setMarked(bool val);
     bool isMarked();
+    QList<Spirit *> getNeighbors(int distance);	// the area is a rectangle
 
     virtual void act();
 

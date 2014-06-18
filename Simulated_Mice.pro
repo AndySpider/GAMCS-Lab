@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     nail.cpp \
     mouse.cpp \
     cat.cpp \
-    spirit.cpp
+    spirit.cpp \
+    comavatar.cpp
 
 HEADERS  += mainwindow.h \
     scene.h \
@@ -33,7 +34,8 @@ HEADERS  += mainwindow.h \
     mouse.h \
     config.h \
     cat.h \
-    spirit.h
+    spirit.h \
+    comavatar.h
 
 unix:!macx|win32: LIBS += -lgamcs
 

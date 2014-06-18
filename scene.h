@@ -4,12 +4,16 @@
 #include <QTimer>
 #include <QList>
 #include "spirit.h"
+#include "comavatar.h"
 
 QT_BEGIN_NAMESPACE
 class QGraphicsSceneMouseEvent;
 QT_END_NAMESPACE
 
-class SpiritInfo;
+struct SpiritInfo;
+struct Message;
+
+using namespace gamcs;
 
 class Scene : public QGraphicsScene
 {
@@ -56,6 +60,8 @@ public:
     QPoint calGridPos(const QPointF &);
     Spirit *getSpiritAt(int grid_x, int grid_y);
 
+    void putMsg(ComAvatar *sender, ComAvatar *receiver, State_Info_Header *stif);
+
 signals:
     void spiritsNumChanged(int);
 
@@ -83,6 +89,7 @@ private:
     int num_mice;
     int num_cats;
     GameMode game_mode;
+    QList<Message> msg_pool;
 
     void buildWalls();
     void showGrids();
@@ -97,12 +104,20 @@ private:
 
     void mousePressEvent(QGraphicsSceneMouseEvent  *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void dispatchMsg();
 };
 
 struct SpiritInfo
 {
     QString name;
     int num;
+};
+
+struct Message
+{
+    ComAvatar *sender;
+    ComAvatar *receiver;
+    State_Info_Header *stif;
 };
 
 #endif // SCENE_H

@@ -101,6 +101,28 @@ bool Spirit::isMarked()
     return is_marked;
 }
 
+QList<Spirit *> Spirit::getNeighbors(int distance)
+{
+    QList<Spirit *>neigh_spirits;
+
+    QList<QGraphicsItem *> items = myscene->items(0, 0, (qreal) distance, (qreal) distance,Qt::IntersectsItemShape, Qt::DescendingOrder);	// FIXME: the rectangle
+
+    if (!items.empty())
+    {
+        for (QList<QGraphicsItem *>::iterator iit = items.begin(); iit != items.end(); ++iit)
+        {
+            if ((*iit) == this)	// exclude self
+                continue;
+
+            Spirit *spirit = qgraphicsitem_cast<Spirit *>(*iit);
+            if (spirit != NULL)
+                neigh_spirits.append(spirit);
+        }
+    }
+
+    return neigh_spirits;
+}
+
 QList<Spirit *> Spirit::collidingSpirits()
 {
     QList<Spirit *> colliding_spirits;

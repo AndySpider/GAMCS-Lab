@@ -64,6 +64,9 @@ void Scene::step()
         }
     }
 
+    // dispatch messages
+    dispatchMsg();
+
     timer->start(timer_interval);
 }
 
@@ -271,8 +274,6 @@ void Scene::genRandSpirit(int num)
         int type = qrand() % Spirit::SPIRIT_NUM;
 
         addSpiritAt((Spirit::SType) type, QPoint(gx, gy));
-        usleep(100 * 1000);
-
         num--;
     }
 
@@ -706,4 +707,29 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
 
     QGraphicsScene::mouseMoveEvent(event);
+}
+
+void Scene::putMsg(ComAvatar *sender, ComAvatar *receiver, State_Info_Header *stif)
+{
+    struct Message msg;
+    msg.sender = sender;
+    msg.receiver = receiver;
+    msg.stif = stif;
+
+    msg_pool.append(msg);
+}
+
+void Scene::dispatchMsg()
+{
+    for (QList<Message>::iterator mit = msg_pool.begin(); mit != msg_pool.end(); ++mit)
+    {
+        ComAvatar *recver = (*mit).receiver;
+        recver->recvMsg((*mit).stif);
+
+        // clear stif
+        free((*mit).stif);
+    }
+
+    // clear msgs
+    msg_pool.clear();
 }

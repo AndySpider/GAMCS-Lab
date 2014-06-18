@@ -1,12 +1,9 @@
 #ifndef CAT_H
 #define CAT_H
+#include "spirit.h"
+#include "comavatar.h"
 
-#include <gamcs/Avatar.h>
-#include <gamcs/CSOSAgent.h>
-
-using namespace gamcs;
-
-class Cat : public Spirit, public Avatar
+class Cat : public Spirit, public ComAvatar
 {
 public:
     Cat(int id);
@@ -24,9 +21,7 @@ private:
     float originalPayoff(Agent::State);
 
 private:
-    CSOSAgent *myagent;
     QString storage;
-    Agent::Mode learning_mode;
 };
 
 #endif // CAT_H

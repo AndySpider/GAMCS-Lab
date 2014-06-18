@@ -10,20 +10,15 @@
 #include "config.h"
 #include "mouse.h"
 
-Mouse::Mouse(int id) : Avatar(id), storage(""), learning_mode(Agent::ONLINE)
+Mouse::Mouse(int id) : ComAvatar(id), storage("")
 {
     _type = MOUSE;
     _color = QColor(89, 255, 89);
     _life = 30;
-
-    myagent = new CSOSAgent(id, 0.9, 0.01);
-    myagent->setMode(learning_mode);
-    connectAgent(myagent);
 }
 
 Mouse::~Mouse()
 {
-    delete myagent;
 }
 
 void Mouse::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
@@ -130,6 +125,27 @@ void Mouse::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 void Mouse::act()
 {
     Avatar::step();
+
+    // handle communication
+    bool com = timeToCom();
+    if (com)
+    {
+        Agent::State st = myagent->nextState();
+        if (st == Agent::INVALID_STATE)	// wrap
+            st = myagent->firstState();
+
+        State_Info_Header *stif = myagent->getStateInfo(st);
+
+        // get neighbors
+        QList<Spirit *> neighs = getNeighbors(5);	// in 5 grids
+        for (QList<Spirit *>::iterator nit = neighs.begin(); nit != neighs.end(); ++ nit)
+        {
+            if ((*nit)->spiritType() == this->spiritType())	// only send msg to the same type
+            {
+                sendMsg(dynamic_cast<ComAvatar *>(*nit), stif);	// FIXME: type cast
+            }
+        }
+    }
 }
 
 Agent::State Mouse::perceiveState()

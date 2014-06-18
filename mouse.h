@@ -1,12 +1,9 @@
 #ifndef MOUSE_H
 #define MOUSE_H
+#include "spirit.h"
+#include "comavatar.h"
 
-#include <gamcs/Avatar.h>
-#include <gamcs/CSOSAgent.h>
-
-using namespace gamcs;
-
-class Mouse : public Spirit, public Avatar
+class Mouse : public Spirit, public ComAvatar
 {
 public:
     Mouse(int id);
@@ -24,9 +21,7 @@ private:
     float originalPayoff(Agent::State);
 
 private:
-    CSOSAgent *myagent;
     QString storage;
-    Agent::Mode learning_mode;
 };
 
 #endif // MOUSE_H
