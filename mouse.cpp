@@ -137,14 +137,13 @@ void Mouse::act()
         State_Info_Header *stif = myagent->getStateInfo(st);
 
         // get neighbors
-        QList<Spirit *> neighs = getNeighbors(5);	// in 5 grids
+        QList<Spirit *> neighs = getNeighbors(10);	// in 10 grids
         for (QList<Spirit *>::iterator nit = neighs.begin(); nit != neighs.end(); ++ nit)
         {
-            if ((*nit)->spiritType() == this->spiritType())	// only send msg to the same type
-            {
-                sendMsg(dynamic_cast<ComAvatar *>(*nit), stif);	// FIXME: type cast
-            }
+            sendMsg(dynamic_cast<ComAvatar *>(*nit), stif);
         }
+
+        free(stif); // free memory
     }
 }
 

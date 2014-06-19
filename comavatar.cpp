@@ -1,9 +1,11 @@
 #include <gamcs/StateInfoParser.h>
+#include <gamcs/debug.h>
 #include <math.h>
+#include <QDebug>
 #include "comavatar.h"
-#include "scene.h"
+#include "channel.h"
 
-ComAvatar::ComAvatar(int id) : Avatar(id), learning_mode(Agent::ONLINE), com_count(5)
+ComAvatar::ComAvatar(int id) : Avatar(id), mychannel(NULL), myagent(NULL), learning_mode(Agent::ONLINE), com_count(5)
 {
     myagent = new CSOSAgent(id, 0.9, 0.01);
     myagent->setMode(learning_mode);
@@ -15,33 +17,39 @@ ComAvatar::~ComAvatar()
     delete myagent;
 }
 
+void ComAvatar::setChannel(Channel *c)
+{
+    mychannel = c;
+}
+
 void ComAvatar::sendMsg(ComAvatar *receiver, State_Info_Header *stif)
 {
-    Scene *myscene;	// FIXME
-    myscene->putMsg(this, receiver, stif);
+    qDebug() << "Avatar" << id << "send msg to" << receiver->id;
+    mychannel->putMsg(this, receiver, stif);
 
     // set a new com_count
     com_count = qrand() % 10;	// [0, 10)
 }
 
-void ComAvatar::recvMsg(const State_Info_Header *stif)
+void ComAvatar::recvMsg(const State_Info_Header *recstif)
 {
+    qDebug() << "Avatar" << id << "receive a msg";
+
     // do the merge
-    State_Info_Header *mystif = myagent->getStateInfo(stif->st);
+    State_Info_Header *mystif = myagent->getStateInfo(recstif->st);
 
     if (mystif == NULL)
     {
-        myagent->addStateInfo(stif);
+        myagent->addStateInfo(recstif);
         return;
     }
     else
     {
         // merge mystif with stif
-
         // copy the incoming stif
-        char stif_buf[stif->size];
-        memcpy(stif_buf, stif, stif->size);
-        State_Info_Header *copy_stif = (State_Info_Header *) stif;
+        char stif_buf[recstif->size];
+        memcpy(stif_buf, recstif, recstif->size);
+        State_Info_Header *copy_stif = (State_Info_Header *) recstif;
 
         char act_buffer[mystif->act_num + copy_stif->act_num][mystif->size
                 + copy_stif->size]; //buffer for manipulaing act infos, make sure it's big enough
@@ -174,6 +182,7 @@ void ComAvatar::recvMsg(const State_Info_Header *stif)
 
         // get sthd
         myagent->updateStateInfo(sthd);
+        free(mystif);   // free memory
     }
 }
 

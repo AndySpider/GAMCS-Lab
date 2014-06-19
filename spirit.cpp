@@ -105,7 +105,10 @@ QList<Spirit *> Spirit::getNeighbors(int distance)
 {
     QList<Spirit *>neigh_spirits;
 
-    QList<QGraphicsItem *> items = myscene->items(0, 0, (qreal) distance, (qreal) distance,Qt::IntersectsItemShape, Qt::DescendingOrder);	// FIXME: the rectangle
+    qreal pix_dis = (qreal) distance * GRID_SIZE;
+    QRectF neigh_area = this->mapRectToScene(-pix_dis, -pix_dis, pix_dis * 2, pix_dis * 2);
+
+    QList<QGraphicsItem *> items = myscene->items(neigh_area, Qt::IntersectsItemShape, Qt::DescendingOrder);
 
     if (!items.empty())
     {
@@ -115,8 +118,10 @@ QList<Spirit *> Spirit::getNeighbors(int distance)
                 continue;
 
             Spirit *spirit = qgraphicsitem_cast<Spirit *>(*iit);
-            if (spirit != NULL)
+            if (spirit != NULL && spirit->spiritType() == this->spiritType())        // only the same type can be neighbor
+            {
                 neigh_spirits.append(spirit);
+            }
         }
     }
 

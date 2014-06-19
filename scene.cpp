@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
 #include <QFile>
+#include <assert.h>
 #include "block.h"
 #include "cheese.h"
 #include "nail.h"
@@ -17,6 +18,9 @@ Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(T_NONE), mouse_
     this->setSceneRect(-10, -10, SCENE_WIDTH *GRID_SIZE + 20, SCENE_HEIGHT * GRID_SIZE + 20);
     this->init();
 
+    // initialize channel
+    channel = new Channel();
+
     timer = new QTimer(this);
     timer->setSingleShot(true);
     connect(timer, SIGNAL(timeout()), this, SLOT(step()));
@@ -26,6 +30,7 @@ Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(T_NONE), mouse_
 Scene::~Scene()
 {
     delete timer;
+    delete channel;
 }
 
 void Scene::step()
@@ -42,11 +47,14 @@ void Scene::step()
             {
                 if ((*it)->life() <= 0)	// remove spirit if it's dead
                 {
-                    dead_spirits.append(*it);
+                    dead_spirits.append(*it);   // record dead spirits
                 }
             }
         }
     }
+
+    // dispatch messages (before any spirit is removed)
+    channel->dispatchMsg();
 
     // remove dead spirits
     for (QList<Spirit *>::iterator it = dead_spirits.begin(); it != dead_spirits.end(); ++it)
@@ -63,9 +71,6 @@ void Scene::step()
             (*it)->doMove();
         }
     }
-
-    // dispatch messages
-    dispatchMsg();
 
     timer->start(timer_interval);
 }
@@ -617,6 +622,13 @@ Spirit *Scene::newSpiritAt(Spirit::SType type, const QPoint &grid_pos)
         return NULL;
     }
 
+    if (spt->spiritType() == Spirit::MOUSE || spt->spiritType() == Spirit::CAT)
+    {
+        ComAvatar *ava = dynamic_cast<ComAvatar *>(spt);
+        assert(ava != NULL);
+        ava->setChannel(channel);    // set channel
+    }
+
     spirits.append(spt);
     (*num)++;
     emit spiritsNumChanged(spirits.size());
@@ -707,29 +719,4 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
 
     QGraphicsScene::mouseMoveEvent(event);
-}
-
-void Scene::putMsg(ComAvatar *sender, ComAvatar *receiver, State_Info_Header *stif)
-{
-    struct Message msg;
-    msg.sender = sender;
-    msg.receiver = receiver;
-    msg.stif = stif;
-
-    msg_pool.append(msg);
-}
-
-void Scene::dispatchMsg()
-{
-    for (QList<Message>::iterator mit = msg_pool.begin(); mit != msg_pool.end(); ++mit)
-    {
-        ComAvatar *recver = (*mit).receiver;
-        recver->recvMsg((*mit).stif);
-
-        // clear stif
-        free((*mit).stif);
-    }
-
-    // clear msgs
-    msg_pool.clear();
 }
