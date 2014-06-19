@@ -9,7 +9,7 @@
 #include "config.h"
 
 Spirit::Spirit() : _life(1), _type(BLOCK), _color(Qt::black), myscene(NULL), grid_x(-1), grid_y(-1),
-    tmp_delta_grid_x(0), tmp_delta_grid_y(0), is_awake(true), is_marked(false)
+    tmp_delta_grid_x(0), tmp_delta_grid_y(0), is_awake(true), is_marked(false), radar_range(5)
 {
     setFlags(ItemIsSelectable | ItemIsMovable);
     setAcceptHoverEvents(true);
@@ -101,12 +101,24 @@ bool Spirit::isMarked()
     return is_marked;
 }
 
-QList<Spirit *> Spirit::getNeighbors(int distance)
+void Spirit::setRadarRange(int rang)
 {
-    QList<Spirit *>neigh_spirits;
+    radar_range = rang;
+}
 
-    qreal pix_dis = (qreal) distance * GRID_SIZE;
-    QRectF neigh_area = this->mapRectToScene(-pix_dis, -pix_dis, pix_dis * 2, pix_dis * 2);
+bool Spirit::isRadarOn()
+{
+    return radar_range > 0;
+}
+
+QList<Spirit *> Spirit::getNeighbors()
+{
+    if (!isRadarOn())	// radar is off
+        return QList<Spirit *>();
+
+    QList<Spirit *>neigh_spirits;
+    qreal pix_rang = (qreal) radar_range * GRID_SIZE;
+    QRectF neigh_area = this->mapRectToScene(-pix_rang, -pix_rang, pix_rang * 2 + GRID_SIZE, pix_rang * 2 + GRID_SIZE);
 
     QList<QGraphicsItem *> items = myscene->items(neigh_area, Qt::IntersectsItemShape, Qt::DescendingOrder);
 
@@ -245,6 +257,16 @@ void Spirit::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
         path.lineTo(GRID_SIZE * 0.75, GRID_SIZE * 0.75);
         painter->setBrush(Qt::NoBrush);
         painter->drawPath(path);
+    }
+
+    if (isRadarOn() && (this->spiritType() == MOUSE || this->spiritType() == CAT))	// draw radar range for avatars
+    {
+        QPen radar_pen(_color);
+        radar_pen.setStyle(Qt::DashLine);
+        painter->setPen(radar_pen);
+        qreal pix_rang = (qreal) radar_range * GRID_SIZE;
+        painter->setBrush(Qt::NoBrush);
+        painter->drawRect(-pix_rang, -pix_rang, pix_rang * 2 + GRID_SIZE, pix_rang * 2 + GRID_SIZE);
     }
 
     return;

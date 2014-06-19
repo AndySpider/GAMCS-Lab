@@ -47,7 +47,9 @@ public:
     bool isAwake();
     void setMarked(bool val);
     bool isMarked();
-    QList<Spirit *> getNeighbors(int distance);	// the area is a rectangle
+    void setRadarRange(int rang);
+    bool isRadarOn();
+    QList<Spirit *> getNeighbors();	// the area is a rectangle
 
     virtual void act();
 
@@ -84,6 +86,7 @@ private:
     int tmp_delta_grid_y;
     bool is_awake;
     bool is_marked;
+    int radar_range;
 
 };
 
