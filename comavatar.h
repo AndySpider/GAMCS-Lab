@@ -14,16 +14,21 @@ public:
     virtual ~ComAvatar();
 
     void setChannel(Channel *c);
+    void setAvgFreq(int f);
+    int getAvgFreq();
 
     void sendMsg(ComAvatar *receiver, State_Info_Header *stif);
     void recvMsg(const State_Info_Header *recstif);
 
+protected:    
     bool timeToCom();
 
-protected:
     Channel *mychannel;
     CSOSAgent *myagent;
     Agent::Mode learning_mode;
+
+private:
+    int com_freq;
     long com_count;
 };
 

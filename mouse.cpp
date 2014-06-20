@@ -9,6 +9,7 @@
 #include "scene.h"
 #include "config.h"
 #include "mouse.h"
+#include "setdialog.h"
 
 Mouse::Mouse(int id) : ComAvatar(id), storage("")
 {
@@ -36,18 +37,26 @@ void Mouse::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     QMenu menu;
 
+    // mark
     QAction *toggle_mark;
     if (isMarked())
         toggle_mark = menu.addAction("Unmark");
     else
         toggle_mark = menu.addAction("Mark");
 
+    // awake
     QAction *toggle_awake;
     if (isAwake())
         toggle_awake = menu.addAction("Sleep");
     else
         toggle_awake = menu.addAction("Wake up");
 
+    // radar
+    QMenu *radar = menu.addMenu("Radar");
+    QAction *radar_range = radar->addAction("Set Range");
+    QAction *radar_freq = radar->addAction("Set Freq");
+
+    // learning mode
     QMenu *lmode = menu.addMenu("Learning Mode");
     QAction *online = lmode->addAction("Online mode");
     online->setCheckable(true);
@@ -58,6 +67,7 @@ void Mouse::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     else
         explore->setChecked(true);
 
+    // memory
     QMenu *memory = menu.addMenu("Memory");
     QAction *save = memory->addAction("Save...");
     QAction *load = memory->addAction("Load...");
@@ -72,6 +82,42 @@ void Mouse::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     else if (selectedAction == toggle_awake)
     {
         this->setAwake(!this->isAwake());
+    }
+    else if (selectedAction == radar_range)
+    {
+        SetDialog dialog("Radar Range", QString::number(getRadarRange()));
+        if (dialog.exec())
+        {
+            bool ok;
+            int new_radar_range = dialog.getValue().toInt(&ok, 10);
+            if (ok)
+            {
+                this->setRadarRange(new_radar_range);
+                qDebug() << "+++ Radar range set to" << new_radar_range;
+            }
+            else
+            {
+                qDebug() << "--- invalid radar range, should be integers!";
+            }
+        }
+    }
+    else if (selectedAction == radar_freq)
+    {
+        SetDialog dialog("Radar Freq", QString::number(getAvgFreq()));
+        if (dialog.exec())
+        {
+            bool ok;
+            int new_radar_freq = dialog.getValue().toInt(&ok, 10);
+            if (ok)
+            {
+                this->setAvgFreq(new_radar_freq);
+                qDebug() << "+++ Average freq set to" << new_radar_freq;
+            }
+            else
+            {
+                qDebug() << "--- invalid radar freq, should be intergers >= 0!";
+            }
+        }
     }
     else if (selectedAction == online)
     {
@@ -124,26 +170,34 @@ void Mouse::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 
 void Mouse::act()
 {
-    Avatar::step();
-
-    // handle communication
-    bool com = timeToCom();
-    if (com)
+    if (isAwake())
     {
-        Agent::State st = myagent->nextState();
-        if (st == Agent::INVALID_STATE)	// wrap
-            st = myagent->firstState();
+        Avatar::step();
 
-        State_Info_Header *stif = myagent->getStateInfo(st);
-
-        // get neighbors
-        QList<Spirit *> neighs = getNeighbors();
-        for (QList<Spirit *>::iterator nit = neighs.begin(); nit != neighs.end(); ++ nit)
+        // handle communication
+        bool com = timeToCom();
+        if (com && getRadarRange() > 0)     // send state info
         {
-            sendMsg(dynamic_cast<ComAvatar *>(*nit), stif);
-        }
+            Agent::State st = myagent->nextState();
+            if (st == Agent::INVALID_STATE)	// wrap
+                st = myagent->firstState();
 
-        free(stif); // free memory
+            State_Info_Header *stif = myagent->getStateInfo(st);
+
+            // get neighbors
+            QList<Spirit *> neighs = getNeighbors();
+            for (QList<Spirit *>::iterator nit = neighs.begin(); nit != neighs.end(); ++ nit)
+            {
+                sendMsg(dynamic_cast<ComAvatar *>(*nit), stif);
+            }
+
+            free(stif); // free memory
+            setSending(true);
+        }
+    }
+    else
+    {
+        // do nothing when not awake
     }
 }
 

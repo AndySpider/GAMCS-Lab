@@ -2,7 +2,6 @@
 #include <string.h>
 #include "channel.h"
 #include "comavatar.h"
-#include <gamcs/debug.h>
 
 Channel::Channel()
 {
@@ -16,8 +15,6 @@ void Channel::putMsg(ComAvatar *sender, ComAvatar *receiver, State_Info_Header *
     msg.data = (char *) malloc(stif->size);
     memcpy(msg.data, stif, stif->size);
 
-    qDebug() << "Channel: put a msg";
-    gamcs::printStateInfo((State_Info_Header *) msg.data);
     msg_pool.append(msg);
 }
 

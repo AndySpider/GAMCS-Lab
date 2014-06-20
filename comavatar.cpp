@@ -5,7 +5,8 @@
 #include "comavatar.h"
 #include "channel.h"
 
-ComAvatar::ComAvatar(int id) : Avatar(id), mychannel(NULL), myagent(NULL), learning_mode(Agent::ONLINE), com_count(5)
+ComAvatar::ComAvatar(int id) : Avatar(id), mychannel(NULL), myagent(NULL), learning_mode(Agent::ONLINE), com_freq(5),
+    com_count(qrand() % com_freq * 2)
 {
     myagent = new CSOSAgent(id, 0.9, 0.01);
     myagent->setMode(learning_mode);
@@ -22,19 +23,24 @@ void ComAvatar::setChannel(Channel *c)
     mychannel = c;
 }
 
+void ComAvatar::setAvgFreq(int f)
+{
+    com_freq = f;
+}
+
+int ComAvatar::getAvgFreq()
+{
+    return com_freq;
+}
+
 void ComAvatar::sendMsg(ComAvatar *receiver, State_Info_Header *stif)
 {
-    qDebug() << "Avatar" << id << "send msg to" << receiver->id;
+//    qDebug() << "Avatar" << id << "send msg to" << receiver->id;
     mychannel->putMsg(this, receiver, stif);
-
-    // set a new com_count
-    com_count = qrand() % 10;	// [0, 10)
 }
 
 void ComAvatar::recvMsg(const State_Info_Header *recstif)
 {
-    qDebug() << "Avatar" << id << "receive a msg";
-
     // do the merge
     State_Info_Header *mystif = myagent->getStateInfo(recstif->st);
 
@@ -45,8 +51,8 @@ void ComAvatar::recvMsg(const State_Info_Header *recstif)
     }
     else
     {
-        // merge mystif with stif
-        // copy the incoming stif
+        // merge mystif with restif
+        // copy the incoming restif
         char stif_buf[recstif->size];
         memcpy(stif_buf, recstif, recstif->size);
         State_Info_Header *copy_stif = (State_Info_Header *) recstif;
@@ -109,6 +115,7 @@ void ComAvatar::recvMsg(const State_Info_Header *recstif)
                 {
                     // compare each eat from tmp_origsthd with eats from tmp_recvsthd
                     int tmp_eat_num = buf_achd->eat_num; // eat_num will be changed
+
                     eaif = myparser.firstEat();
                     while (eaif != NULL)
                     {
@@ -124,6 +131,7 @@ void ComAvatar::recvMsg(const State_Info_Header *recstif)
                                 break;
                             }
                             buf_eapt += sizeof(EnvAction_Info); // next eat info
+                            buf_eaif = (EnvAction_Info *) buf_eapt;
                         }
                         if (j >= tmp_eat_num) // eat not found, it's a new eat in mystif
                         {
@@ -183,10 +191,23 @@ void ComAvatar::recvMsg(const State_Info_Header *recstif)
         // get sthd
         myagent->updateStateInfo(sthd);
         free(mystif);   // free memory
+        free(sthd);
     }
 }
 
 bool ComAvatar::timeToCom()
 {
-    return --com_count <= 0;
+    bool re = false;
+    if (com_count <= 0)
+    {
+        com_count = qrand() % com_freq * 2;	// [0, 2 * com_freq)    // set a new value
+        re = true;
+    }
+    else
+    {
+        com_count--;
+        re = false;
+    }
+
+    return re;
 }

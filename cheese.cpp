@@ -13,7 +13,6 @@ Cheese::~Cheese()
 
 void Cheese::act()
 {
-
     QList<Spirit *> colliding_spirits = collidingSpirits();
     if (colliding_spirits.empty())
     {

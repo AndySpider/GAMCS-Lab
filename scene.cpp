@@ -39,16 +39,13 @@ void Scene::step()
 
     for (QList<Spirit *>::iterator it = spirits.begin(); it != spirits.end(); ++it)
     {
-        if ((*it)->isAwake())
-        {
-            (*it)->act();
+        (*it)->act();
 
-            if (game_mode == DEAD)  // collect dead bodies
+        if (game_mode == DEAD)  // collect dead bodies
+        {
+            if ((*it)->life() <= 0)	// remove spirit if it's dead
             {
-                if ((*it)->life() <= 0)	// remove spirit if it's dead
-                {
-                    dead_spirits.append(*it);   // record dead spirits
-                }
+                dead_spirits.append(*it);   // record dead spirits
             }
         }
     }
@@ -63,13 +60,10 @@ void Scene::step()
         removeSpirit(*it);
     }
 
-    // do the real move after all spirits have taken actions
+    // the position are changed after all spirits have taken actions
     for (QList<Spirit *>::iterator it = spirits.begin(); it != spirits.end(); ++it)
     {
-        if ((*it)->isAwake())
-        {
-            (*it)->doMove();
-        }
+        (*it)->changePos();
     }
 
     timer->start(timer_interval);

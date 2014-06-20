@@ -9,7 +9,7 @@
 #include "config.h"
 
 Spirit::Spirit() : _life(1), _type(BLOCK), _color(Qt::black), myscene(NULL), grid_x(-1), grid_y(-1),
-    tmp_delta_grid_x(0), tmp_delta_grid_y(0), is_awake(true), is_marked(false), radar_range(5)
+    tmp_delta_grid_x(0), tmp_delta_grid_y(0), is_marked(false), radar_range(5), is_awake(true), is_sending(false)
 {
     setFlags(ItemIsSelectable | ItemIsMovable);
     setAcceptHoverEvents(true);
@@ -67,7 +67,7 @@ QPoint Spirit::gridPos()
     return QPoint(grid_x, grid_y);
 }
 
-QPoint Spirit::doMove()
+QPoint Spirit::changePos()
 {
     grid_x += tmp_delta_grid_x;
     grid_y += tmp_delta_grid_y;
@@ -81,16 +81,6 @@ QPoint Spirit::doMove()
     return new_grid_pos;
 }
 
-void Spirit::setAwake(bool val)
-{
-    is_awake = val;
-}
-
-bool Spirit::isAwake()
-{
-    return is_awake;
-}
-
 void Spirit::setMarked(bool val)
 {
     is_marked = val;
@@ -101,19 +91,39 @@ bool Spirit::isMarked()
     return is_marked;
 }
 
-void Spirit::setRadarRange(int rang)
+void Spirit::setRadarRange(int range)
 {
-    radar_range = rang;
+    radar_range = range;
 }
 
-bool Spirit::isRadarOn()
+int Spirit::getRadarRange()
 {
-    return radar_range > 0;
+    return radar_range;
+}
+
+void Spirit::setAwake(bool val)
+{
+    is_awake = val;
+}
+
+bool Spirit::isAwake()
+{
+    return is_awake;
+}
+
+void Spirit::setSending(bool val)
+{
+    is_sending = val;
+}
+
+bool Spirit::isSending()
+{
+    return is_sending;
 }
 
 QList<Spirit *> Spirit::getNeighbors()
 {
-    if (!isRadarOn())	// radar is off
+    if (radar_range <= 0)	// radar is off
         return QList<Spirit *>();
 
     QList<Spirit *>neigh_spirits;
@@ -130,7 +140,7 @@ QList<Spirit *> Spirit::getNeighbors()
                 continue;
 
             Spirit *spirit = qgraphicsitem_cast<Spirit *>(*iit);
-            if (spirit != NULL && spirit->spiritType() == this->spiritType())        // only the same type can be neighbor
+            if (spirit != NULL && spirit->spiritType() == this->spiritType() && spirit->isAwake())        // only the same type && awake spirit can be a neighbor
             {
                 neigh_spirits.append(spirit);
             }
@@ -258,15 +268,28 @@ void Spirit::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
         painter->setBrush(Qt::NoBrush);
         painter->drawPath(path);
     }
-
-    if (isRadarOn() && (this->spiritType() == MOUSE || this->spiritType() == CAT))	// draw radar range for avatars
+    else    // awake
     {
-        QPen radar_pen(_color);
-        radar_pen.setStyle(Qt::DashLine);
-        painter->setPen(radar_pen);
-        qreal pix_rang = (qreal) radar_range * GRID_SIZE;
+        if (radar_range > 0 && (this->spiritType() == MOUSE || this->spiritType() == CAT))	// draw radar range for awake avatars
+        {
+            QPen radar_pen(_color.lighter(128));
+            radar_pen.setStyle(Qt::DashLine);
+            painter->setPen(radar_pen);
+            qreal pix_rang = (qreal) radar_range * GRID_SIZE;
+            painter->setBrush(Qt::NoBrush);
+            painter->drawRect(-pix_rang, -pix_rang, pix_rang * 2 + GRID_SIZE, pix_rang * 2 + GRID_SIZE);
+        }
+    }
+
+    if (is_sending)
+    {
+        QPen send_pen(_color.darker());
+        send_pen.setStyle(Qt::DashLine);
+        painter->setPen(send_pen);
         painter->setBrush(Qt::NoBrush);
-        painter->drawRect(-pix_rang, -pix_rang, pix_rang * 2 + GRID_SIZE, pix_rang * 2 + GRID_SIZE);
+        painter->drawEllipse(QPoint(GRID_SIZE/2, GRID_SIZE/2), GRID_SIZE, GRID_SIZE);
+
+        is_sending = false;     // reset value
     }
 
     return;

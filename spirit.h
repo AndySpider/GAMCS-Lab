@@ -42,13 +42,16 @@ public:
     void injured(float l);
     void healed(float l);
     QPoint gridPos();
-    QPoint doMove();
-    void setAwake(bool val);
-    bool isAwake();
+    QPoint changePos();
+
     void setMarked(bool val);
     bool isMarked();
-    void setRadarRange(int rang);
-    bool isRadarOn();
+    void setRadarRange(int range);
+    int getRadarRange();
+    void setAwake(bool val);
+    bool isAwake();
+    void setSending(bool val);
+    bool isSending();
     QList<Spirit *> getNeighbors();	// the area is a rectangle
 
     virtual void act();
@@ -84,10 +87,10 @@ private:
     QMutex _life_mutex;
     int tmp_delta_grid_x;   // this is used to postporn the moving action
     int tmp_delta_grid_y;
-    bool is_awake;
     bool is_marked;
     int radar_range;
-
+    bool is_awake;
+    bool is_sending;
 };
 
 #endif // SPIRIT_H

@@ -8,11 +8,11 @@ class Mouse : public Spirit, public ComAvatar
 public:
     Mouse(int id);
     ~Mouse();
+    void act();
 
 protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
-    void act();
 
 private:
     Agent::State perceiveState();
