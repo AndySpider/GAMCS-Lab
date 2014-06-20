@@ -1,4 +1,9 @@
+#include <QGraphicsSceneMouseEvent>
+#include <QMenu>
+#include <QAction>
+#include <QDebug>
 #include "cheese.h"
+#include "setdialog.h"
 
 Cheese::Cheese()
 {
@@ -32,5 +37,37 @@ void Cheese::act()
             }
         }
     }
+}
 
+void Cheese::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+   QMenu menu;
+
+   // life
+   QAction *setlife = menu.addAction("Set life");
+
+   // show the menu
+   QAction *selectedAction = menu.exec(event->screenPos());
+
+   // judge the selected action
+   if (selectedAction == setlife)
+   {
+        SetDialog dialog("Life:", QString::number(_life));
+        if (dialog.exec())
+        {
+            bool ok;
+            float new_life = dialog.getValue().toFloat(&ok);
+            if (ok)
+            {
+                this->_life = new_life;
+                qDebug() << "+++ life set to" << new_life;
+            }
+            else
+            {
+                qDebug() << "--- invalid life value, should be float!";
+            }
+        }
+   }
+
+    update();
 }

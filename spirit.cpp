@@ -268,28 +268,17 @@ void Spirit::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
         painter->setBrush(Qt::NoBrush);
         painter->drawPath(path);
     }
-    else    // awake
-    {
-        if (radar_range > 0 && (this->spiritType() == MOUSE || this->spiritType() == CAT))	// draw radar range for awake avatars
-        {
-            QPen radar_pen(_color.lighter(128));
-            radar_pen.setStyle(Qt::DashLine);
-            painter->setPen(radar_pen);
-            qreal pix_rang = (qreal) radar_range * GRID_SIZE;
-            painter->setBrush(Qt::NoBrush);
-            painter->drawRect(-pix_rang, -pix_rang, pix_rang * 2 + GRID_SIZE, pix_rang * 2 + GRID_SIZE);
-        }
-    }
 
-    if (is_sending)
+    if (is_sending && radar_range > 0)	// draw radar range for avatars that are sending msg
     {
-        QPen send_pen(_color.darker());
-        send_pen.setStyle(Qt::DashLine);
-        painter->setPen(send_pen);
+        QPen radar_pen(_color);
+        radar_pen.setStyle(Qt::DashLine);
+        painter->setPen(radar_pen);
+        qreal pix_rang = (qreal) radar_range * GRID_SIZE;
         painter->setBrush(Qt::NoBrush);
-        painter->drawEllipse(QPoint(GRID_SIZE/2, GRID_SIZE/2), GRID_SIZE, GRID_SIZE);
+        painter->drawRect(-pix_rang, -pix_rang, pix_rang * 2 + GRID_SIZE, pix_rang * 2 + GRID_SIZE);
 
-        is_sending = false;     // reset value
+        is_sending = false;		// reset
     }
 
     return;

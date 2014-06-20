@@ -72,6 +72,10 @@ void Mouse::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     QAction *save = memory->addAction("Save...");
     QAction *load = memory->addAction("Load...");
 
+    // life
+    QAction *setlife = menu.addAction("Set life");
+
+    // show the menu
     QAction *selectedAction = menu.exec(event->screenPos());
 
     // judge selected action
@@ -136,7 +140,7 @@ void Mouse::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
         if (storage.isEmpty())
         {
             storage = QFileDialog::getSaveFileName(NULL, QObject::tr("Save memory..."), QString(),
-                                                   QObject::tr("Sqlite3 database (*.slt);; All Files(*)"));
+                                                   QObject::tr("Avatar memory (*.mem);; All Files(*)"));
         }
 
         if (!storage.endsWith(".slt", Qt::CaseInsensitive))
@@ -152,7 +156,7 @@ void Mouse::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     else if (selectedAction == load)
     {
         storage = QFileDialog::getOpenFileName(NULL, QObject::tr("Load memory..."), QString(),
-                                               QObject::tr("Sqlite3 database (*.slt);; All Files(*)"));
+                                               QObject::tr("Avatar memory (*.mem);; All Files(*)"));
 
         if (!storage.isEmpty())
         {
@@ -162,6 +166,24 @@ void Mouse::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
             this->setAwake(false);  // put to sleep for loading memory
             myagent->loadMemoryFromStorage(&db);
             this->setAwake(status);   // restore old status
+        }
+    }
+    else if (selectedAction == setlife)
+    {
+        SetDialog dialog("Life:", QString::number(_life));
+        if (dialog.exec())
+        {
+            bool ok;
+            float new_life = dialog.getValue().toFloat(&ok);
+            if (ok)
+            {
+                this->_life = new_life;
+                qDebug() << "+++ life set to" << new_life;
+            }
+            else
+            {
+                qDebug() << "--- invalid life value, should be float!";
+            }
         }
     }
 

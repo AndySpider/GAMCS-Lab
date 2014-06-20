@@ -9,6 +9,9 @@ public:
     Cheese();
     ~Cheese();
 
+protected:
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+
 private:
     void act();
 };
