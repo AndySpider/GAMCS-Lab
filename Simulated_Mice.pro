@@ -47,3 +47,6 @@ RESOURCES += \
     images.qrc
 
 FORMS +=
+
+DEFINES += GLOBAL_SENSE #	\
+#    SURVIVE_MODE

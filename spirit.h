@@ -1,6 +1,5 @@
 #ifndef SPIRIT_H
 #define SPIRIT_H
-
 #include <QGraphicsItem>
 #include <QMutex>
 #include <QColor>

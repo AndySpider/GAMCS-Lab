@@ -66,6 +66,7 @@ void Scene::step()
         (*it)->changePos();
     }
 
+    update();	// update scene
     timer->start(timer_interval);
 }
 

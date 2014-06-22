@@ -15,7 +15,11 @@ Mouse::Mouse(int id) : ComAvatar(id), storage("")
 {
     _type = MOUSE;
     _color = QColor(89, 255, 89);
+#ifdef SURVIVE_MODE
+    _life = 0.5;	// instant death
+#else
     _life = 30;
+#endif
 }
 
 Mouse::~Mouse()
@@ -27,7 +31,7 @@ void Mouse::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     Q_UNUSED(event);
 
     QString tips;
-    QTextStream(&tips) << "id:" << id << ", life:" << _life << ", Mode" << learning_mode;
+    QTextStream(&tips) << "id:" << id << ", life:" << _life;
     setToolTip(tips);
     update();
 }
@@ -112,14 +116,14 @@ void Mouse::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
         {
             bool ok;
             int new_radar_freq = dialog.getValue().toInt(&ok, 10);
-            if (ok)
+            if (ok && new_radar_freq > 0)
             {
                 this->setAvgFreq(new_radar_freq);
                 qDebug() << "+++ Average freq set to" << new_radar_freq;
             }
             else
             {
-                qDebug() << "--- invalid radar freq, should be intergers >= 0!";
+                qDebug() << "--- invalid radar freq, should be intergers > 0!";
             }
         }
     }
@@ -225,10 +229,11 @@ void Mouse::act()
 
 Agent::State Mouse::perceiveState()
 {
-//    int st = grid_x;
-//    st += grid_y * SCENE_WIDTH;
+#ifdef GLOBAL_SENSE
+    int st = grid_x + grid_y * SCENE_WIDTH;
 
-//    // perceive the spirits at four directions
+#else
+    // perceive the spirits at four directions
     int stype0 = 0, stype1 = 0, stype2 = 0, stype3 = 0, stype4 = 0;
 
     // current pos
@@ -307,6 +312,7 @@ Agent::State Mouse::perceiveState()
         stype4 = 5;
 
     int st = stype0 + stype1 * 6 + stype2 * 36 + stype3 * 216 + stype4 * 1296;
+#endif
 
     return st;
 }
@@ -375,11 +381,14 @@ float Mouse::originalPayoff(Agent::State st)
             }
             else
             {
-                qDebug() << "Mouse" << id << ": What's this, get out of my way!";
                 pf += 0.0;
             }
         }
     }
 
+#ifdef SURVIVE_MODE
+    return 1.0;
+#else
     return pf;
+#endif
 }
