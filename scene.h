@@ -87,7 +87,6 @@ private:
     Channel *channel;
 
     void buildWalls();
-    void showGrids();
 
     void useToolAt(const QPoint &grid_pos);
     void addSpiritAt(Spirit::SType type, const QPoint &grid_pos);

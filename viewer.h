@@ -11,6 +11,9 @@ class Viewer : public QGraphicsView
 public:
     Viewer(QWidget *parent);
 
+protected:
+    virtual void wheelEvent(QWheelEvent *event);
+
 private:
 };
 

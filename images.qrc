@@ -11,5 +11,6 @@
         <file>images/speeddown.png</file>
         <file>images/speedup.png</file>
         <file>images/cat.png</file>
+        <file>images/grid.png</file>
     </qresource>
 </RCC>

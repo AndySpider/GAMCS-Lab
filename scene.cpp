@@ -100,7 +100,6 @@ void Scene::init()
     cat_id = 0;
 
     // build scene
-    showGrids();
     buildWalls();
 }
 
@@ -151,25 +150,6 @@ void Scene::buildWalls()
         block->setEnabled(false);
         this->addItem(block);
     }
-}
-
-void Scene::showGrids()
-{
-    QRectF dot_sz = QRectF(0, 0, 0.2, 0.2);
-    QPen pen = QPen(Qt::black);
-    QBrush brush = QBrush(Qt::SolidPattern);
-    QGraphicsEllipseItem *dot = NULL;
-
-     for (int i = 0; i < SCENE_HEIGHT; i++)
-     {
-         for (int j = 0; j < SCENE_WIDTH; j++)
-         {
-             dot = this->addEllipse(dot_sz, pen, brush);
-             dot->setZValue(-10000);     // at the most background!
-             dot->setPos(j * GRID_SIZE, i * GRID_SIZE);
-             dot->setEnabled(false);    // no need to be enabled
-         }
-     }
 }
 
 void Scene::setCurTool(Tool t)
