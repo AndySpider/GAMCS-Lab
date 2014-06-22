@@ -2,6 +2,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QFile>
 #include <assert.h>
+#include "avatarspirit.h"
 #include "block.h"
 #include "cheese.h"
 #include "nail.h"
@@ -60,10 +61,10 @@ void Scene::step()
         removeSpirit(*it);
     }
 
-    // the position are changed after all spirits have taken actions
+    // post actions: eg. the position are changed after all spirits have taken actions
     for (QList<Spirit *>::iterator it = spirits.begin(); it != spirits.end(); ++it)
     {
-        (*it)->changePos();
+        (*it)->postAct();
     }
 
     update();	// update scene
@@ -619,7 +620,7 @@ Spirit *Scene::newSpiritAt(Spirit::SType type, const QPoint &grid_pos)
 
     if (spt->spiritType() == Spirit::MOUSE || spt->spiritType() == Spirit::CAT)
     {
-        ComAvatar *ava = dynamic_cast<ComAvatar *>(spt);
+        AvatarSpirit *ava = dynamic_cast<AvatarSpirit *>(spt);
         assert(ava != NULL);
         ava->setChannel(channel);    // set channel
     }

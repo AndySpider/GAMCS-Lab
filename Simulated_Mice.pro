@@ -23,9 +23,9 @@ SOURCES += main.cpp\
     mouse.cpp \
     cat.cpp \
     spirit.cpp \
-    comavatar.cpp \
     channel.cpp \
-    setdialog.cpp
+    setdialog.cpp \
+    avatarspirit.cpp
 
 HEADERS  += mainwindow.h \
     scene.h \
@@ -37,9 +37,9 @@ HEADERS  += mainwindow.h \
     config.h \
     cat.h \
     spirit.h \
-    comavatar.h \
     channel.h \
-    setdialog.h
+    setdialog.h \
+    avatarspirit.h
 
 unix:!macx|win32: LIBS += -lgamcs
 

@@ -1,13 +1,12 @@
 #include <QDebug>
 #include <string.h>
 #include "channel.h"
-#include "comavatar.h"
 
 Channel::Channel()
 {
 }
 
-void Channel::putMsg(ComAvatar *sender, ComAvatar *receiver, State_Info_Header *stif)
+void Channel::putMsg(AvatarSpirit *sender, AvatarSpirit *receiver, State_Info_Header *stif)
 {
     struct Message msg;
     msg.sender = sender;
@@ -23,7 +22,7 @@ void Channel::dispatchMsg()
 //    qDebug() << msg_pool.size() << "msgs to be dispatched...";
     for (QList<Message>::iterator mit = msg_pool.begin(); mit != msg_pool.end(); ++mit)
     {
-        ComAvatar *recver = mit->receiver;
+        AvatarSpirit *recver = mit->receiver;
         recver->recvMsg((State_Info_Header *) mit->data);
 
         // free data

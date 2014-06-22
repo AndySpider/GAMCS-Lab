@@ -4,7 +4,6 @@
 #include <QTimer>
 #include <QList>
 #include "spirit.h"
-#include "comavatar.h"
 #include "channel.h"
 
 QT_BEGIN_NAMESPACE
@@ -12,7 +11,6 @@ class QGraphicsSceneMouseEvent;
 QT_END_NAMESPACE
 
 struct SpiritInfo;
-struct Message;
 
 class Scene : public QGraphicsScene
 {

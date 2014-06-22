@@ -4,12 +4,13 @@
 #include <QGraphicsScene>
 #include <QTextStream>
 #include <QDebug>
+#include <QList>
 #include "scene.h"
 #include "spirit.h"
 #include "config.h"
 
 Spirit::Spirit() : _life(1), _type(BLOCK), _color(Qt::black), myscene(NULL), grid_x(-1), grid_y(-1),
-    tmp_delta_grid_x(0), tmp_delta_grid_y(0), is_marked(false), radar_range(5), is_awake(true), is_sending(false)
+    is_marked(false)
 {
     setFlags(ItemIsSelectable | ItemIsMovable);
     setAcceptHoverEvents(true);
@@ -67,20 +68,6 @@ QPoint Spirit::gridPos()
     return QPoint(grid_x, grid_y);
 }
 
-QPoint Spirit::changePos()
-{
-    grid_x += tmp_delta_grid_x;
-    grid_y += tmp_delta_grid_y;
-
-    QPoint new_grid_pos = QPoint(grid_x, grid_y);
-
-    this->setPos(new_grid_pos * GRID_SIZE);
-
-    tmp_delta_grid_x = tmp_delta_grid_y = 0;    // clear tmp values
-
-    return new_grid_pos;
-}
-
 void Spirit::setMarked(bool val)
 {
     is_marked = val;
@@ -89,65 +76,6 @@ void Spirit::setMarked(bool val)
 bool Spirit::isMarked()
 {
     return is_marked;
-}
-
-void Spirit::setRadarRange(int range)
-{
-    radar_range = range;
-}
-
-int Spirit::getRadarRange()
-{
-    return radar_range;
-}
-
-void Spirit::setAwake(bool val)
-{
-    is_awake = val;
-}
-
-bool Spirit::isAwake()
-{
-    return is_awake;
-}
-
-void Spirit::setSending(bool val)
-{
-    is_sending = val;
-}
-
-bool Spirit::isSending()
-{
-    return is_sending;
-}
-
-QList<Spirit *> Spirit::getNeighbors()
-{
-    if (radar_range <= 0)	// radar is off
-        return QList<Spirit *>();
-
-    QList<Spirit *>neigh_spirits;
-    qreal pix_rang = (qreal) radar_range * GRID_SIZE;
-    QRectF neigh_area = this->mapRectToScene(-pix_rang, -pix_rang, pix_rang * 2 + GRID_SIZE, pix_rang * 2 + GRID_SIZE);
-
-    QList<QGraphicsItem *> items = myscene->items(neigh_area, Qt::IntersectsItemShape, Qt::DescendingOrder);
-
-    if (!items.empty())
-    {
-        for (QList<QGraphicsItem *>::iterator iit = items.begin(); iit != items.end(); ++iit)
-        {
-            if ((*iit) == this)	// exclude self
-                continue;
-
-            Spirit *spirit = qgraphicsitem_cast<Spirit *>(*iit);
-            if (spirit != NULL && spirit->spiritType() == this->spiritType() && spirit->isAwake())        // only the same type && awake spirit can be a neighbor
-            {
-                neigh_spirits.append(spirit);
-            }
-        }
-    }
-
-    return neigh_spirits;
 }
 
 QList<Spirit *> Spirit::collidingSpirits()
@@ -174,48 +102,9 @@ void Spirit::act()
     // do nothing by default
 }
 
-void Spirit::moveUp()
+void Spirit::postAct()
 {
-    // check if there are blocks
-    Spirit *spt = myscene->getSpiritAt(grid_x, grid_y - 1);
-    if (spt == NULL || spt->spiritType() != BLOCK)
-    {
-        tmp_delta_grid_x = 0;   // use tmp pos
-        tmp_delta_grid_y = -1;
-    }
-}
-
-void Spirit::moveDown()
-{
-    // check if there are blocks
-    Spirit *spt = myscene->getSpiritAt(grid_x, grid_y + 1);
-    if (spt == NULL || spt->spiritType() != BLOCK)
-    {
-        tmp_delta_grid_x = 0;
-        tmp_delta_grid_y = 1;
-    }
-}
-
-void Spirit::moveLeft()
-{
-    // check if there are blocks
-    Spirit *spt = myscene->getSpiritAt(grid_x - 1, grid_y);
-    if (spt == NULL || spt->spiritType() != BLOCK)
-    {
-        tmp_delta_grid_x = -1;
-        tmp_delta_grid_y = 0;
-    }
-}
-
-void Spirit::moveRight()
-{
-    // check if there are blocks
-    Spirit *spt = myscene->getSpiritAt(grid_x + 1, grid_y);
-    if (spt == NULL || spt->spiritType() != BLOCK)
-    {
-        tmp_delta_grid_x = 1;
-        tmp_delta_grid_y = 0;
-    }
+    // do nothing by default
 }
 
 QRectF Spirit::boundingRect() const
@@ -256,29 +145,6 @@ void Spirit::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
         };
 
         painter->drawConvexPolygon(points, 3);   // draw at origin point
-    }
-
-    if (!is_awake)  // sleep
-    {
-        painter->setPen(Qt::darkGray);
-        QPainterPath path(QPointF(GRID_SIZE * 0.25, GRID_SIZE * 0.25));
-        path.lineTo(GRID_SIZE * 0.75, GRID_SIZE * 0.25);
-        path.lineTo(GRID_SIZE * 0.25, GRID_SIZE * 0.75);
-        path.lineTo(GRID_SIZE * 0.75, GRID_SIZE * 0.75);
-        painter->setBrush(Qt::NoBrush);
-        painter->drawPath(path);
-    }
-
-    if (is_sending && radar_range > 0)	// draw radar range for avatars that are sending msg
-    {
-        QPen radar_pen(_color);
-        radar_pen.setStyle(Qt::DashLine);
-        painter->setPen(radar_pen);
-        qreal pix_rang = (qreal) radar_range * GRID_SIZE;
-        painter->setBrush(Qt::NoBrush);
-        painter->drawRect(-pix_rang, -pix_rang, pix_rang * 2 + GRID_SIZE, pix_rang * 2 + GRID_SIZE);
-
-        is_sending = false;		// reset
     }
 
     return;

@@ -1,7 +1,7 @@
 #ifndef CHANNEL_H
 #define CHANNEL_H
 #include <QList>
-#include "comavatar.h"
+#include "avatarspirit.h"
 
 struct Message;
 
@@ -12,7 +12,7 @@ class Channel
 public:
     Channel();
 
-    void putMsg(ComAvatar *sender, ComAvatar *receiver, State_Info_Header *stif);
+    void putMsg(AvatarSpirit *sender, AvatarSpirit *receiver, State_Info_Header *stif);
     void dispatchMsg();
 
 private:
@@ -21,8 +21,8 @@ private:
 
 struct Message
 {
-    ComAvatar *sender;
-    ComAvatar *receiver;
+    AvatarSpirit *sender;
+    AvatarSpirit *receiver;
     char *data;
 };
 
