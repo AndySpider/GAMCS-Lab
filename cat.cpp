@@ -41,8 +41,14 @@ float Cat::originalPayoff(Agent::State st)
             else if ((*it)->spiritType() == MOUSE)
             {
                 qDebug() << "Cat" << id << ": Mouse! My favorite!";
-                this->healed(0.5);
+                this->healed(1);
                 pf += 2.0;
+            }
+            else if ((*it)->spiritType() == ELEPHANT)
+            {
+                qDebug() << "Cat" << id << ": Elephant! OMG, run away!";
+                this->injured(1);
+                pf += -2.0;
             }
             else
             {

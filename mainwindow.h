@@ -33,6 +33,7 @@ private:
     QAction *actionNail;
     QAction *actionMouse;
     QAction *actionCat;
+    QAction *actionElephant;
 
     QActionGroup *toolGroup;
 
@@ -44,13 +45,13 @@ private:
     // menubar, toolbar, statusbar
     QMenuBar *menuBar;
 
-    QMenu *menuFile;
+    QMenu *menuScene;
     QAction *actionNew;
     QAction *actionOpen;
     QAction *actionSave;
     QAction *actionSave_as;
     QAction *actionQuit;
-    QAction *actionRecent_Files;
+    QAction *actionRecent_Scenes;
 
     QMenu *menuOptions;
     QMenu *menuDeadMode;
@@ -84,6 +85,7 @@ private slots:
     void on_actionNail_triggered();
     void on_actionMouse_triggered();
     void on_actionCat_triggered();
+    void on_actionElephant_triggered();
 
     void on_actionPause_Resume_toggled(bool arg1);
     void on_actionSpeedUp_triggered();

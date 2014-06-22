@@ -104,6 +104,16 @@ void MainWindow::initUi()
     actionCat->setCheckable(true);
     toolGroup->addAction(actionCat);
 
+    actionElephant = new QAction(this);
+    actionElephant->setText("Elephant");
+    actionElephant->setObjectName("actionElephant");
+    actionElephant->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_8));
+    QIcon iconEle;
+    iconEle.addFile(QStringLiteral(":/images/elephant.png"), QSize(), QIcon::Normal, QIcon::Off);
+    actionElephant->setIcon(iconEle);
+    actionElephant->setCheckable(true);
+    toolGroup->addAction(actionElephant);
+
     actionPause_Resume = new QAction(this);
     actionPause_Resume->setText("Pause/Resume");
     actionPause_Resume->setObjectName("actionPause_Resume");
@@ -157,9 +167,9 @@ void MainWindow::initUi()
     menuBar->setObjectName("menuBar");
     menuBar->setGeometry(QRect(0, 0, 800, 25));
 
-    menuFile = new QMenu(menuBar);
-    menuFile->setObjectName("menuFile");
-    menuFile->setTitle("File");
+    menuScene = new QMenu(menuBar);
+    menuScene->setObjectName("menuScene");
+    menuScene->setTitle("Scene");
 
     // File actions
     actionNew = new QAction(this);
@@ -172,23 +182,23 @@ void MainWindow::initUi()
     actionSave_as->setObjectName(QStringLiteral("actionSave_as"));
     actionQuit = new QAction(this);
     actionQuit->setObjectName(QStringLiteral("actionQuit"));
-    actionRecent_Files = new QAction(this);
-    actionRecent_Files->setObjectName(QStringLiteral("actionRecent_Files"));
+    actionRecent_Scenes = new QAction(this);
+    actionRecent_Scenes->setObjectName(QStringLiteral("actionRecent_Files"));
     actionNew->setText("New");
     actionOpen->setText("Open");
     actionSave->setText("Save");
     actionSave_as->setText("Save as");
     actionQuit->setText("Quit");
-    actionRecent_Files->setText("Recent Files");
+    actionRecent_Scenes->setText("Recent Scenes");
 
-    menuFile->addAction(actionNew);
-    menuFile->addAction(actionOpen);
-    menuFile->addAction(actionRecent_Files);
-    menuFile->addSeparator();
-    menuFile->addAction(actionSave);
-    menuFile->addAction(actionSave_as);
-    menuFile->addSeparator();
-    menuFile->addAction(actionQuit);
+    menuScene->addAction(actionNew);
+    menuScene->addAction(actionOpen);
+    menuScene->addAction(actionRecent_Scenes);
+    menuScene->addSeparator();
+    menuScene->addAction(actionSave);
+    menuScene->addAction(actionSave_as);
+    menuScene->addSeparator();
+    menuScene->addAction(actionQuit);
 
     // Options Menu
     menuOptions = new QMenu(menuBar);
@@ -205,7 +215,7 @@ void MainWindow::initUi()
     actionDeadMode_Undead->setObjectName("actionDeadMode_Undead");
     actionDeadMode_Undead->setCheckable(true);
 
-    actionGenRand = menuOptions->addAction("Generate Random Spirits");
+    actionGenRand = menuOptions->addAction("Generate 30 Spirits Randomly");
     actionGenRand->setObjectName("actionGenRand");
 
     // About Menu
@@ -224,7 +234,7 @@ void MainWindow::initUi()
     menuAbout->addAction(actionAbout_GAMCS);
 
     // add to menuBar
-    menuBar->addAction(menuFile->menuAction());
+    menuBar->addAction(menuScene->menuAction());
     menuBar->addAction(menuOptions->menuAction());
     menuBar->addAction(menuAbout->menuAction());
     this->setMenuBar(menuBar);
@@ -242,6 +252,7 @@ void MainWindow::initUi()
     toolBar->addAction(actionNail);
     toolBar->addAction(actionMouse);
     toolBar->addAction(actionCat);
+    toolBar->addAction(actionElephant);
     toolBar->addSeparator();
     toolBar->addAction(actionPause_Resume);
     toolBar->addAction(actionSpeedUp);
@@ -304,6 +315,11 @@ void MainWindow::on_actionMouse_triggered()
 void MainWindow::on_actionCat_triggered()
 {
     scene->setCurTool(Scene::T_CAT);
+}
+
+void MainWindow::on_actionElephant_triggered()
+{
+    scene->setCurTool(Scene::T_ELEPHANT);
 }
 
 void MainWindow::on_actionPause_Resume_toggled(bool arg1)

@@ -1,22 +1,18 @@
 #include <QDebug>
-#include "mouse.h"
+#include "elephant.h"
 
-Mouse::Mouse(int id) : AvatarSpirit(id)
+Elephant::Elephant(int id) : AvatarSpirit(id)
 {
-    _type = MOUSE;
-    _color = QColor(89, 255, 89);
-#ifdef SURVIVE_MODE
-    _life = 0.5;	// instant death
-#else
-    _life = 30;
-#endif
+    _type = ELEPHANT;
+    _color = QColor(152, 163, 188);
+    _life = 100;
 }
 
-Mouse::~Mouse()
+Elephant::~Elephant()
 {
 }
 
-float Mouse::originalPayoff(Agent::State st)
+float Elephant::originalPayoff(Agent::State st)
 {
     Q_UNUSED(st);
 
@@ -32,27 +28,27 @@ float Mouse::originalPayoff(Agent::State st)
         {
             if ((*it)->spiritType() == CHEESE)
             {
-                qDebug() << "Mouse" << id << ": Wow! cheese!";
-                this->healed(0.5);
+                qDebug() << "Elephant" << id << ": Wow! cheese!";
+                this->healed(0.1);
                 pf += 1.0;
             }
             else if ((*it)->spiritType() == NAIL)
             {
-                qDebug() << "Mouse" << id << ": Oops! nail!";
-                this->injured(0.5);
+                qDebug() << "Elephant" << id << ": Oops! nail!";
+                this->injured(0.1);
                 pf += -1.0;
             }
             else if ((*it)->spiritType() == CAT)
             {
-                qDebug() << "Mouse" << id << ": Cat! My GOD!";
-                this->injured(1);
-                pf += -2.0;
-            }
-            else if ((*it)->spiritType() == ELEPHANT)
-            {
-                qDebug() << "Mouse" << id << ": Elephant! my delicious!";
+                qDebug() << "Elephant" << id << ": Cat~ I'll squeese you!";
                 this->healed(1);
                 pf += 2.0;
+            }
+            else if ((*it)->spiritType() == MOUSE)
+            {
+                qDebug() << "Elephant" << id << ": Mouse! OMG! stay away from my nose!";
+                this->injured(1);
+                pf += -2.0;
             }
             else
             {
@@ -61,9 +57,5 @@ float Mouse::originalPayoff(Agent::State st)
         }
     }
 
-#ifdef SURVIVE_MODE
-    return 1.0;
-#else
     return pf;
-#endif
 }

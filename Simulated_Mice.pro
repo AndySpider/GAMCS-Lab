@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     spirit.cpp \
     channel.cpp \
     setdialog.cpp \
-    avatarspirit.cpp
+    avatarspirit.cpp \
+    elephant.cpp
 
 HEADERS  += mainwindow.h \
     scene.h \
@@ -39,7 +40,8 @@ HEADERS  += mainwindow.h \
     spirit.h \
     channel.h \
     setdialog.h \
-    avatarspirit.h
+    avatarspirit.h \
+    elephant.h
 
 unix:!macx|win32: LIBS += -lgamcs
 

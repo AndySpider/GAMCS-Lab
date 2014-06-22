@@ -19,17 +19,19 @@ public:
         CHEESE,
         NAIL,
         MOUSE,
-        CAT
+        CAT,
+        ELEPHANT
     };
 
     // stack priority, or z value
+    static const int ELEPHANT_Z = 3;
     static const int CAT_Z = 2;
     static const int MOUSE_Z = 1;
     static const int NAIL_Z = 0;
     static const int BLOCK_Z = 0;
     static const int CHEESE_Z = 0;
 
-    static const int SPIRIT_NUM = 5;
+    static const int SPIRIT_NUM = 6;
 
     // QGraphicsItem type
     enum { Type = UserType + 1};

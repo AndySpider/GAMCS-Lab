@@ -8,11 +8,12 @@
 #include "nail.h"
 #include "mouse.h"
 #include "cat.h"
+#include "elephant.h"
 #include "scene.h"
 #include "config.h"
 
-Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(T_NONE), mouse_id(0), cat_id(0), timer_interval(100),
-    num_blocks(0), num_cheeses(0), num_nails(0), num_mice(0), num_cats(0), game_mode(DEAD)
+Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(T_NONE), mouse_id(0), cat_id(0), elephant_id(0), timer_interval(100),
+    num_blocks(0), num_cheeses(0), num_nails(0), num_mice(0), num_cats(0), num_elephants(0), game_mode(DEAD)
 {
     setItemIndexMethod(BspTreeIndex);   // NoIndex is slow!
 
@@ -95,7 +96,9 @@ void Scene::init()
     num_cheeses = 0;
     num_mice = 0;
     num_nails = 0;
+    num_elephants = 0;
 
+    elephant_id = 0;
     mouse_id = 0;
     cat_id = 0;
 
@@ -271,6 +274,7 @@ QList<SpiritInfo> Scene::statistics()
     SpiritInfo nails_info;
     SpiritInfo mice_info;
     SpiritInfo cats_info;
+    SpiritInfo elephants_info;
 
     blocks_info.name = "Block";
     blocks_info.num = num_blocks;
@@ -291,6 +295,10 @@ QList<SpiritInfo> Scene::statistics()
     cats_info.name = "Cat";
     cats_info.num = num_cats;
     infos.append(cats_info);
+
+    elephants_info.name = "Elephant";
+    elephants_info.num = num_elephants;
+    infos.append(elephants_info);
 
     return infos;
 }
@@ -321,6 +329,10 @@ void Scene::useToolAt(const QPoint &grid_pos)
     {
         addSpiritAt(Spirit::CAT, grid_pos);
     }
+    else if (cur_tool == T_ELEPHANT)
+    {
+        addSpiritAt(Spirit::ELEPHANT, grid_pos);
+    }
     else if (cur_tool == T_NONE)
     {
         //
@@ -347,31 +359,7 @@ void Scene::addSpiritAt(Spirit::SType type, const QPoint &grid_pos)
     Spirit *old_spirit = getSpiritAt(grid_pos.x(), grid_pos.y());
     if (old_spirit == NULL) // no spirit at pos, add directly
     {
-        if (type == Spirit::BLOCK)
-        {
-            newSpiritAt(Spirit::BLOCK, grid_pos);
-        }
-        else if (type == Spirit::CHEESE)
-        {
-            newSpiritAt(Spirit::CHEESE, grid_pos);
-        }
-        else if (type == Spirit::NAIL)
-        {
-            newSpiritAt(Spirit::NAIL, grid_pos);
-        }
-        else if (type == Spirit::MOUSE)
-        {
-            newSpiritAt(Spirit::MOUSE, grid_pos);
-        }
-        else if (type == Spirit::CAT)
-        {
-            newSpiritAt(Spirit::CAT, grid_pos);
-        }
-        else
-        {
-            qWarning() << "Unknown type:" << type;
-        }
-        // other types come here
+        newSpiritAt(type, grid_pos);
     }
     else 	// some type is at pos
     {
@@ -407,6 +395,10 @@ void Scene::addSpiritAt(Spirit::SType type, const QPoint &grid_pos)
             {
                 newSpiritAt(Spirit::CAT, grid_pos);
             }
+            else if (type == Spirit::ELEPHANT)	// add directly
+            {
+                newSpiritAt(Spirit::ELEPHANT, grid_pos);
+            }
             // other types come here
         }
         else if (old_spirit_type == Spirit::NAIL)
@@ -435,11 +427,15 @@ void Scene::addSpiritAt(Spirit::SType type, const QPoint &grid_pos)
             {
                 newSpiritAt(Spirit::CAT, grid_pos);
             }
+            else if (type == Spirit::ELEPHANT)	// add directly
+            {
+                newSpiritAt(Spirit::ELEPHANT, grid_pos);
+            }
             // other types come here
         }
-        else if (old_spirit_type == Spirit::MOUSE)
+        else if (old_spirit_type == Spirit::MOUSE || old_spirit_type == Spirit::CAT || old_spirit_type == Spirit::ELEPHANT)
         {
-            if (type == Spirit::BLOCK)	// move mouse
+            if (type == Spirit::BLOCK)	// move avatar
             {
                 bool found;
                 QPoint npos = findSpiritNewPos(grid_pos, &found);
@@ -454,58 +450,10 @@ void Scene::addSpiritAt(Spirit::SType type, const QPoint &grid_pos)
 
                 newSpiritAt(Spirit::BLOCK, grid_pos);
             }
-            else if (type == Spirit::CHEESE)	// add directly
+            else	// add directly
             {
-                newSpiritAt(Spirit::CHEESE, grid_pos);
+                newSpiritAt(type, grid_pos);
             }
-            else if (type == Spirit::NAIL)	// add directly
-            {
-                newSpiritAt(Spirit::NAIL, grid_pos);
-            }
-            else if (type == Spirit::MOUSE)	// do nothing
-            {
-                qDebug() << "can not add a mouse on a mouse, erase it first!";
-            }
-            else if (type == Spirit::CAT)	// add directly, cat likes mouse
-            {
-                newSpiritAt(Spirit::CAT, grid_pos);
-            }
-            // other types come here
-        }
-        else if (old_spirit_type == Spirit::CAT)
-        {
-            if (type == Spirit::BLOCK)	// move cat
-            {
-                bool found;
-                QPoint npos = findSpiritNewPos(grid_pos, &found);
-                if (found)
-                {
-                    old_spirit->setPos(npos * GRID_SIZE);
-                }
-                else
-                {
-                    removeSpirit(old_spirit);
-                }
-
-                newSpiritAt(Spirit::BLOCK, grid_pos);
-            }
-            else if (type == Spirit::CHEESE)	// add directly
-            {
-                newSpiritAt(Spirit::CHEESE, grid_pos);
-            }
-            else if (type == Spirit::NAIL)	// add directly
-            {
-                newSpiritAt(Spirit::NAIL, grid_pos);
-            }
-            else if (type == Spirit::MOUSE)	 // add directly
-            {
-                newSpiritAt(Spirit::MOUSE, grid_pos);
-            }
-            else if (type == Spirit::CAT)	// do nothing
-            {
-                qDebug() << "can not add a cat on a cat, erase it first!";
-            }
-            // other types come here
         }
         // other types come here
     }
@@ -587,6 +535,12 @@ Spirit *Scene::newSpiritAt(Spirit::SType type, const QPoint &grid_pos)
         num = &num_cats;
         spt->setZValue(Spirit::CAT_Z);
     }
+    else if (type == Spirit::ELEPHANT)
+    {
+        spt = new Elephant(elephant_id);
+        num = &num_elephants;
+        spt->setZValue(Spirit::ELEPHANT_Z);
+    }
 
     spt->setPos(grid_pos.x() * GRID_SIZE, grid_pos.y() * GRID_SIZE);
     this->addItem(spt);
@@ -598,7 +552,8 @@ Spirit *Scene::newSpiritAt(Spirit::SType type, const QPoint &grid_pos)
         return NULL;
     }
 
-    if (spt->spiritType() == Spirit::MOUSE || spt->spiritType() == Spirit::CAT)
+    // avatars use channel to communicate
+    if (spt->spiritType() == Spirit::MOUSE || spt->spiritType() == Spirit::CAT || spt->spiritType() == Spirit::ELEPHANT)
     {
         AvatarSpirit *ava = dynamic_cast<AvatarSpirit *>(spt);
         assert(ava != NULL);
@@ -636,6 +591,10 @@ void Scene::removeSpirit(Spirit *spt)
     else if (type == Spirit::CAT)
     {
         num = &num_cats;
+    }
+    else if (type == Spirit::ELEPHANT)
+    {
+        num = &num_elephants;
     }
 
     this->removeItem(spt);

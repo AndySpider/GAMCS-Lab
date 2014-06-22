@@ -28,7 +28,8 @@ public:
         T_CHEESE,
         T_NAIL,
         T_MOUSE,
-        T_CAT
+        T_CAT,
+        T_ELEPHANT
     };
 
     enum GameMode
@@ -72,6 +73,7 @@ private:
 
     int mouse_id;
     int cat_id;
+    int elephant_id;
 
     // control
     QTimer *timer;
@@ -83,6 +85,7 @@ private:
     int num_nails;
     int num_mice;
     int num_cats;
+    int num_elephants;
     GameMode game_mode;
     Channel *channel;
 
