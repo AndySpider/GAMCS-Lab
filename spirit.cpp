@@ -2,15 +2,11 @@
 #include <QStyleOptionGraphicsItem>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsScene>
-#include <QTextStream>
 #include <QDebug>
-#include <QMenu>
-#include <QAction>
 #include <QList>
 #include "scene.h"
 #include "spirit.h"
 #include "config.h"
-#include "setdialog.h"
 
 Spirit::Spirit() : _life(1), _type(BLOCK), _color(Qt::black), myscene(NULL), grid_x(-1), grid_y(-1),
     is_marked(false)
@@ -47,9 +43,19 @@ Spirit::SType Spirit::spiritType()
     return _type;
 }
 
+Spirit::SCategory Spirit::spiritCategory()
+{
+    return _category;
+}
+
 float Spirit::life()
 {
     return _life;
+}
+
+void Spirit::setLife(float l)
+{
+    _life = l;
 }
 
 void Spirit::injured(float l)
@@ -108,6 +114,64 @@ void Spirit::act()
 void Spirit::postAct()
 {
     // do nothing by default
+}
+
+QString Spirit::stypeToString(SType stype)
+{
+    QString str;
+
+    switch (stype)
+    {
+    case BLOCK:
+        str = "Block";
+        break;
+    case CHEESE:
+        str = "Cheese";
+        break;
+    case NAIL:
+        str = "Nail";
+        break;
+    case BOMB:
+        str = "Bomb";
+        break;
+    case MOUSE:
+        str = "Mouse";
+        break;
+    case CAT:
+        str = "Cat";
+        break;
+    case ELEPHANT:
+        str = "Elephant";
+        break;
+    default:
+        qDebug() << "unknown spirit type:" << stype;
+        break;
+    }
+
+    return str;
+}
+
+Spirit::SType Spirit::stringToSType(const QString &str)
+{
+    Spirit::SType type;
+    if (str == "Block")
+        type = BLOCK;
+    else if (str == "Cheese")
+        type = CHEESE;
+    else if (str == "Nail")
+        type = NAIL;
+    else if (str == "Bomb")
+        type = BOMB;
+    else if (str == "Mouse")
+        type = MOUSE;
+    else if (str == "Cat")
+        type = CAT;
+    else if (str == "Elephant")
+        type = ELEPHANT;
+    else
+        qDebug() << "unknown Spirit string" << str;
+
+    return type;
 }
 
 QRectF Spirit::boundingRect() const
@@ -192,49 +256,5 @@ void Spirit::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void Spirit::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     QGraphicsItem::mouseReleaseEvent(event);
-    update();
-}
-
-void Spirit::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
-{
-    Q_UNUSED(event);
-
-    QString tips;
-    QTextStream(&tips) << "life:" << _life;
-    setToolTip(tips);
-
-    update();
-}
-
-void Spirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
-{
-   QMenu menu;
-
-   // life
-   QAction *setlife = menu.addAction("Set life");
-
-   // show the menu
-   QAction *selectedAction = menu.exec(event->screenPos());
-
-   // judge the selected action
-   if (selectedAction == setlife)
-   {
-        SetDialog dialog("Life:", QString::number(_life));
-        if (dialog.exec())
-        {
-            bool ok;
-            float new_life = dialog.getValue().toFloat(&ok);
-            if (ok)
-            {
-                this->_life = new_life;
-                qDebug() << "+++ life set to" << new_life;
-            }
-            else
-            {
-                qDebug() << "--- invalid life value, should be float!";
-            }
-        }
-   }
-
     update();
 }

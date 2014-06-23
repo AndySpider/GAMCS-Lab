@@ -1,6 +1,7 @@
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
 #include <QFile>
+#include <QDomDocument>
 #include <assert.h>
 #include "avatarspirit.h"
 #include "block.h"
@@ -75,16 +76,268 @@ void Scene::step()
 
 int Scene::load(const QString &file)
 {
-    if (!QFile::exists(file))
-        return -1;
+    // pause the scene
+    pause();
 
+    QFile infile(file);
+    if (!infile.open(QFile::Text | QFile::ReadOnly))
+    {
+        qDebug() << "Error: cannot open file for loading scene" << file;
+        return -1;
+    }
+
+    QDomDocument doc("Scene");
+    QString errMsg;
+    int errLine, errCol;
+    if (!doc.setContent(&infile, false, &errMsg, &errLine, &errCol))
+    {
+        qDebug() << "Error: cannot set content of xml to the file" << file << errMsg <<
+                    "at" << errLine << "," << errCol;
+        infile.close();
+        return -1;
+    }
+    infile.close();
+
+    QDomElement root = doc.documentElement();
+
+    // scene meta-info
+    QDomNode first_node = root.firstChild();
+    if (!first_node.isElement())	// until find the first element
+        first_node = first_node.nextSibling();
+
+    QDomElement scene_info = first_node.toElement();
+    Q_UNUSED(scene_info);
+
+    // spirit
+    QDomNode node = first_node.nextSibling();
+    while (!node.isNull())
+    {
+        Spirit::SType type;
+        int life;
+        QPoint grid_pos;
+        bool is_marked;
+        int id;
+        int radar_range;
+        bool is_awake;
+        int com_freq;
+        Agent::Mode lm;
+        bool ok;
+        bool is_avatar = false;
+
+        if (node.isElement())
+        {
+            QDomElement spt = node.toElement();
+            qDebug() << "tagname:" << spt.tagName();
+            type = Spirit::stringToSType(spt.attribute("type"));
+
+            // traverse all the child nodes
+            QDomNodeList list = spt.childNodes();
+
+            for (int i = 0; i < list.count(); i++)
+            {
+                QDomNode childnode = list.at(i);
+                if (childnode.isElement())
+                {
+                    QDomElement ele = childnode.toElement();
+                    if (ele.tagName() == "life")
+                    {
+                        life = ele.text().toFloat(&ok);
+                        assert(ok);
+                    }
+                    else if (ele.tagName() == "xpos")
+                    {
+                        int xpos = ele.text().toInt(&ok, 10);
+                        assert(ok);
+                        grid_pos.setX(xpos);
+                    }
+                    else if (ele.tagName() == "ypos")
+                    {
+                        int ypos = ele.text().toInt(&ok, 10);
+                        assert(ok);
+                        grid_pos.setY(ypos);
+                    }
+                    else if (ele.tagName() == "isMarked")
+                    {
+                        if (ele.text() == "true")
+                            is_marked = true;
+                        else
+                            is_marked = false;
+                    }	// for avatars below
+                    else if (ele.tagName() == "id")
+                    {
+                        id = ele.text().toInt(&ok, 10);
+                        assert(ok);
+                        is_avatar = true;
+                    }
+                    else if (ele.tagName() == "Radar_Range")
+                    {
+                        radar_range = ele.text().toInt(&ok, 10);
+                        assert(ok);
+                    }
+                    else if (ele.tagName() == "isAwake")
+                    {
+                        if (ele.text() == "true")
+                            is_awake = true;
+                        else
+                            is_awake = false;
+                    }
+                    else if (ele.tagName() == "Com_Freq")
+                    {
+                        com_freq = ele.text().toInt(&ok, 10);
+                        assert(ok);
+                    }
+                    else if (ele.tagName() == "Learning_Mode")
+                    {
+                        if (ele.text() == "Explore")
+                            lm = Agent::EXPLORE;
+                        else
+                            lm = Agent::ONLINE;
+                    }
+                }
+            }
+        }
+
+        Spirit *nspt = newSpiritAt(type, grid_pos);
+        nspt->setLife(life);
+        nspt->setMarked(is_marked);
+
+        // for avatars
+        if (is_avatar)
+        {
+            AvatarSpirit *avaspt = dynamic_cast<AvatarSpirit *>(nspt);
+            assert(avaspt != NULL);
+
+            avaspt->setId(id);
+            avaspt->setRadarRange(radar_range);
+            avaspt->setAwake(is_awake);
+            avaspt->setAvgFreq(com_freq);
+            avaspt->setLearningMode(lm);
+        }
+
+        node = node.nextSibling();
+    }
 
     return 0;
 }
 
 void Scene::save(const QString &file)
 {
+    // pause the scene
+    bool timer_active  = timer->isActive();
+    pause();
 
+    QFile of(file);
+    if(!of.open(QFile::Text | QFile::WriteOnly))
+    {
+        qDebug() << "Error: can not open file for saving scene" << file;
+        return;
+    }
+
+    QDomDocument doc("Scene");
+    QDomElement root = doc.createElement("Scene");
+    doc.appendChild(root);
+
+    // save the meta-scene info
+    QDomElement meta_info = doc.createElement("Scene_Infomation");
+    // spirits statistics
+    QDomElement spirits_stis = doc.createElement("Spirit_Statistics");
+    spirits_stis.setAttribute("total_num", spirits.size());
+
+    QList<SpiritInfo> spirits_infos = statistics();
+    for (QList<SpiritInfo>::iterator iit = spirits_infos.begin();
+         iit != spirits_infos.end(); ++iit)
+    {
+        QDomElement ele = doc.createElement(iit->name);
+        QDomText text = doc.createTextNode(QString::number(iit->num));
+        ele.appendChild(text);
+
+        spirits_stis.appendChild(ele);
+    }
+    meta_info.appendChild(spirits_stis);
+    // other scene-scale info come here
+    root.appendChild(meta_info);
+
+    // traverse all the spirits
+    for (QList<Spirit *>::iterator sit = spirits.begin();
+         sit != spirits.end(); ++sit)
+    {
+        QDomElement spirit = doc.createElement("Spirit");
+        spirit.setAttribute("type", Spirit::stypeToString((*sit)->spiritType()));
+        // life
+        QDomElement life = doc.createElement("life");
+        QDomText life_val = doc.createTextNode(QString::number((*sit)->life()));
+        life.appendChild(life_val);
+        spirit.appendChild(life);
+        // grid position
+        // xpos
+        // ypos
+        QDomElement xpos = doc.createElement("xpos");
+        QDomText xpos_val = doc.createTextNode(QString::number((*sit)->gridPos().x()));
+        xpos.appendChild(xpos_val);
+        QDomElement ypos = doc.createElement("ypos");
+        QDomText ypos_val = doc.createTextNode(QString::number((*sit)->gridPos().y()));
+        ypos.appendChild(ypos_val);
+        spirit.appendChild(xpos);
+        spirit.appendChild(ypos);
+        // marked?
+        QDomElement ismarked = doc.createElement("isMarked");
+        QDomText ismarked_val;
+        if ((*sit)->isMarked())
+            ismarked_val = doc.createTextNode("true");
+        else
+            ismarked_val = doc.createTextNode("false");
+        ismarked.appendChild(ismarked_val);
+        spirit.appendChild(ismarked);
+        /* for avatars */
+        if ((*sit)->spiritCategory() == Spirit::AVATARSPIRIT)
+        {
+            AvatarSpirit *avaspt = dynamic_cast<AvatarSpirit *>(*sit);
+            assert(avaspt != NULL);
+            // id
+            QDomElement id = doc.createElement("id");
+            QDomText id_val = doc.createTextNode(QString::number(avaspt->getId()));
+            id.appendChild(id_val);
+            spirit.appendChild(id);
+            // radar range
+            QDomElement radar_range = doc.createElement("Radar_Range");
+            QDomText range_val = doc.createTextNode(QString::number(avaspt->getRadarRange()));
+            radar_range.appendChild(range_val);
+            spirit.appendChild(radar_range);
+            // awake?
+            QDomElement isawake = doc.createElement("isAwake");
+            QDomText isawake_val;
+            if (avaspt->isAwake())
+                isawake_val = doc.createTextNode("true");
+            else
+                isawake_val = doc.createTextNode("false");
+            isawake.appendChild(isawake_val);
+            spirit.appendChild(isawake);
+            // avgfreq
+            QDomElement freq = doc.createElement("Com_Freq");
+            QDomText freq_val = doc.createTextNode(QString::number(avaspt->getAvgFreq()));
+            freq.appendChild(freq_val);
+            spirit.appendChild(freq);
+            // learning mode
+            QDomElement learning_mode = doc.createElement("Learning_Mode");
+            QDomText mode_val;
+            if (avaspt->getLearningMode() == Agent::EXPLORE)
+                mode_val = doc.createTextNode("Explore");
+            else
+                mode_val = doc.createTextNode("Online");
+            learning_mode.appendChild(mode_val);
+            spirit.appendChild(learning_mode);
+        }
+
+        root.appendChild(spirit);
+    }
+
+    QTextStream out(&of);
+    doc.save(out, 4);
+    of.close();
+
+    // restore timer
+    if (timer_active == true)
+        resume();
 }
 
 void Scene::init()
@@ -375,11 +628,12 @@ void Scene::addSpiritAt(Spirit::SType type, const QPoint &grid_pos)
     else 	// some type is at pos
     {
         Spirit::SType old_spirit_type = old_spirit->spiritType();
+        Spirit::SCategory old_spirit_cate = old_spirit->spiritCategory();
         if (old_spirit_type == Spirit::BLOCK)
         {
             qDebug() << "can not add types on a Block, erase it first!";
         }
-        else if (old_spirit_type == Spirit::CHEESE || old_spirit_type == Spirit::NAIL || old_spirit_type == Spirit::BOMB)
+        else if (old_spirit_cate == Spirit::STATICSPIRIT)	// static spirits
         {
             if (type == Spirit::BLOCK)	// erase old spirit first
             {
@@ -402,12 +656,12 @@ void Scene::addSpiritAt(Spirit::SType type, const QPoint &grid_pos)
                 newSpiritAt(type, grid_pos);
             }
         }
-        else if (old_spirit_type == Spirit::MOUSE || old_spirit_type == Spirit::CAT || old_spirit_type == Spirit::ELEPHANT)
+        else if (old_spirit_cate == Spirit::AVATARSPIRIT)	// avatar spirits
         {
             if (type == Spirit::BLOCK)	// move avatar
             {
                 bool found;
-                QPoint npos = findSpiritNewPos(grid_pos, &found);
+                QPoint npos = findAvatarNewPos(grid_pos, &found);
                 if (found)
                 {
                     old_spirit->setPos(npos * GRID_SIZE);   // move to the new pos
@@ -428,7 +682,7 @@ void Scene::addSpiritAt(Spirit::SType type, const QPoint &grid_pos)
     }
 }
 
-QPoint Scene::findSpiritNewPos(const QPoint &grid_pos, bool *found)
+QPoint Scene::findAvatarNewPos(const QPoint &grid_pos, bool *found)
 {
     Spirit *spt = NULL;
     *found = false;
@@ -528,7 +782,7 @@ Spirit *Scene::newSpiritAt(Spirit::SType type, const QPoint &grid_pos)
     }
 
     // avatars use channel to communicate
-    if (spt->spiritType() == Spirit::MOUSE || spt->spiritType() == Spirit::CAT || spt->spiritType() == Spirit::ELEPHANT)
+    if (spt->spiritCategory() == Spirit::AVATARSPIRIT)
     {
         AvatarSpirit *ava = dynamic_cast<AvatarSpirit *>(spt);
         assert(ava != NULL);

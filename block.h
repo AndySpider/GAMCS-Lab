@@ -1,9 +1,8 @@
 #ifndef BLOCK_H
 #define BLOCK_H
+#include "staticspirit.h"
 
-#include "spirit.h"
-
-class Block : public Spirit
+class Block : public StaticSpirit
 {
 public:
     Block();

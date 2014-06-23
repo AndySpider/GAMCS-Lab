@@ -1,9 +1,8 @@
 #ifndef NAIL_H
 #define NAIL_H
+#include "staticspirit.h"
 
-#include "spirit.h"
-
-class Nail : public Spirit
+class Nail : public StaticSpirit
 {
 public:
     Nail();

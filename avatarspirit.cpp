@@ -17,6 +17,7 @@ AvatarSpirit::AvatarSpirit(int id) : Avatar(id), mychannel(NULL), myagent(NULL),
     radar_range(5), is_awake(true), is_sending(false), storage(""), com_freq(5),
     com_count(qrand() % (com_freq * 2))
 {
+    _category = AVATARSPIRIT;
     myagent = new CSOSAgent(id, 0.9, 0.01);
     myagent->setMode(learning_mode);
     connectAgent(myagent);
@@ -25,6 +26,16 @@ AvatarSpirit::AvatarSpirit(int id) : Avatar(id), mychannel(NULL), myagent(NULL),
 AvatarSpirit::~AvatarSpirit()
 {
     delete myagent;
+}
+
+void AvatarSpirit::setId(int i)
+{
+    id = i;
+}
+
+int AvatarSpirit::getId()
+{
+    return id;
 }
 
 void AvatarSpirit::setRadarRange(int range)
@@ -45,6 +56,17 @@ void AvatarSpirit::setAwake(bool val)
 bool AvatarSpirit::isAwake()
 {
     return is_awake;
+}
+
+void AvatarSpirit::setLearningMode(Agent::Mode lm)
+{
+    learning_mode = lm;
+    myagent->setMode(learning_mode);
+}
+
+Agent::Mode AvatarSpirit::getLearningMode()
+{
+    return learning_mode;
 }
 
 void AvatarSpirit::setChannel(Channel *c)

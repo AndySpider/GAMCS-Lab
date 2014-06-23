@@ -24,6 +24,12 @@ public:
         ELEPHANT
     };
 
+    enum SCategory
+    {
+        STATICSPIRIT = 0,
+        AVATARSPIRIT
+    };
+
     // stack priority, or z value
     static const int ELEPHANT_Z = 3;
     static const int CAT_Z = 2;
@@ -41,7 +47,9 @@ public:
     int initialize();	// initialize scene and grid_x, grid_y
 
     SType spiritType();
+    SCategory spiritCategory();
     float life();
+    void setLife(float l);
     void injured(float l);
     void healed(float l);
     QPoint gridPos();
@@ -51,6 +59,9 @@ public:
 
     virtual void act();
     virtual void postAct();
+
+    static QString stypeToString(SType stype);
+    static SType stringToSType(const QString &str);
 
     virtual QRectF boundingRect() const;
     virtual QPainterPath shape() const;
@@ -64,12 +75,11 @@ protected:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
 protected:
     float _life;
     SType _type;
+    SCategory _category;
     QColor _color;
 
     Scene *myscene;

@@ -380,6 +380,8 @@ void MainWindow::on_actionNew_triggered()
 
 void MainWindow::on_actionOpen_triggered()
 {
+    on_actionNew_triggered();	// clear the scene first
+
     QString fn = QFileDialog::getOpenFileName(this, tr("Open Scene..."), QString(),
                                               tr("Scene Files (*.scene);;All Files(*)"));
     if (!fn.isEmpty())

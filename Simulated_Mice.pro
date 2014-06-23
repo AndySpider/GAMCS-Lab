@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets xml
 
 TARGET = Simulated_Mice
 TEMPLATE = app
@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     setdialog.cpp \
     avatarspirit.cpp \
     elephant.cpp \
-    bomb.cpp
+    bomb.cpp \
+    staticspirit.cpp
 
 HEADERS  += mainwindow.h \
     scene.h \
@@ -43,7 +44,8 @@ HEADERS  += mainwindow.h \
     setdialog.h \
     avatarspirit.h \
     elephant.h \
-    bomb.h
+    bomb.h \
+    staticspirit.h
 
 unix:!macx|win32: LIBS += -lgamcs
 

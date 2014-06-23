@@ -4,7 +4,7 @@
 Nail::Nail()
 {
    _type = NAIL;
-   _color = Qt::black;
+   _color = QColor(89, 89, 100);
    _life = 1.5;
 }
 

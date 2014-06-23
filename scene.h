@@ -96,7 +96,7 @@ private:
     void useToolAt(const QPoint &grid_pos);
     void addSpiritAt(Spirit::SType type, const QPoint &grid_pos);
     void removeSpiritAt(const QPoint &grid_pos);
-    QPoint findSpiritNewPos(const QPoint &grid_pos, bool *found);
+    QPoint findAvatarNewPos(const QPoint &grid_pos, bool *found);
 
     Spirit *newSpiritAt(Spirit::SType type, const QPoint &grid_pos);
     void removeSpirit(Spirit *spt);

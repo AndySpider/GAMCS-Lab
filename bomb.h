@@ -1,8 +1,8 @@
 #ifndef ABYSS_H
 #define ABYSS_H
-#include "spirit.h"
+#include "staticspirit.h"
 
-class Bomb : public Spirit
+class Bomb : public StaticSpirit
 {
 public:
     Bomb();

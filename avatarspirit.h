@@ -17,10 +17,14 @@ public:
     void act();
     void postAct();
 
+    void setId(int i);
+    int getId();
     void setRadarRange(int range);
     int getRadarRange();
     void setAwake(bool val);
     bool isAwake();
+    void setLearningMode(Agent::Mode lm);
+    Agent::Mode getLearningMode();
     void setChannel(Channel *c);
     void setAvgFreq(int f);
     int getAvgFreq();
