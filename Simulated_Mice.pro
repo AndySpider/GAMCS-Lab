@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     channel.cpp \
     setdialog.cpp \
     avatarspirit.cpp \
-    elephant.cpp
+    elephant.cpp \
+    bomb.cpp
 
 HEADERS  += mainwindow.h \
     scene.h \
@@ -41,7 +42,8 @@ HEADERS  += mainwindow.h \
     channel.h \
     setdialog.h \
     avatarspirit.h \
-    elephant.h
+    elephant.h \
+    bomb.h
 
 unix:!macx|win32: LIBS += -lgamcs
 

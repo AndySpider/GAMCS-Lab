@@ -13,5 +13,6 @@
         <file>images/cat.png</file>
         <file>images/grid.png</file>
         <file>images/elephant.png</file>
+        <file>images/gamcs-logo-small.png</file>
     </qresource>
 </RCC>

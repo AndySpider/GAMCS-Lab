@@ -1,15 +1,11 @@
-#include <QGraphicsSceneMouseEvent>
-#include <QMenu>
-#include <QAction>
 #include <QDebug>
 #include "cheese.h"
-#include "setdialog.h"
 
 Cheese::Cheese()
 {
     _type = CHEESE;
     _color = QColor(255,204,0);
-    _life = 10;
+    _life = 15;
 }
 
 Cheese::~Cheese()
@@ -27,47 +23,19 @@ void Cheese::act()
     {
         for (QList<Spirit *>::iterator it = colliding_spirits.begin(); it != colliding_spirits.end(); ++it)
         {
-            if ((*it)->spiritType() == MOUSE)
+            Spirit::SType type = (*it)->spiritType();
+            if (type == MOUSE)
             {
                 this->injured(1);	// eaten by a mouse
             }
-            else if ((*it)->spiritType() == CAT)
+            else if (type == CAT)
             {
-                this->injured(2);	// eaten by a cat
+                this->injured(3);	// eaten by a cat
+            }
+            else if (type == ELEPHANT)
+            {
+                this->injured(5);   // eaten by an elephant
             }
         }
     }
-}
-
-void Cheese::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
-{
-   QMenu menu;
-
-   // life
-   QAction *setlife = menu.addAction("Set life");
-
-   // show the menu
-   QAction *selectedAction = menu.exec(event->screenPos());
-
-   // judge the selected action
-   if (selectedAction == setlife)
-   {
-        SetDialog dialog("Life:", QString::number(_life));
-        if (dialog.exec())
-        {
-            bool ok;
-            float new_life = dialog.getValue().toFloat(&ok);
-            if (ok)
-            {
-                this->_life = new_life;
-                qDebug() << "+++ life set to" << new_life;
-            }
-            else
-            {
-                qDebug() << "--- invalid life value, should be float!";
-            }
-        }
-   }
-
-    update();
 }

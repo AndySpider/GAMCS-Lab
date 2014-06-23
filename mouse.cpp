@@ -34,25 +34,32 @@ float Mouse::originalPayoff(Agent::State st)
             {
                 qDebug() << "Mouse" << id << ": Wow! cheese!";
                 this->healed(0.5);
-                pf += 1.0;
+                pf += 0.5;
             }
             else if ((*it)->spiritType() == NAIL)
             {
                 qDebug() << "Mouse" << id << ": Oops! nail!";
                 this->injured(0.5);
-                pf += -1.0;
+                pf += -0.5;
             }
-            else if ((*it)->spiritType() == CAT)
+            else if ((*it)->spiritType() == BOMB)
+            {
+                qDebug() << "Mouse" << id << ": BOMB, dead!";
+                this->injured(this->life());    // instant death
+                this->setAwake(false);  // be blown up unconscious
+                pf += -9999999.0;
+            }
+            else if ((*it)->spiritType() == CAT && dynamic_cast<AvatarSpirit *>(*it)->isAwake())    // a sleeping cat is harmless
             {
                 qDebug() << "Mouse" << id << ": Cat! My GOD!";
                 this->injured(1);
-                pf += -2.0;
+                pf += -1.0;
             }
-            else if ((*it)->spiritType() == ELEPHANT)
+            else if ((*it)->spiritType() == ELEPHANT && dynamic_cast<AvatarSpirit *>(*it)->isAwake())   // no attack to a sleeping poor animal
             {
                 qDebug() << "Mouse" << id << ": Elephant! my delicious!";
                 this->healed(1);
-                pf += 2.0;
+                pf += 1.0;
             }
             else
             {

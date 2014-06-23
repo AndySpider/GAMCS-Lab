@@ -18,6 +18,7 @@ public:
         BLOCK = 0,
         CHEESE,
         NAIL,
+        BOMB,
         MOUSE,
         CAT,
         ELEPHANT
@@ -27,11 +28,12 @@ public:
     static const int ELEPHANT_Z = 3;
     static const int CAT_Z = 2;
     static const int MOUSE_Z = 1;
+    static const int BOMB_Z = 0;
     static const int NAIL_Z = 0;
     static const int BLOCK_Z = 0;
     static const int CHEESE_Z = 0;
 
-    static const int SPIRIT_NUM = 6;
+    static const int SPIRIT_NUM = 7;
 
     // QGraphicsItem type
     enum { Type = UserType + 1};
@@ -63,6 +65,7 @@ protected:
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
 protected:
     float _life;

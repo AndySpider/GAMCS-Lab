@@ -9,9 +9,6 @@ public:
     Nail();
     ~Nail();
 
-protected:
-    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
-
 private:
     void act();
 };

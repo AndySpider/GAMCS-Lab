@@ -6,6 +6,7 @@
 #include "block.h"
 #include "cheese.h"
 #include "nail.h"
+#include "bomb.h"
 #include "mouse.h"
 #include "cat.h"
 #include "elephant.h"
@@ -13,7 +14,7 @@
 #include "config.h"
 
 Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(T_NONE), mouse_id(0), cat_id(0), elephant_id(0), timer_interval(100),
-    num_blocks(0), num_cheeses(0), num_nails(0), num_mice(0), num_cats(0), num_elephants(0), game_mode(DEAD)
+    num_blocks(0), num_cheeses(0), num_nails(0), num_bombs(0), num_mice(0), num_cats(0), num_elephants(0), game_mode(DEAD)
 {
     setItemIndexMethod(BspTreeIndex);   // NoIndex is slow!
 
@@ -96,6 +97,7 @@ void Scene::init()
     num_cheeses = 0;
     num_mice = 0;
     num_nails = 0;
+    num_bombs = 0;
     num_elephants = 0;
 
     elephant_id = 0;
@@ -272,6 +274,7 @@ QList<SpiritInfo> Scene::statistics()
     SpiritInfo blocks_info;
     SpiritInfo cheeses_info;
     SpiritInfo nails_info;
+    SpiritInfo bombs_info;
     SpiritInfo mice_info;
     SpiritInfo cats_info;
     SpiritInfo elephants_info;
@@ -287,6 +290,10 @@ QList<SpiritInfo> Scene::statistics()
     nails_info.name = "Nail";
     nails_info.num = num_nails;
     infos.append(nails_info);
+
+    bombs_info.name = "Bomb";
+    bombs_info.num = num_bombs;
+    infos.append(bombs_info);
 
     mice_info.name = "Mouse";
     mice_info.num = num_mice;
@@ -333,6 +340,10 @@ void Scene::useToolAt(const QPoint &grid_pos)
     {
         addSpiritAt(Spirit::ELEPHANT, grid_pos);
     }
+    else if (cur_tool == T_BOMB)
+    {
+        addSpiritAt(Spirit::BOMB, grid_pos);
+    }
     else if (cur_tool == T_NONE)
     {
         //
@@ -368,70 +379,28 @@ void Scene::addSpiritAt(Spirit::SType type, const QPoint &grid_pos)
         {
             qDebug() << "can not add types on a Block, erase it first!";
         }
-        else if (old_spirit_type == Spirit::CHEESE)
+        else if (old_spirit_type == Spirit::CHEESE || old_spirit_type == Spirit::NAIL || old_spirit_type == Spirit::BOMB)
         {
-            if (type == Spirit::BLOCK)	// erase cheese
-            {
-                removeSpirit(old_spirit);
-
-                newSpiritAt(Spirit::BLOCK, grid_pos);
-            }
-            else if (type == Spirit::CHEESE)	// supply
-            {
-                Spirit *spt = newSpiritAt(Spirit::CHEESE, grid_pos);
-                spt->healed(old_spirit->life());
-                removeSpirit(old_spirit);
-            }
-            else if (type == Spirit::NAIL)	// erase cheese
-            {
-                removeSpirit(old_spirit);
-                newSpiritAt(Spirit::NAIL, grid_pos);
-            }
-            else if (type == Spirit::MOUSE)	// add without erase
-            {
-                newSpiritAt(Spirit::MOUSE, grid_pos);
-            }
-            else if (type == Spirit::CAT)	// add direct
-            {
-                newSpiritAt(Spirit::CAT, grid_pos);
-            }
-            else if (type == Spirit::ELEPHANT)	// add directly
-            {
-                newSpiritAt(Spirit::ELEPHANT, grid_pos);
-            }
-            // other types come here
-        }
-        else if (old_spirit_type == Spirit::NAIL)
-        {
-            if (type == Spirit::BLOCK)	// erase nail
+            if (type == Spirit::BLOCK)	// erase old spirit first
             {
                 removeSpirit(old_spirit);
                 newSpiritAt(Spirit::BLOCK, grid_pos);
             }
-            else if (type == Spirit::CHEESE)	// erase nail
+            else if (type == old_spirit_type)   // supply
             {
-                removeSpirit(old_spirit);
-                newSpiritAt(Spirit::CHEESE, grid_pos);
-            }
-            else if (type == Spirit::NAIL)	// supply
-            {
-                Spirit *spt = newSpiritAt(Spirit::NAIL, grid_pos);
+                Spirit *spt = newSpiritAt(type, grid_pos);
                 spt->healed(old_spirit->life());
                 removeSpirit(old_spirit);
             }
-            else if (type == Spirit::MOUSE) // add directly
+            else if (type == Spirit::MOUSE || type == Spirit::CAT || type == Spirit::ELEPHANT)  // add avatar directly
             {
-                newSpiritAt(Spirit::MOUSE, grid_pos);
+                newSpiritAt(type, grid_pos);
             }
-            else if (type == Spirit::CAT)	// add directly
+            else    // other non-avatar spirits, erase old and add new
             {
-                newSpiritAt(Spirit::CAT, grid_pos);
+                removeSpirit(old_spirit);
+                newSpiritAt(type, grid_pos);
             }
-            else if (type == Spirit::ELEPHANT)	// add directly
-            {
-                newSpiritAt(Spirit::ELEPHANT, grid_pos);
-            }
-            // other types come here
         }
         else if (old_spirit_type == Spirit::MOUSE || old_spirit_type == Spirit::CAT || old_spirit_type == Spirit::ELEPHANT)
         {
@@ -523,6 +492,12 @@ Spirit *Scene::newSpiritAt(Spirit::SType type, const QPoint &grid_pos)
         spt->setZValue(Spirit::NAIL_Z);
         num = &num_nails;
     }
+    else if (type == Spirit::BOMB)
+    {
+        spt = new Bomb();
+        spt->setZValue(Spirit::BOMB_Z);
+        num = &num_bombs;
+    }
     else if (type == Spirit::MOUSE)
     {
         spt = new Mouse(mouse_id++);
@@ -583,6 +558,10 @@ void Scene::removeSpirit(Spirit *spt)
     else if (type == Spirit::NAIL)
     {
         num = &num_nails;
+    }
+    else if (type == Spirit::BOMB)
+    {
+        num = &num_bombs;
     }
     else if (type == Spirit::MOUSE)
     {

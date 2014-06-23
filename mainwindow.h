@@ -31,6 +31,7 @@ private:
     QAction *actionBlock;
     QAction *actionCheese;
     QAction *actionNail;
+    QAction *actionBomb;
     QAction *actionMouse;
     QAction *actionCat;
     QAction *actionElephant;
@@ -83,6 +84,7 @@ private slots:
     void on_actionBlock_triggered();
     void on_actionCheese_triggered();
     void on_actionNail_triggered();
+    void on_actionBomb_triggered();
     void on_actionMouse_triggered();
     void on_actionCat_triggered();
     void on_actionElephant_triggered();
@@ -109,7 +111,7 @@ private slots:
 private:
     QString filename;
 
-    bool saveScene();
+    bool confirmClose();
     void setCurrentFileName(const QString &file);
 
 };

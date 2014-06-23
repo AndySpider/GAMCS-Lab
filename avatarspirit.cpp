@@ -296,8 +296,8 @@ void AvatarSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     {
         if (storage.isEmpty())
         {
-            storage = QFileDialog::getSaveFileName(NULL, QObject::tr("Save memory..."), QString(),
-                                                   QObject::tr("Avatar memory (*.mem);; All Files(*)"));
+            storage = QFileDialog::getSaveFileName(NULL, QObject::tr("Save Avatar Memory..."), QString(),
+                                                   QObject::tr("Avatar Memory (*.mem);; All Files(*)"));
         }
 
         if (!storage.endsWith(".slt", Qt::CaseInsensitive))
@@ -312,8 +312,8 @@ void AvatarSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     }
     else if (selectedAction == load)
     {
-        storage = QFileDialog::getOpenFileName(NULL, QObject::tr("Load memory..."), QString(),
-                                               QObject::tr("Avatar memory (*.mem);; All Files(*)"));
+        storage = QFileDialog::getOpenFileName(NULL, QObject::tr("Load Avatar Memory..."), QString(),
+                                               QObject::tr("Avatar Memory (*.mem);; All Files(*)"));
 
         if (!storage.isEmpty())
         {

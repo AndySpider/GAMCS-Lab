@@ -27,6 +27,7 @@ public:
         T_BLOCK,
         T_CHEESE,
         T_NAIL,
+        T_BOMB,
         T_MOUSE,
         T_CAT,
         T_ELEPHANT
@@ -83,6 +84,7 @@ private:
     int num_blocks;
     int num_cheeses;
     int num_nails;
+    int num_bombs;
     int num_mice;
     int num_cats;
     int num_elephants;

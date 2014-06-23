@@ -84,10 +84,20 @@ void MainWindow::initUi()
     actionNail->setCheckable(true);
     toolGroup->addAction(actionNail);
 
+    actionBomb = new QAction(this);
+    actionBomb->setText("Bomb");
+    actionBomb->setObjectName("actionBomb");
+    actionBomb->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_6));
+    QIcon iconbomb;
+    iconbomb.addFile(QStringLiteral(":/images/bomb.png"), QSize(), QIcon::Normal, QIcon::Off);
+    actionBomb->setIcon(iconbomb);
+    actionBomb->setCheckable(true);
+    toolGroup->addAction(actionBomb);
+
     actionMouse = new QAction(this);
     actionMouse->setText("Mouse");
     actionMouse->setObjectName("actionMouse");
-    actionMouse->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_6));
+    actionMouse->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_7));
     QIcon icon5;
     icon5.addFile(QStringLiteral(":/images/mouse.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionMouse->setIcon(icon5);
@@ -97,7 +107,7 @@ void MainWindow::initUi()
     actionCat = new QAction(this);
     actionCat->setText("Cat");
     actionCat->setObjectName("actionCat");
-    actionCat->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_7));
+    actionCat->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_8));
     QIcon iconCat;
     iconCat.addFile(QStringLiteral(":/images/cat.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionCat->setIcon(iconCat);
@@ -107,7 +117,7 @@ void MainWindow::initUi()
     actionElephant = new QAction(this);
     actionElephant->setText("Elephant");
     actionElephant->setObjectName("actionElephant");
-    actionElephant->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_8));
+    actionElephant->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_9));
     QIcon iconEle;
     iconEle.addFile(QStringLiteral(":/images/elephant.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionElephant->setIcon(iconEle);
@@ -247,9 +257,11 @@ void MainWindow::initUi()
 
     toolBar->addAction(actionCursor);
     toolBar->addAction(actionEraser);
+    toolBar->addSeparator();
     toolBar->addAction(actionBlock);
     toolBar->addAction(actionCheese);
     toolBar->addAction(actionNail);
+    toolBar->addAction(actionBomb);
     toolBar->addAction(actionMouse);
     toolBar->addAction(actionCat);
     toolBar->addAction(actionElephant);
@@ -307,6 +319,11 @@ void MainWindow::on_actionNail_triggered()
     scene->setCurTool(Scene::T_NAIL);
 }
 
+void MainWindow::on_actionBomb_triggered()
+{
+    scene->setCurTool(Scene::T_BOMB);
+}
+
 void MainWindow::on_actionMouse_triggered()
 {
     scene->setCurTool(Scene::T_MOUSE);
@@ -354,7 +371,7 @@ void MainWindow::on_actionSpeedDown_triggered()
 
 void MainWindow::on_actionNew_triggered()
 {
-    if (saveScene())
+    if (confirmClose())
     {
         scene->init();
         setCurrentFileName(QString());
@@ -383,7 +400,7 @@ void MainWindow::on_actionSave_triggered()
 
 void MainWindow::on_actionSave_as_triggered()
 {
-    QString fn = QFileDialog::getSaveFileName(this, tr("Save as..."), QString(),
+    QString fn = QFileDialog::getSaveFileName(this, tr("Save Scene..."), QString(),
                                               tr("Scene Files (*.scene);;All Files(*)"));
     if (!fn.isEmpty())
     {
@@ -411,14 +428,38 @@ void MainWindow::on_actionAbout_Simulated_Mice_triggered()
 
 void MainWindow::on_actionAbout_GAMCS_triggered()
 {
-    QMessageBox::about(this, tr("About GAMCS"), tr("Generalized Agent Model and Computer Simulation."));
+    QString translatedTextAboutGAMCSCaption;
+    translatedTextAboutGAMCSCaption = QMessageBox::tr(
+                "<h3> About GAMCS</h3>"
+                "<p> This program uses GAMCS version 1.3.4");
+
+    QString translatedTextAboutGAMCSText;
+    translatedTextAboutGAMCSText = QMessageBox::tr(
+                "<p> GAMCS is a blabla.</p>"
+                "<p> GAMCS provides blabla. </p>"
+                "<p> gamcs licensed under blabla </p>"
+                "<p> here is the link: <a href=\"http://gamcs.andy87.com\">gamcs</a> for an overview of gamcs </p>"
+                "<p> copyright </p>"
+                );
+    QMessageBox *aboutBox = new QMessageBox(this);
+    aboutBox->setAttribute(Qt::WA_DeleteOnClose);
+    aboutBox->setWindowTitle(tr("About GAMCS"));
+    aboutBox->setText(translatedTextAboutGAMCSCaption);
+    aboutBox->setInformativeText(translatedTextAboutGAMCSText);
+
+    QPixmap logo(QStringLiteral(":/images/gamcs-logo-small.png"));
+    aboutBox->setIconPixmap(logo);
+    aboutBox->setDefaultButton(aboutBox->addButton(QMessageBox::Ok));
+
+    aboutBox->show();
+    aboutBox->exec();
 }
 
-bool MainWindow::saveScene()
+bool MainWindow::confirmClose()
 {
     QMessageBox::StandardButton ret;
-    ret = QMessageBox::warning(this, tr("Save Scene..."),
-                                        tr("Do you want to save your scene?"),
+    ret = QMessageBox::warning(this, tr("Confirm Close?"),
+                                        tr("The Scene and all the Avatar Memories will be lost!"),
                                         QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
     if (ret == QMessageBox::Save)
     {
@@ -448,7 +489,7 @@ void MainWindow::setCurrentFileName(const QString &file)
 
 void MainWindow::closeEvent(QCloseEvent *e)
 {
-    if (saveScene())
+    if (confirmClose())
         e->accept();
     else
         e->ignore();

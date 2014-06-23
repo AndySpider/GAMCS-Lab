@@ -30,25 +30,32 @@ float Elephant::originalPayoff(Agent::State st)
             {
                 qDebug() << "Elephant" << id << ": Wow! cheese!";
                 this->healed(0.1);
-                pf += 1.0;
+                pf += 0.1;
             }
             else if ((*it)->spiritType() == NAIL)
             {
                 qDebug() << "Elephant" << id << ": Oops! nail!";
                 this->injured(0.1);
-                pf += -1.0;
+                pf += -0.1;
             }
-            else if ((*it)->spiritType() == CAT)
+            else if ((*it)->spiritType() == BOMB)
+            {
+                qDebug() << "Elephant" << id << ": BOMB, dead!";
+                this->injured(this->life());    // instant death
+                this->setAwake(false);  // be blown up unconscious
+                pf += -9999999.0;
+            }
+            else if ((*it)->spiritType() == CAT && dynamic_cast<AvatarSpirit *>(*it)->isAwake())
             {
                 qDebug() << "Elephant" << id << ": Cat~ I'll squeese you!";
                 this->healed(1);
-                pf += 2.0;
+                pf += 1.0;
             }
-            else if ((*it)->spiritType() == MOUSE)
+            else if ((*it)->spiritType() == MOUSE && dynamic_cast<AvatarSpirit *>(*it)->isAwake())
             {
                 qDebug() << "Elephant" << id << ": Mouse! OMG! stay away from my nose!";
                 this->injured(1);
-                pf += -2.0;
+                pf += -1.0;
             }
             else
             {

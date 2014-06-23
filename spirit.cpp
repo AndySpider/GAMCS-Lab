@@ -4,10 +4,13 @@
 #include <QGraphicsScene>
 #include <QTextStream>
 #include <QDebug>
+#include <QMenu>
+#include <QAction>
 #include <QList>
 #include "scene.h"
 #include "spirit.h"
 #include "config.h"
+#include "setdialog.h"
 
 Spirit::Spirit() : _life(1), _type(BLOCK), _color(Qt::black), myscene(NULL), grid_x(-1), grid_y(-1),
     is_marked(false)
@@ -89,7 +92,7 @@ QList<Spirit *> Spirit::collidingSpirits()
         for (QList<QGraphicsItem *>::iterator itemit = colliding_items.begin(); itemit != colliding_items.end(); ++itemit)
         {
             Spirit *spirit = qgraphicsitem_cast<Spirit *>(*itemit);
-            if (spirit != NULL)		// not a spirit if it's 0
+            if (spirit != NULL)		// should be a spirit
                 colliding_spirits.append(spirit);
         }
     }
@@ -199,6 +202,39 @@ void Spirit::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     QString tips;
     QTextStream(&tips) << "life:" << _life;
     setToolTip(tips);
+
+    update();
+}
+
+void Spirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+   QMenu menu;
+
+   // life
+   QAction *setlife = menu.addAction("Set life");
+
+   // show the menu
+   QAction *selectedAction = menu.exec(event->screenPos());
+
+   // judge the selected action
+   if (selectedAction == setlife)
+   {
+        SetDialog dialog("Life:", QString::number(_life));
+        if (dialog.exec())
+        {
+            bool ok;
+            float new_life = dialog.getValue().toFloat(&ok);
+            if (ok)
+            {
+                this->_life = new_life;
+                qDebug() << "+++ life set to" << new_life;
+            }
+            else
+            {
+                qDebug() << "--- invalid life value, should be float!";
+            }
+        }
+   }
 
     update();
 }
