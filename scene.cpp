@@ -19,7 +19,7 @@ Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(T_NONE), mouse_
 {
     setItemIndexMethod(BspTreeIndex);   // NoIndex is slow!
 
-    this->setSceneRect(-10, -10, SCENE_WIDTH *GRID_SIZE + 20, SCENE_HEIGHT * GRID_SIZE + 20);
+    this->setSceneRect(-40, -40, SCENE_WIDTH *GRID_SIZE + 80, SCENE_HEIGHT * GRID_SIZE + 80);
     this->init();
 
     // initialize channel
@@ -76,7 +76,7 @@ void Scene::step()
 
 int Scene::load(const QString &file)
 {
-    // pause the scene
+    // pause the scene when and after load scene
     pause();
 
     QFile infile(file);
@@ -127,7 +127,6 @@ int Scene::load(const QString &file)
         if (node.isElement())
         {
             QDomElement spt = node.toElement();
-            qDebug() << "tagname:" << spt.tagName();
             type = Spirit::stringToSType(spt.attribute("type"));
 
             // traverse all the child nodes
@@ -198,20 +197,23 @@ int Scene::load(const QString &file)
         }
 
         Spirit *nspt = newSpiritAt(type, grid_pos);
-        nspt->setLife(life);
-        nspt->setMarked(is_marked);
-
-        // for avatars
-        if (is_avatar)
+        if (nspt != NULL)
         {
-            AvatarSpirit *avaspt = dynamic_cast<AvatarSpirit *>(nspt);
-            assert(avaspt != NULL);
+            nspt->setLife(life);
+            nspt->setMarked(is_marked);
 
-            avaspt->setId(id);
-            avaspt->setRadarRange(radar_range);
-            avaspt->setAwake(is_awake);
-            avaspt->setAvgFreq(com_freq);
-            avaspt->setLearningMode(lm);
+            // for avatars
+            if (is_avatar)
+            {
+                AvatarSpirit *avaspt = dynamic_cast<AvatarSpirit *>(nspt);
+                assert(avaspt != NULL);
+
+                avaspt->setId(id);
+                avaspt->setRadarRange(radar_range);
+                avaspt->setAwake(is_awake);
+                avaspt->setComFreq(com_freq);
+                avaspt->setLearningMode(lm);
+            }
         }
 
         node = node.nextSibling();
@@ -222,12 +224,12 @@ int Scene::load(const QString &file)
 
 void Scene::save(const QString &file)
 {
-    // pause the scene
+    // pause the scene when save
     bool timer_active  = timer->isActive();
     pause();
 
     QFile of(file);
-    if(!of.open(QFile::Text | QFile::WriteOnly))
+    if(!of.open(QFile::Text | QFile::WriteOnly | QFile::Truncate))
     {
         qDebug() << "Error: can not open file for saving scene" << file;
         return;
@@ -236,6 +238,10 @@ void Scene::save(const QString &file)
     QDomDocument doc("Scene");
     QDomElement root = doc.createElement("Scene");
     doc.appendChild(root);
+
+    root.setAttribute("width", SCENE_WIDTH);
+    root.setAttribute("height", SCENE_HEIGHT);
+    root.setAttribute("grid_size", GRID_SIZE);
 
     // save the meta-scene info
     QDomElement meta_info = doc.createElement("Scene_Infomation");
@@ -314,7 +320,7 @@ void Scene::save(const QString &file)
             spirit.appendChild(isawake);
             // avgfreq
             QDomElement freq = doc.createElement("Com_Freq");
-            QDomText freq_val = doc.createTextNode(QString::number(avaspt->getAvgFreq()));
+            QDomText freq_val = doc.createTextNode(QString::number(avaspt->getComFreq()));
             freq.appendChild(freq_val);
             spirit.appendChild(freq);
             // learning mode
@@ -358,56 +364,64 @@ void Scene::init()
     cat_id = 0;
 
     // build scene
-    buildWalls();
+    drawAxis();
+    drawLimitLine();
 }
 
 void Scene::pause()
 {
     timer->stop();
+    emit paused();
 }
 
 void Scene::resume()
 {
     timer->start(timer_interval);
+    emit resumed();
 }
 
-void Scene::buildWalls()
+void Scene::drawAxis()
 {
-    // the left wall, [0, 0] ~ [0, h-10]
-    for (int i =0; i< SCENE_HEIGHT; i++)
-    {
-        Block *block = new Block();
-        block->setPos(0 , i*GRID_SIZE);
-        block->setEnabled(false);
-        this->addItem(block);
-    }
+    QPointF origin = QPointF(-20, -20);
+    QPointF xend = QPointF( 5 * GRID_SIZE, -20);
+    QPointF yend = QPointF(-20, 5 * GRID_SIZE);
+    QLineF xaxis = QLineF(origin, xend);
+    QLineF yaxis = QLineF(origin, yend);
 
-    // the right wall, [w-5, 5] ~ [w-5, h-5]
-    for (int i=0; i< SCENE_HEIGHT; i++)
-    {
-        Block *block = new Block();
-        block->setPos((SCENE_WIDTH - 1) * GRID_SIZE, i*GRID_SIZE);
-        block->setEnabled(false);
-        this->addItem(block);
-    }
+    this->addLine(xaxis);
+    this->addLine(yaxis);
+    QGraphicsSimpleTextItem *olabel = this->addSimpleText("O");
+    olabel->setPos(-35, -35);
+    QGraphicsSimpleTextItem *xlabel = this->addSimpleText("X");
+    xlabel->setPos(5 * GRID_SIZE, -20);
+    QGraphicsSimpleTextItem *ylabel = this->addSimpleText("Y");
+    ylabel->setPos(-20, 5 * GRID_SIZE);
+}
 
-    // the up wall, [15, 5] ~ [w-15, 5]
-    for (int i=0; i < SCENE_WIDTH - 2; i++)
-    {
-        Block *block = new Block();
-        block->setPos((i + 1) * GRID_SIZE, 0);
-        block->setEnabled(false);
-        this->addItem(block);
-    }
+void Scene::drawLimitLine()
+{
+    QPointF ur = QPointF(0, 0);
+    QPointF ul = QPointF(GRID_SIZE * SCENE_WIDTH, 0);
+    QPointF dr = QPointF(0, GRID_SIZE * SCENE_HEIGHT);
+    QPointF dl = QPointF(GRID_SIZE * SCENE_WIDTH, GRID_SIZE * SCENE_HEIGHT);
 
-    // the bottom wall, [15, h-5] ~ [w-15, h-5]
-    for (int i = 0; i < SCENE_WIDTH - 2; i++)
-    {
-        Block *block = new Block();
-        block->setPos((i + 1) * GRID_SIZE, (SCENE_HEIGHT - 1) * GRID_SIZE);
-        block->setEnabled(false);
-        this->addItem(block);
-    }
+    QPen pen;
+    pen.setStyle(Qt::SolidLine);
+    pen.setBrush(Qt::black);
+    pen.setWidth(2);
+    pen.setJoinStyle(Qt::RoundJoin);
+
+    QLineF uline = QLineF(ul, ur);
+    QLineF rline = QLineF(ur, dr);
+    QLineF dline = QLineF(dr, dl);
+    QLineF lline = QLineF(dl, ul);
+    this->addLine(uline, pen);
+    this->addLine(rline, pen);
+    this->addLine(dline, pen);
+    this->addLine(lline, pen);
+
+    QGraphicsSimpleTextItem *text =  this->addSimpleText("Limit Line");
+    text->setPos(SCENE_WIDTH * GRID_SIZE / 2.0, -20);
 }
 
 void Scene::setCurTool(Tool t)
@@ -418,6 +432,8 @@ void Scene::setCurTool(Tool t)
 
 void Scene::speedUp()
 {
+    int level = 0;
+
     switch (timer_interval)
     {
     case 1000:
@@ -446,6 +462,7 @@ void Scene::speedUp()
         break;
     case 1:
         qDebug() << "It's the maximum speed!";
+        level = 1;
         break;
     default:
         qWarning() << "!!! The timer interval is out of control!";
@@ -453,10 +470,14 @@ void Scene::speedUp()
 
     if (timer->isActive())
         timer->start(timer_interval);
+
+    emit currentSpeedLevel(level);
 }
 
 void Scene::speedDown()
 {
+    int level = 0;
+
     switch (timer_interval)
     {
     case 1:
@@ -485,6 +506,7 @@ void Scene::speedDown()
         break;
     case 1000:
         qDebug() << "It's the minimum speed!";
+        level = -1;
         break;
     default:
         qWarning() << "!!! The timer interval is out of control!";
@@ -492,12 +514,19 @@ void Scene::speedDown()
 
     if (timer->isActive())
         timer->start(timer_interval);
+
+    emit currentSpeedLevel(level);
 }
 
 void Scene::setGameMode(GameMode mode)
 {
     game_mode = mode;
     qDebug() << "+++ Scene - change game mode to " << game_mode;
+}
+
+bool Scene::empty()
+{
+    return spirits.empty();
 }
 
 void Scene::genRandSpirit(int num)
@@ -643,7 +672,8 @@ void Scene::addSpiritAt(Spirit::SType type, const QPoint &grid_pos)
             else if (type == old_spirit_type)   // supply
             {
                 Spirit *spt = newSpiritAt(type, grid_pos);
-                spt->healed(old_spirit->life());
+                if (spt != NULL)
+                    spt->healed(old_spirit->life());
                 removeSpirit(old_spirit);
             }
             else if (type == Spirit::MOUSE || type == Spirit::CAT || type == Spirit::ELEPHANT)  // add avatar directly
@@ -688,7 +718,8 @@ QPoint Scene::findAvatarNewPos(const QPoint &grid_pos, bool *found)
     *found = false;
     // check if there's space above
     spt = this->getSpiritAt(grid_pos.x(), grid_pos.y() - 1);
-    if (spt == NULL || spt->spiritType() != Spirit::BLOCK)	// not exit or not block
+    if (grid_pos.y() != 0 &&
+            (spt == NULL || spt->spiritType() != Spirit::BLOCK))	// not cross limit line and (empty or not block)
     {
         *found = true;
         return QPoint(grid_pos.x(), grid_pos.y() - 1);
@@ -696,7 +727,8 @@ QPoint Scene::findAvatarNewPos(const QPoint &grid_pos, bool *found)
 
     // check right
     spt = this->getSpiritAt(grid_pos.x() + 1, grid_pos.y());
-    if (spt == NULL || spt->spiritType() != Spirit::BLOCK)	// not exit or not block
+    if (grid_pos.x() != SCENE_WIDTH -1 &&
+            (spt == NULL || spt->spiritType() != Spirit::BLOCK))
     {
         *found = true;
         return QPoint(grid_pos.x() + 1, grid_pos.y());
@@ -704,7 +736,8 @@ QPoint Scene::findAvatarNewPos(const QPoint &grid_pos, bool *found)
 
     // check below
     spt = this->getSpiritAt(grid_pos.x(), grid_pos.y() + 1);
-    if (spt == NULL || spt->spiritType() != Spirit::BLOCK)	// not exit or not block
+    if (grid_pos.y() != SCENE_HEIGHT - 1 &&
+            (spt == NULL || spt->spiritType() != Spirit::BLOCK))
     {
         *found = true;
         return QPoint(grid_pos.x(), grid_pos.y() + 1);
@@ -712,7 +745,8 @@ QPoint Scene::findAvatarNewPos(const QPoint &grid_pos, bool *found)
 
     // check left
     spt = this->getSpiritAt(grid_pos.x() - 1, grid_pos.y());
-    if (spt == NULL || spt->spiritType() != Spirit::BLOCK)	// not exit or not block
+    if (grid_pos.x() != 0 &&
+            (spt == NULL || spt->spiritType() != Spirit::BLOCK))
     {
         *found = true;
         return QPoint(grid_pos.x() - 1, grid_pos.y());
@@ -725,6 +759,13 @@ QPoint Scene::findAvatarNewPos(const QPoint &grid_pos, bool *found)
 
 Spirit *Scene::newSpiritAt(Spirit::SType type, const QPoint &grid_pos)
 {
+    // can not add spirit out of limit line
+    if (outOfLimitLine(grid_pos))
+    {
+        qDebug() << "--- Scene: can not create spirit out of limit line";
+        return NULL;
+    }
+
     Spirit *spt = NULL;
     int *num = NULL;
 
@@ -887,4 +928,15 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     }
 
     QGraphicsScene::mouseMoveEvent(event);
+}
+
+bool Scene::outOfLimitLine(const QPoint &grid_pos)
+{
+    if (grid_pos.x() < 0
+            || grid_pos.x() > SCENE_WIDTH - 1
+            || grid_pos.y() < 0
+            || grid_pos.y() > SCENE_HEIGHT - 1)
+        return true;
+    else
+        return false;
 }

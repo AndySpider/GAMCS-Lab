@@ -245,11 +245,14 @@ void Spirit::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     QPoint pos = myscene->calGridPos(event->scenePos());
 
-    // update grid pos
-    grid_x = pos.x();
-    grid_y = pos.y();
+    if (!myscene->outOfLimitLine(pos))    // update position only if not out of limit line
+    {
+        grid_x = pos.x();
+        grid_y = pos.y();
 
-    this->setPos(grid_x * GRID_SIZE, grid_y * GRID_SIZE);
+        this->setPos(grid_x * GRID_SIZE, grid_y * GRID_SIZE);
+    }
+
     update();
 }
 

@@ -23,6 +23,9 @@ public:
 
 public slots:
     void spiritsNumChanged(int);
+    void scenePaused();
+    void sceneResumed();
+    void sceneSpeedLevel(int level);
 
 private:
     // tool actions
@@ -61,7 +64,7 @@ private:
     QAction *actionGenRand;
 
     QMenu *menuAbout;
-    QAction *actionAbout_Simulated_Mice;
+    QAction *actionAbout_App;
     QAction *actionAbout_GAMCS;
 
     QToolBar *toolBar;
@@ -105,7 +108,7 @@ private slots:
 
     void on_actionGenRand_triggered();
 
-    void on_actionAbout_Simulated_Mice_triggered();
+    void on_actionAbout_App_triggered();
     void on_actionAbout_GAMCS_triggered();
 
 private:

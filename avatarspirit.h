@@ -26,8 +26,8 @@ public:
     void setLearningMode(Agent::Mode lm);
     Agent::Mode getLearningMode();
     void setChannel(Channel *c);
-    void setAvgFreq(int f);
-    int getAvgFreq();
+    void setComFreq(int f);
+    int getComFreq();
 
     void sendMsg(AvatarSpirit *receiver, State_Info_Header *stif);
     void recvMsg(const State_Info_Header *recstif);

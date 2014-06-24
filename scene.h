@@ -51,6 +51,7 @@ public:
     void speedUp();
     void speedDown();
     void setGameMode(GameMode);
+    bool empty();
 
     void genRandSpirit(int num);
 
@@ -58,9 +59,13 @@ public:
 
     QPoint calGridPos(const QPointF &);
     Spirit *getSpiritAt(int grid_x, int grid_y);
+    bool outOfLimitLine(const QPoint &grid_pos);
 
 signals:
     void spiritsNumChanged(int);
+    void paused();
+    void resumed();
+    void currentSpeedLevel(int);
 
 private slots:
     void step();
@@ -91,7 +96,8 @@ private:
     GameMode game_mode;
     Channel *channel;
 
-    void buildWalls();
+    void drawAxis();
+    void drawLimitLine();
 
     void useToolAt(const QPoint &grid_pos);
     void addSpiritAt(Spirit::SType type, const QPoint &grid_pos);

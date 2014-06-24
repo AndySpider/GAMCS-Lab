@@ -30,6 +30,13 @@ void StaticSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
    QMenu menu;
 
+   // mark
+   QAction *toggle_mark;
+   if (isMarked())
+       toggle_mark = menu.addAction("Unmark");
+   else
+       toggle_mark = menu.addAction("Mark");
+
    // life
    QAction *setlife = menu.addAction("Set life");
 
@@ -54,6 +61,10 @@ void StaticSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
                 qDebug() << "--- invalid life value, should be float!";
             }
         }
+   }
+   else if (selectedAction == toggle_mark)
+   {
+       this->setMarked(!this->isMarked());
    }
 
     update();

@@ -4,12 +4,17 @@
 #
 #-------------------------------------------------
 
+APPNAME = Pandora
+VERSION = 0.0.1
+
 QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets xml
 
-TARGET = Simulated_Mice
+TARGET = $${APPNAME}
 TEMPLATE = app
+
+CONFIG += warn_on
 
 QMAKE_CXXFLAGS += -std=c++0x
 
@@ -56,3 +61,7 @@ FORMS +=
 
 DEFINES += GLOBAL_SENSE #	\
 #    SURVIVE_MODE
+
+VERSTR = '\\"$${VERSION}\\"'
+APPSTR = '\\"$${APPNAME}\\"'
+DEFINES += VER=\"$${VERSTR}\" APP=\"$${APPSTR}\"

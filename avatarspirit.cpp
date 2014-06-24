@@ -74,12 +74,12 @@ void AvatarSpirit::setChannel(Channel *c)
     mychannel = c;
 }
 
-void AvatarSpirit::setAvgFreq(int f)
+void AvatarSpirit::setComFreq(int f)
 {
     com_freq = f;
 }
 
-int AvatarSpirit::getAvgFreq()
+int AvatarSpirit::getComFreq()
 {
     return com_freq;
 }
@@ -115,45 +115,58 @@ QList<AvatarSpirit *> AvatarSpirit::getNeighbors()
 
 void AvatarSpirit::moveUp()
 {
-    // check if there are blocks
-    Spirit *spt = myscene->getSpiritAt(grid_x, grid_y - 1);
+    // do not cross the limit line
+    if (grid_y <= 0)
+        return;
+
+    // check if there are blocks at upper grid
+    Spirit *spt = myscene->getSpiritAt(grid_x + tmp_delta_grid_x, grid_y + tmp_delta_grid_y - 1);
     if (spt == NULL || spt->spiritType() != BLOCK)
     {
-        tmp_delta_grid_x = 0;   // use tmp pos
-        tmp_delta_grid_y = -1;
+        tmp_delta_grid_x += 0;   // use tmp pos
+        tmp_delta_grid_y += -1;
     }
 }
 
 void AvatarSpirit::moveDown()
 {
-    // check if there are blocks
-    Spirit *spt = myscene->getSpiritAt(grid_x, grid_y + 1);
+    if (grid_y >= SCENE_HEIGHT - 1) // on the below limit line
+        return;
+
+    // check if there are blocks below
+    Spirit *spt = myscene->getSpiritAt(grid_x + tmp_delta_grid_x, grid_y + tmp_delta_grid_y + 1);
     if (spt == NULL || spt->spiritType() != BLOCK)
     {
-        tmp_delta_grid_x = 0;
-        tmp_delta_grid_y = 1;
+        tmp_delta_grid_x += 0;
+        tmp_delta_grid_y += 1;
     }
 }
 
 void AvatarSpirit::moveLeft()
 {
+    if (grid_x <= 0)
+        return;
+
     // check if there are blocks
-    Spirit *spt = myscene->getSpiritAt(grid_x - 1, grid_y);
+    Spirit *spt = myscene->getSpiritAt(grid_x + tmp_delta_grid_x - 1, grid_y + tmp_delta_grid_y);
     if (spt == NULL || spt->spiritType() != BLOCK)
     {
-        tmp_delta_grid_x = -1;
-        tmp_delta_grid_y = 0;
+        tmp_delta_grid_x += -1;
+        tmp_delta_grid_y += 0;
     }
 }
 
 void AvatarSpirit::moveRight()
 {
+    if (grid_x >= SCENE_WIDTH - 1)
+        return;
+
     // check if there are blocks
-    Spirit *spt = myscene->getSpiritAt(grid_x + 1, grid_y);
+    Spirit *spt = myscene->getSpiritAt(grid_x + tmp_delta_grid_x + 1, grid_y + tmp_delta_grid_y);
     if (spt == NULL || spt->spiritType() != BLOCK)
     {
-        tmp_delta_grid_x = 1;
-        tmp_delta_grid_y = 0;
+        tmp_delta_grid_x += 1;
+        tmp_delta_grid_y += 0;
     }
 }
 
@@ -286,14 +299,14 @@ void AvatarSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     }
     else if (selectedAction == radar_freq)
     {
-        SetDialog dialog("Radar Freq", QString::number(getAvgFreq()));
+        SetDialog dialog("Radar Freq", QString::number(getComFreq()));
         if (dialog.exec())
         {
             bool ok;
             int new_radar_freq = dialog.getValue().toInt(&ok, 10);
             if (ok && new_radar_freq > 0)
             {
-                this->setAvgFreq(new_radar_freq);
+                this->setComFreq(new_radar_freq);
                 qDebug() << "+++ Average freq set to" << new_radar_freq;
             }
             else

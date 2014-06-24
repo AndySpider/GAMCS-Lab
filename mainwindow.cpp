@@ -18,7 +18,7 @@ MainWindow::~MainWindow()
 void MainWindow::initUi()
 {
     // mainwindow
-    this->setWindowTitle("Simulated Mice --- powered by GAMCS");
+    this->setWindowTitle(QString("%1 v%2 --- powered by GAMCS").arg(APP).arg(VER));
     this->setObjectName("MainWindow");
     QIcon icon;
     icon.addFile(QStringLiteral(":/images/mouse.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -168,6 +168,9 @@ void MainWindow::initUi()
     scene = new Scene(this);
     scene->setObjectName("scene");
     connect(scene, SIGNAL(spiritsNumChanged(int)), this, SLOT(spiritsNumChanged(int)));
+    connect(scene, SIGNAL(paused()), this, SLOT(scenePaused()));
+    connect(scene, SIGNAL(resumed()), this, SLOT(sceneResumed()));
+    connect(scene, SIGNAL(currentSpeedLevel(int)), this, SLOT(sceneSpeedLevel(int)));
 
     viewer->setScene(scene);		// attach scene
 
@@ -233,14 +236,14 @@ void MainWindow::initUi()
     menuAbout->setObjectName("menuAbout");
     menuAbout->setTitle("About");
     // About actions
-    actionAbout_Simulated_Mice = new QAction(this);
-    actionAbout_Simulated_Mice->setObjectName(QStringLiteral("actionAbout_Simulated_Mice"));
+    actionAbout_App = new QAction(this);
+    actionAbout_App->setObjectName(QStringLiteral("actionAbout_App"));
     actionAbout_GAMCS = new QAction(this);
     actionAbout_GAMCS->setObjectName(QStringLiteral("actionAbout_GAMCS"));
-    actionAbout_Simulated_Mice->setText("About Simulated Mice");
+    actionAbout_App->setText(QString("About %1").arg(APP));
     actionAbout_GAMCS->setText("About GAMCS");
 
-    menuAbout->addAction(actionAbout_Simulated_Mice);
+    menuAbout->addAction(actionAbout_App);
     menuAbout->addAction(actionAbout_GAMCS);
 
     // add to menuBar
@@ -294,6 +297,40 @@ void MainWindow::spiritsNumChanged(int num)
     statusBar->showMessage(msg);
 }
 
+void MainWindow::scenePaused()
+{
+    QIcon icon;
+    qDebug() << "+++ pause mice";
+    icon.addFile(QStringLiteral(":/images/pause.png"), QSize(), QIcon::Normal, QIcon::Off);
+    actionPause_Resume->setIcon(icon);
+    actionPause_Resume->setChecked(true);
+}
+
+void MainWindow::sceneResumed()
+{
+    QIcon icon;
+    qDebug() << "+++ resume mice";
+    icon.addFile(QStringLiteral(":/images/resume.png"), QSize(), QIcon::Normal, QIcon::Off);
+    actionPause_Resume->setIcon(icon);
+}
+
+void MainWindow::sceneSpeedLevel(int level)
+{
+    if (level == -1)  // reach minima
+    {
+        actionSpeedDown->setEnabled(false);
+    }
+    else if (level == 1)  // reach maxima
+    {
+        actionSpeedUp->setEnabled(false);
+    }
+    else
+    {
+        actionSpeedUp->setEnabled(true);
+        actionSpeedDown->setEnabled(true);
+    }
+}
+
 void MainWindow::on_actionCursor_triggered()
 {
     scene->setCurTool(Scene::T_NONE);
@@ -341,20 +378,12 @@ void MainWindow::on_actionElephant_triggered()
 
 void MainWindow::on_actionPause_Resume_toggled(bool arg1)
 {
-    QIcon icon;
-
     if (arg1)
     {
-        qDebug() << "+++ pause mice";
-        icon.addFile(QStringLiteral(":/images/pause.png"), QSize(), QIcon::Normal, QIcon::Off);
-        actionPause_Resume->setIcon(icon);
         scene->pause();
     }
     else
     {
-        qDebug() << "+++ resume mice";
-        icon.addFile(QStringLiteral(":/images/resume.png"), QSize(), QIcon::Normal, QIcon::Off);
-        actionPause_Resume->setIcon(icon);
         scene->resume();
     }
 }
@@ -408,9 +437,9 @@ void MainWindow::on_actionSave_as_triggered()
     {
        if (!fn.endsWith(".scene", Qt::CaseInsensitive))
            fn += ".scene";  // default
-    }
 
-    scene->save(fn);
+       scene->save(fn);
+    }
 }
 
 void MainWindow::on_actionQuit_triggered()
@@ -423,7 +452,7 @@ void MainWindow::on_actionRecent_Files_triggered()
 
 }
 
-void MainWindow::on_actionAbout_Simulated_Mice_triggered()
+void MainWindow::on_actionAbout_App_triggered()
 {
     QMessageBox::about(this, tr("About"), tr("This application demonstrates the use of GAMCS to create multipul autonomaous avatars."));
 }
@@ -459,6 +488,9 @@ void MainWindow::on_actionAbout_GAMCS_triggered()
 
 bool MainWindow::confirmClose()
 {
+    if (scene->empty())
+        return true;
+
     QMessageBox::StandardButton ret;
     ret = QMessageBox::warning(this, tr("Confirm Close?"),
                                         tr("The Scene and all the Avatar Memories will be lost!"),
@@ -485,7 +517,7 @@ void MainWindow::setCurrentFileName(const QString &file)
     else
         showName = QFileInfo(filename).fileName();
 
-    setWindowTitle(tr("%1[*] [%2]").arg(showName).arg(tr("Simulated Mice --- powered by GAMCS")));
+    setWindowTitle(tr("%1[*] [%2]").arg(showName).arg(tr("%1 v%2 --- powered by GAMCS").arg(APP).arg(VER)));
     setWindowModified(false);
 }
 
