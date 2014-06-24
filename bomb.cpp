@@ -1,4 +1,5 @@
 #include "bomb.h"
+#include "avatarspirit.h"
 
 Bomb::Bomb()
 {
@@ -23,7 +24,7 @@ void Bomb::act()
         for (QList<Spirit *>::iterator it = colliding_spirits.begin(); it != colliding_spirits.end(); ++it)
         {
             Spirit::SType type = (*it)->spiritType();
-            if (type == MOUSE || type == CAT || type == ELEPHANT)
+            if ((type == MOUSE || type == CAT || type == ELEPHANT) && dynamic_cast<AvatarSpirit *>(*it)->isAwake())
             {
                 this->injured(1.0);    // blow up a bomb
             }

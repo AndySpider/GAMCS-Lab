@@ -18,7 +18,7 @@ AvatarSpirit::AvatarSpirit(int id) : Avatar(id), mychannel(NULL), myagent(NULL),
     com_count(qrand() % (com_freq * 2))
 {
     _category = AVATARSPIRIT;
-    myagent = new CSOSAgent(id, 0.9, 0.01);
+    myagent = new CSOSAgent(id, 0.95, 0.001);
     myagent->setMode(learning_mode);
     connectAgent(myagent);
 }
@@ -335,8 +335,8 @@ void AvatarSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
                                                    QObject::tr("Avatar Memory (*.mem);; All Files(*)"));
         }
 
-        if (!storage.endsWith(".slt", Qt::CaseInsensitive))
-            storage += ".slt";
+        if (!storage.endsWith(".mem", Qt::CaseInsensitive))
+            storage += ".mem";
 
         // save memory to storage
         Sqlite db(storage.toStdString());
@@ -498,7 +498,30 @@ OSpace AvatarSpirit::availableActions(Agent::State st)
     Q_UNUSED(st);
 
     OSpace acts;
-    acts.add(1, 5, 1);
+
+    Spirit *spt;
+    // check upper grid
+    spt = myscene->getSpiritAt(grid_x, grid_y -1);
+    if (spt == NULL || spt->spiritType() != BLOCK)
+        acts.add(1);
+
+    // down
+    spt = myscene->getSpiritAt(grid_x, grid_y + 1);
+    if (spt == NULL || spt->spiritType() != BLOCK)
+        acts.add(2);
+
+    // left
+    spt = myscene->getSpiritAt(grid_x - 1, grid_y);
+    if (spt == NULL || spt->spiritType() != BLOCK)
+        acts.add(3);
+
+    // right
+    spt = myscene->getSpiritAt(grid_x + 1, grid_y);
+    if (spt == NULL || spt->spiritType() != BLOCK)
+        acts.add(4);
+
+    // stop
+    acts.add(5);
     return acts;
 }
 

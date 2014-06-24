@@ -439,6 +439,7 @@ void MainWindow::on_actionSave_as_triggered()
            fn += ".scene";  // default
 
        scene->save(fn);
+       filename = fn;
     }
 }
 
@@ -454,7 +455,9 @@ void MainWindow::on_actionRecent_Files_triggered()
 
 void MainWindow::on_actionAbout_App_triggered()
 {
-    QMessageBox::about(this, tr("About"), tr("This application demonstrates the use of GAMCS to create multipul autonomaous avatars."));
+    QMessageBox::about(this, tr("About"), tr("<p> This application demonstrates the using of GAMCS to create autonomous avatars, "
+                                             "providing a yard and several basic spirits for you to experiment with. </p>"
+                                             "<p> Just play around and watch the magic things that can happen. </p>"));
 }
 
 void MainWindow::on_actionAbout_GAMCS_triggered()
@@ -462,15 +465,14 @@ void MainWindow::on_actionAbout_GAMCS_triggered()
     QString translatedTextAboutGAMCSCaption;
     translatedTextAboutGAMCSCaption = QMessageBox::tr(
                 "<h3> About GAMCS</h3>"
-                "<p> This program uses GAMCS version 1.3.4");
+                "<p> The avatars in this program are powered by GAMCS.");
 
     QString translatedTextAboutGAMCSText;
     translatedTextAboutGAMCSText = QMessageBox::tr(
-                "<p> GAMCS is a blabla.</p>"
-                "<p> GAMCS provides blabla. </p>"
-                "<p> gamcs licensed under blabla </p>"
-                "<p> here is the link: <a href=\"http://gamcs.andy87.com\">gamcs</a> for an overview of gamcs </p>"
-                "<p> copyright </p>"
+                "<p> GAMCS is a computer implementation of <b>GAM</b>, which is a new, generalized (machine) learning algorithm..</p>"
+                "<p> GAMCS provides a very easy to use as well as complete interface. It is very fast and stable. </p>"
+                "<p> GAMCS is licensed under Mozilla Public License (MPL). </p>"
+                "<p> Please see <a href=\"http://gamcs.andy87.com\">gamcs.andy87.com</a> for more details about GAMCS. </p>"
                 );
     QMessageBox *aboutBox = new QMessageBox(this);
     aboutBox->setAttribute(Qt::WA_DeleteOnClose);
