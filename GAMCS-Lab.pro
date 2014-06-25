@@ -33,7 +33,10 @@ SOURCES += main.cpp\
     avatarspirit.cpp \
     elephant.cpp \
     bomb.cpp \
-    staticspirit.cpp
+    staticspirit.cpp \
+    memhandler.cpp \
+    configdialog.cpp \
+    configpages.cpp
 
 HEADERS  += mainwindow.h \
     scene.h \
@@ -50,7 +53,10 @@ HEADERS  += mainwindow.h \
     avatarspirit.h \
     elephant.h \
     bomb.h \
-    staticspirit.h
+    staticspirit.h \
+    memhandler.h \
+    configdialog.h \
+    configpages.h
 
 unix:!macx|win32: LIBS += -lgamcs
 

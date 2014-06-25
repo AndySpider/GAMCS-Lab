@@ -4,6 +4,7 @@
 #include <QCloseEvent>
 #include "mainwindow.h"
 #include "config.h"
+#include "configdialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -230,6 +231,9 @@ void MainWindow::initUi()
 
     actionGenRand = menuOptions->addAction("Generate 30 Spirits Randomly");
     actionGenRand->setObjectName("actionGenRand");
+
+    actionConfigure = menuOptions->addAction("Configure");
+    actionConfigure->setObjectName("actionConfigure");
 
     // About Menu
     menuAbout = new QMenu(menuBar);
@@ -548,4 +552,10 @@ void MainWindow::on_actionDeadMode_Undead_triggered()
 void MainWindow::on_actionGenRand_triggered()
 {
     scene->genRandSpirit(30);
+}
+
+void MainWindow::on_actionConfigure_triggered()
+{
+    ConfigDialog dialog;
+    dialog.exec();
 }

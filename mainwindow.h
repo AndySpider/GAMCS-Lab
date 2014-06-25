@@ -62,6 +62,7 @@ private:
     QAction *actionDeadMode_Undead;
     QAction *actionDeadMode_Dead;
     QAction *actionGenRand;
+    QAction *actionConfigure;
 
     QMenu *menuAbout;
     QAction *actionAbout_App;
@@ -107,6 +108,7 @@ private slots:
     void on_actionDeadMode_Undead_triggered();
 
     void on_actionGenRand_triggered();
+    void on_actionConfigure_triggered();
 
     void on_actionAbout_App_triggered();
     void on_actionAbout_GAMCS_triggered();

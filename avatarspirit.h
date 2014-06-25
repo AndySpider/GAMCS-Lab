@@ -5,6 +5,7 @@
 #include "spirit.h"
 
 class Channel;
+class MemHandler;
 
 using namespace gamcs;
 
@@ -52,6 +53,7 @@ protected:
     bool timeToCom();
 
     Channel *mychannel;
+    MemHandler *memhandler;
     CSOSAgent *myagent;
     Agent::Mode learning_mode;
 

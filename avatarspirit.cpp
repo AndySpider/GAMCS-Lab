@@ -1,3 +1,4 @@
+#include <QObject>
 #include <QDebug>
 #include <QList>
 #include <QPainter>
@@ -11,8 +12,9 @@
 #include "scene.h"
 #include "config.h"
 #include "setdialog.h"
+#include "memhandler.h"
 
-AvatarSpirit::AvatarSpirit(int id) : Avatar(id), mychannel(NULL), myagent(NULL),
+AvatarSpirit::AvatarSpirit(int id) : Avatar(id), mychannel(NULL), memhandler(NULL), myagent(NULL),
     learning_mode(Agent::ONLINE), tmp_delta_grid_x(0), tmp_delta_grid_y(0),
     radar_range(5), is_awake(true), is_sending(false), storage(""), com_freq(5),
     com_count(qrand() % (com_freq * 2))
@@ -262,6 +264,7 @@ void AvatarSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     // memory
     QMenu *memory = menu.addMenu("Memory");
     QAction *save = memory->addAction("Save...");
+    QAction *save_as = memory->addAction("Save As...");
     QAction *load = memory->addAction("Load...");
 
     // life
@@ -339,11 +342,21 @@ void AvatarSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
             storage += ".mem";
 
         // save memory to storage
-        Sqlite db(storage.toStdString());
-        bool status = this->isAwake();
-        this->setAwake(false);  // put to sleep for saving memory
-        myagent->dumpMemoryToStorage(&db);
-        this->setAwake(status);   // restore old status
+        memhandler = new MemHandler(this, myagent, storage, 1);
+        QObject::connect(memhandler, SIGNAL(finished()), memhandler, SLOT(deleteLater()));
+        memhandler->start();    // It may take a while, start a thread to handle memory
+    }
+    else if (selectedAction == save_as)
+    {
+        storage = QFileDialog::getSaveFileName(NULL, QObject::tr("Save Avatar Memory..."), QString(),
+                                               QObject::tr("Avatar Memory (*.mem);; All Files(*)"));
+        if (!storage.endsWith(".mem", Qt::CaseInsensitive))
+            storage += ".mem";
+
+        // save memory to storage
+        memhandler = new MemHandler(this, myagent, storage, 1);
+        QObject::connect(memhandler, SIGNAL(finished()), memhandler, SLOT(deleteLater()));
+        memhandler->start();
     }
     else if (selectedAction == load)
     {
@@ -353,11 +366,9 @@ void AvatarSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
         if (!storage.isEmpty())
         {
             // load memory from storage
-            Sqlite db(storage.toStdString());
-            bool status = this->isAwake();
-            this->setAwake(false);  // put to sleep for loading memory
-            myagent->loadMemoryFromStorage(&db);
-            this->setAwake(status);   // restore old status
+            memhandler = new MemHandler(this, myagent, storage, 0);
+            QObject::connect(memhandler, SIGNAL(finished()), memhandler, SLOT(deleteLater()));
+            memhandler->start();
         }
     }
     else if (selectedAction == setlife)
