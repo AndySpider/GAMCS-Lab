@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-APPNAME = Pandora
+APPNAME = GAMCS-Lab
 VERSION = 0.0.1
 
 QT       += core gui

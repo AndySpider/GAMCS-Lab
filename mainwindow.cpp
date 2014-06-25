@@ -18,7 +18,7 @@ MainWindow::~MainWindow()
 void MainWindow::initUi()
 {
     // mainwindow
-    this->setWindowTitle(QString("%1 v%2 --- powered by GAMCS").arg(APP).arg(VER));
+    this->setWindowTitle(QString("%1 v%2").arg(APP).arg(VER));
     this->setObjectName("MainWindow");
     QIcon icon;
     icon.addFile(QStringLiteral(":/images/mouse.png"), QSize(), QIcon::Normal, QIcon::Off);
@@ -519,7 +519,7 @@ void MainWindow::setCurrentFileName(const QString &file)
     else
         showName = QFileInfo(filename).fileName();
 
-    setWindowTitle(tr("%1[*] [%2]").arg(showName).arg(tr("%1 v%2 --- powered by GAMCS").arg(APP).arg(VER)));
+    setWindowTitle(tr("%1[*] [%2]").arg(showName).arg(tr("%1 v%2").arg(APP).arg(VER)));
     setWindowModified(false);
 }
 
