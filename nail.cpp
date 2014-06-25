@@ -1,12 +1,19 @@
 #include <QDebug>
 #include "nail.h"
 #include "avatarspirit.h"
+#include "configure.h"
 
 Nail::Nail()
 {
    _type = NAIL;
    _color = QColor(89, 89, 100);
-   _life = 1.5;
+
+   bool ok;
+   float fval = g_config.getValue("StaticSpirit/Life/Nail").toFloat(&ok);
+   if (ok)
+       _life = fval;
+   else
+       _life = 1.5;		// default
 }
 
 Nail::~Nail()

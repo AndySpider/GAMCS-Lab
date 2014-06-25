@@ -12,19 +12,37 @@
 #include "cat.h"
 #include "elephant.h"
 #include "scene.h"
-#include "config.h"
+#include "configure.h"
 
 Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(T_NONE), mouse_id(0), cat_id(0), elephant_id(0), timer_interval(100),
-    num_blocks(0), num_cheeses(0), num_nails(0), num_bombs(0), num_mice(0), num_cats(0), num_elephants(0), game_mode(DEAD)
+    num_blocks(0), num_cheeses(0), num_nails(0), num_bombs(0), num_mice(0), num_cats(0), num_elephants(0), game_mode(DEAD),
+    channel(NULL), _width(0), _height(0)
 {
     setItemIndexMethod(BspTreeIndex);   // NoIndex is slow!
 
-    this->setSceneRect(-40, -40, SCENE_WIDTH *GRID_SIZE + 80, SCENE_HEIGHT * GRID_SIZE + 80);
-    this->init();
+    // set scene size
+    bool ok;
+    int val = g_config.getValue("Scene/Size/Width").toInt(&ok);
+    if (ok && val > 0)
+        _width = val;
+    else
+        _width = 512;
+
+    val = g_config.getValue("Scene/Size/Height").toInt(&ok);
+    if (ok && val > 0)
+        _height = val;
+    else
+        _height = 256;
+
+    this->setSceneRect(-40, -40, _width * GRID_SIZE + 80, _height * GRID_SIZE + 80);
+
+    // clean scene
+    this->clean();
 
     // initialize channel
     channel = new Channel();
 
+    // start timer
     timer = new QTimer(this);
     timer->setSingleShot(true);
     connect(timer, SIGNAL(timeout()), this, SLOT(step()));
@@ -239,8 +257,8 @@ void Scene::save(const QString &file)
     QDomElement root = doc.createElement("Scene");
     doc.appendChild(root);
 
-    root.setAttribute("width", SCENE_WIDTH);
-    root.setAttribute("height", SCENE_HEIGHT);
+    root.setAttribute("width", _width);
+    root.setAttribute("height", _height);
     root.setAttribute("grid_size", GRID_SIZE);
 
     // save the meta-scene info
@@ -346,8 +364,9 @@ void Scene::save(const QString &file)
         resume();
 }
 
-void Scene::init()
+void Scene::clean()
 {
+    // spirits
     spirits.clear(); // clear spirits
     this->clear();  // clear items
 
@@ -363,7 +382,7 @@ void Scene::init()
     mouse_id = 0;
     cat_id = 0;
 
-    // build scene
+    // draw boundary
     drawAxis();
     drawLimitLine();
 }
@@ -401,9 +420,9 @@ void Scene::drawAxis()
 void Scene::drawLimitLine()
 {
     QPointF ur = QPointF(0, 0);
-    QPointF ul = QPointF(GRID_SIZE * SCENE_WIDTH, 0);
-    QPointF dr = QPointF(0, GRID_SIZE * SCENE_HEIGHT);
-    QPointF dl = QPointF(GRID_SIZE * SCENE_WIDTH, GRID_SIZE * SCENE_HEIGHT);
+    QPointF ul = QPointF(GRID_SIZE * _width, 0);
+    QPointF dr = QPointF(0, GRID_SIZE * _height);
+    QPointF dl = QPointF(GRID_SIZE * _width, GRID_SIZE * _height);
 
     QPen pen;
     pen.setStyle(Qt::SolidLine);
@@ -421,7 +440,7 @@ void Scene::drawLimitLine()
     this->addLine(lline, pen);
 
     QGraphicsSimpleTextItem *text =  this->addSimpleText("Limit Line");
-    text->setPos(SCENE_WIDTH * GRID_SIZE / 2.0, -20);
+    text->setPos(_width * GRID_SIZE / 2.0, -20);
 }
 
 void Scene::setCurTool(Tool t)
@@ -529,6 +548,16 @@ bool Scene::empty()
     return spirits.empty();
 }
 
+int Scene::width()
+{
+    return _width;
+}
+
+int Scene::height()
+{
+    return _height;
+}
+
 void Scene::genRandSpirit(int num)
 {
     bool timer_status = timer->isActive();  // save status
@@ -537,8 +566,8 @@ void Scene::genRandSpirit(int num)
     while (num > 0)
     {
         // find a random grid position inside SCENE
-        int gx = qrand() % SCENE_WIDTH;
-        int gy = qrand() % SCENE_HEIGHT;
+        int gx = qrand() % _width;
+        int gy = qrand() % _height;
         int type = qrand() % Spirit::SPIRIT_NUM;
 
         addSpiritAt((Spirit::SType) type, QPoint(gx, gy));
@@ -727,7 +756,7 @@ QPoint Scene::findAvatarNewPos(const QPoint &grid_pos, bool *found)
 
     // check right
     spt = this->getSpiritAt(grid_pos.x() + 1, grid_pos.y());
-    if (grid_pos.x() != SCENE_WIDTH -1 &&
+    if (grid_pos.x() != _width -1 &&
             (spt == NULL || spt->spiritType() != Spirit::BLOCK))
     {
         *found = true;
@@ -736,7 +765,7 @@ QPoint Scene::findAvatarNewPos(const QPoint &grid_pos, bool *found)
 
     // check below
     spt = this->getSpiritAt(grid_pos.x(), grid_pos.y() + 1);
-    if (grid_pos.y() != SCENE_HEIGHT - 1 &&
+    if (grid_pos.y() != _height - 1 &&
             (spt == NULL || spt->spiritType() != Spirit::BLOCK))
     {
         *found = true;
@@ -933,9 +962,9 @@ void Scene::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 bool Scene::outOfLimitLine(const QPoint &grid_pos)
 {
     if (grid_pos.x() < 0
-            || grid_pos.x() > SCENE_WIDTH - 1
+            || grid_pos.x() > _width - 1
             || grid_pos.y() < 0
-            || grid_pos.y() > SCENE_HEIGHT - 1)
+            || grid_pos.y() > _height - 1)
         return true;
     else
         return false;

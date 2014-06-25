@@ -1,12 +1,19 @@
 #include <QDebug>
 #include "cheese.h"
 #include "avatarspirit.h"
+#include "configure.h"
 
 Cheese::Cheese()
 {
     _type = CHEESE;
     _color = QColor(255,204,0);
-    _life = 15;
+
+    bool ok;
+    float fval = g_config.getValue("StaticSpirit/Life/Cheese").toFloat(&ok);
+    if (ok)
+        _life = fval;
+    else
+        _life = 15;		// default
 }
 
 Cheese::~Cheese()

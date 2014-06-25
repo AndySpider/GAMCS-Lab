@@ -1,15 +1,18 @@
 #include <QDebug>
 #include "mouse.h"
+#include "configure.h"
 
 Mouse::Mouse(int id) : AvatarSpirit(id)
 {
     _type = MOUSE;
     _color = QColor(89, 255, 89);
-#ifdef SURVIVE_MODE
-    _life = 0.5;	// instant death
-#else
-    _life = 30;
-#endif
+
+    bool ok;
+    float fval = g_config.getValue("AvatarSpirit/Life/Mouse").toFloat(&ok);
+    if (ok)
+        _life = fval;
+    else
+        _life = 30;		// default
 }
 
 Mouse::~Mouse()

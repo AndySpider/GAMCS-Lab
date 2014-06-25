@@ -8,6 +8,10 @@ class QListWidget;
 class QListWidgetItem;
 class QStackedWidget;
 QT_END_NAMESPACE
+class Configure;
+class GeneralPage;
+class AvatarSpiritPage;
+class StaticSpiritPage;
 
 class ConfigDialog : public QDialog
 {
@@ -28,6 +32,10 @@ private:
 
     QListWidget *contentsWidget;
     QStackedWidget *pagesWidget;
+
+    GeneralPage *generalPage;
+    AvatarSpiritPage *avatarSpiritPage;
+    StaticSpiritPage *staticSpiritPage;
 
 };
 

@@ -36,7 +36,8 @@ SOURCES += main.cpp\
     staticspirit.cpp \
     memhandler.cpp \
     configdialog.cpp \
-    configpages.cpp
+    configpages.cpp \
+    configure.cpp
 
 HEADERS  += mainwindow.h \
     scene.h \
@@ -45,7 +46,6 @@ HEADERS  += mainwindow.h \
     cheese.h \
     nail.h \
     mouse.h \
-    config.h \
     cat.h \
     spirit.h \
     channel.h \
@@ -56,7 +56,8 @@ HEADERS  += mainwindow.h \
     staticspirit.h \
     memhandler.h \
     configdialog.h \
-    configpages.h
+    configpages.h \
+    configure.h
 
 unix:!macx|win32: LIBS += -lgamcs
 

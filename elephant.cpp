@@ -1,11 +1,18 @@
 #include <QDebug>
 #include "elephant.h"
+#include "configure.h"
 
 Elephant::Elephant(int id) : AvatarSpirit(id)
 {
     _type = ELEPHANT;
     _color = QColor(152, 163, 188);
-    _life = 100;
+
+    bool ok;
+    float fval = g_config.getValue("AvatarSpirit/Life/Elephant").toFloat(&ok);
+    if (ok)
+        _life = fval;
+    else
+        _life = 100;		// default
 }
 
 Elephant::~Elephant()

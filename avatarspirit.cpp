@@ -10,17 +10,45 @@
 #include <gamcs/StateInfoParser.h>
 #include "avatarspirit.h"
 #include "scene.h"
-#include "config.h"
+#include "configure.h"
 #include "setdialog.h"
 #include "memhandler.h"
 
 AvatarSpirit::AvatarSpirit(int id) : Avatar(id), mychannel(NULL), memhandler(NULL), myagent(NULL),
     learning_mode(Agent::ONLINE), tmp_delta_grid_x(0), tmp_delta_grid_y(0),
     radar_range(5), is_awake(true), is_sending(false), storage(""), com_freq(5),
-    com_count(qrand() % (com_freq * 2))
+    com_count(qrand() % (com_freq * 2)), discount_rate(0.9), accuracy(0.001)
 {
     _category = AVATARSPIRIT;
-    myagent = new CSOSAgent(id, 0.95, 0.001);
+
+    // read config
+    bool ok;
+    int val = g_config.getValue("AvatarSpirit/ComParams/RadarRange").toInt(&ok);
+    if (ok)
+        radar_range = val;
+
+    val = g_config.getValue("AvatarSpirit/ComParams/ComFreq").toInt(&ok);
+    if (ok)
+    {
+        com_freq = val;
+        com_count = qrand() % (com_freq * 2);
+    }
+
+    float fval = g_config.getValue("AvatarSpirit/GAMCSParams/DiscountRat").toFloat(&ok);
+    if (ok && fval >= 0 && fval < 1)
+        discount_rate = fval;
+
+    fval = g_config.getValue("AvatarSpirit/GAMCSParams/Accuracy").toFloat(&ok);
+    if (ok)
+        accuracy = fval;
+
+    QString lm = g_config.getValue("AvatarSpirit/GAMCSParams/LearningMode").toString();
+    if (!lm.isEmpty() && lm == "Explore")
+        learning_mode = Agent::EXPLORE;
+
+    qDebug() << "discount rate is " << discount_rate << "accuracy is " << accuracy << "lm is" << lm;
+
+    myagent = new CSOSAgent(id, discount_rate, accuracy);
     myagent->setMode(learning_mode);
     connectAgent(myagent);
 }
@@ -132,7 +160,7 @@ void AvatarSpirit::moveUp()
 
 void AvatarSpirit::moveDown()
 {
-    if (grid_y >= SCENE_HEIGHT - 1) // on the below limit line
+    if (grid_y >= myscene->height() - 1) // on the below limit line
         return;
 
     // check if there are blocks below
@@ -160,7 +188,7 @@ void AvatarSpirit::moveLeft()
 
 void AvatarSpirit::moveRight()
 {
-    if (grid_x >= SCENE_WIDTH - 1)
+    if (grid_x >= myscene->width() - 1)
         return;
 
     // check if there are blocks
@@ -396,7 +424,7 @@ void AvatarSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 Agent::State AvatarSpirit::perceiveState()
 {
 #ifdef GLOBAL_SENSE
-    int st = grid_x + grid_y * SCENE_WIDTH;
+    int st = grid_x + grid_y * myscene->width();
 
 #else
     // perceive the spirits at four directions

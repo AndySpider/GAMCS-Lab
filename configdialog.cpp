@@ -6,6 +6,7 @@
 #include <QListWidgetItem>
 #include "configdialog.h"
 #include "configpages.h"
+#include "configure.h"
 
 ConfigDialog::ConfigDialog(QWidget *parent) :
     QDialog(parent)
@@ -16,9 +17,12 @@ ConfigDialog::ConfigDialog(QWidget *parent) :
     contentsWidget->setSpacing(10);
 
     pagesWidget = new QStackedWidget;
-    pagesWidget->addWidget(new GeneralPage);
-    pagesWidget->addWidget(new AvatarSpiritPage);
-    pagesWidget->addWidget(new StaticSpiritPage);
+    generalPage = new GeneralPage();
+    pagesWidget->addWidget(generalPage);
+    avatarSpiritPage = new AvatarSpiritPage();
+    pagesWidget->addWidget(avatarSpiritPage);
+    staticSpiritPage = new StaticSpiritPage();
+    pagesWidget->addWidget(staticSpiritPage);
 
     QPushButton *applyeButton = new QPushButton(tr("Apply"));
     QPushButton *cancelButton = new QPushButton(tr("Cancel"));
@@ -85,15 +89,20 @@ void ConfigDialog::changePage(QListWidgetItem *current, QListWidgetItem *previou
 
 void ConfigDialog::apply()
 {
+    generalPage->applyConfig();
+    avatarSpiritPage->applyConfig();
+    staticSpiritPage->applyConfig();
 
+    g_config.save();
 }
 
 void ConfigDialog::cancel()
 {
-
+    close();
 }
 
 void ConfigDialog::ok()
 {
-
+    apply();
+    close();
 }

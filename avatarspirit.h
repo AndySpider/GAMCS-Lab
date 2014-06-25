@@ -68,6 +68,8 @@ private:
     QString storage;
     int com_freq;
     long com_count;
+    float discount_rate;
+    float accuracy;
 };
 
 #endif // AVATARSPIRIT_H

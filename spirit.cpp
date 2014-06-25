@@ -6,7 +6,7 @@
 #include <QList>
 #include "scene.h"
 #include "spirit.h"
-#include "config.h"
+#include "configure.h"
 
 Spirit::Spirit() : _life(1), _type(BLOCK), _color(Qt::black), myscene(NULL), grid_x(-1), grid_y(-1),
     is_marked(false)

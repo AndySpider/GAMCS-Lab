@@ -406,7 +406,7 @@ void MainWindow::on_actionNew_triggered()
 {
     if (confirmClose())
     {
-        scene->init();
+        scene->clean();
         setCurrentFileName(QString());
     }
 }

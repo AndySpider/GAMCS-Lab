@@ -42,7 +42,7 @@ public:
     int load(const QString &file);
     void save(const QString &file);
 
-    void init();
+    void clean();
 
     void pause();
     void resume();
@@ -52,6 +52,8 @@ public:
     void speedDown();
     void setGameMode(GameMode);
     bool empty();
+    int width();
+    int height();
 
     void genRandSpirit(int num);
 
@@ -95,6 +97,8 @@ private:
     int num_elephants;
     GameMode game_mode;
     Channel *channel;
+    int _width;
+    int _height;
 
     void drawAxis();
     void drawLimitLine();

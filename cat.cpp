@@ -1,11 +1,18 @@
 #include <QDebug>
 #include "cat.h"
+#include "configure.h"
 
 Cat::Cat(int id) : AvatarSpirit(id)
 {
     _type = CAT;
     _color = QColor(250, 81, 143);
-    _life = 50;
+
+    bool ok;
+    float fval = g_config.getValue("AvatarSpirit/Life/Cat").toFloat(&ok);
+    if (ok)
+        _life = fval;
+    else
+        _life = 50;		// default
 }
 
 Cat::~Cat()
