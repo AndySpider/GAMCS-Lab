@@ -17,14 +17,16 @@ GeneralPage::GeneralPage(QWidget *parent) :
     ConfigPage(parent)
 {
     // note banner
-    QLabel *noteLabel = new QLabel(tr("<small><i>Note:: All the changes are applied only to new Scene or Spirits</i></small>"));
+    QLabel *noteLabel = new QLabel(tr("<i>Note:: All the changes are applied only to new Scene or Spirits</i>"));
 
     // scene size
     QGroupBox *sizeGroup = new QGroupBox(tr("Scene Size"));
     QLabel *widthLabel = new QLabel(tr("width"));
     widthEdit = new QLineEdit(g_config.getValue("Scene/Size/Width").toString());
+    widthEdit->setToolTip(tr("int (>0)"));
     QLabel *heightLabel = new QLabel(tr("height"));
     heightEdit = new QLineEdit(g_config.getValue("Scene/Size/Height").toString());
+    heightEdit->setToolTip(tr("int (>0)"));
 
     QGridLayout *sizeLayout = new QGridLayout;
     sizeLayout->addWidget(widthLabel, 0, 0);
@@ -82,10 +84,13 @@ AvatarSpiritPage::AvatarSpiritPage(QWidget *parent) :
     QGroupBox *lifeGroup = new QGroupBox(tr("Default Life Value"));
     QLabel *mouseLifeLabel = new QLabel(tr("Mouse Life"));
     mouseLifeEdit = new QLineEdit(g_config.getValue("AvatarSpirit/Life/Mouse").toString());
+    mouseLifeEdit->setToolTip(tr("float (>0)"));
     QLabel *catLifeLabel = new QLabel(tr("Cat Life"));
     catLifeEdit = new QLineEdit(g_config.getValue("AvatarSpirit/Life/Cat").toString());
+    catLifeEdit->setToolTip(tr("float (>0)"));
     QLabel *elephantLifeLabel = new QLabel(tr("Elephant Life"));
     elephantLifeEdit = new QLineEdit(g_config.getValue("AvatarSpirit/Life/Elephant").toString());
+    elephantLifeEdit->setToolTip(tr("float (>0)"));
 
     QGridLayout *lifeLayout = new QGridLayout;
     lifeLayout->addWidget(mouseLifeLabel, 0, 0);
@@ -100,8 +105,10 @@ AvatarSpiritPage::AvatarSpiritPage(QWidget *parent) :
     QGroupBox *comGroup = new QGroupBox(tr("Default Communication Params"));
     QLabel *rangeLabel = new QLabel(tr("Radar Range"));
     rangeEdit = new QLineEdit(g_config.getValue("AvatarSpirit/ComParams/RadarRange").toString());
+    rangeEdit->setToolTip(tr("int (>=0, 0 to turn off radar)"));
     QLabel *freqLabel = new QLabel(tr("Com Freq"));
     freqEdit = new QLineEdit(g_config.getValue("AvatarSpirit/ComParams/ComFreq").toString());
+    freqEdit->setToolTip(tr("int (>0)"));
 
     QGridLayout *comLayout = new QGridLayout;
     comLayout->addWidget(rangeLabel, 0, 0);
@@ -114,8 +121,10 @@ AvatarSpiritPage::AvatarSpiritPage(QWidget *parent) :
     QGroupBox *paramsGroup = new QGroupBox(tr("Default GAMCS Parameters"));
     QLabel *drLabel = new QLabel(tr("Discount Rate"));
     drEdit = new QLineEdit(g_config.getValue("AvatarSpirit/GAMCSParams/DiscountRate").toString());
+    drEdit->setToolTip(tr("float (>=0, <1)"));
     QLabel *acuLabel = new QLabel(tr("Accuracy"));
     acuEdit = new QLineEdit(g_config.getValue("AvatarSpirit/GAMCSParams/Accuracy").toString());
+    acuEdit->setToolTip(tr("float (>=0)"));
     QLabel *lmLabel = new QLabel(tr("Learning Mode"));
     lmCombo = new QComboBox;
     lmCombo->addItem(tr("Online"));
@@ -204,8 +213,10 @@ StaticSpiritPage::StaticSpiritPage(QWidget *parent) :
     QGroupBox *lifeGroup = new QGroupBox(tr("Default Life Value"));
     QLabel *cheeseLifeLabel = new QLabel(tr("Cheese Life"));
     cheeseLifeEdit = new QLineEdit(g_config.getValue("StaticSpirit/Life/Cheese").toString());
+    cheeseLifeEdit->setToolTip(tr("float (>0)"));
     QLabel *nailLifeLabel = new QLabel(tr("Nail Life"));
     nailLifeEdit = new QLineEdit(g_config.getValue("StaticSpirit/Life/Nail").toString());
+    nailLifeEdit->setToolTip(tr("float (>0)"));
 
     QGridLayout *lifeLayout = new QGridLayout;
     lifeLayout->addWidget(cheeseLifeLabel, 0, 0);

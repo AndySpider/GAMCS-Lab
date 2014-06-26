@@ -55,7 +55,7 @@ AvatarSpirit::AvatarSpirit(int id) : Avatar(id), mychannel(NULL), memhandler(NUL
     }
 
     fval = g_config.getValue("AvatarSpirit/GAMCSParams/Accuracy").toFloat(&ok);
-    if (ok)
+    if (ok && fval >= 0)
         accuracy = fval;
     else    // default value
     {
@@ -71,8 +71,6 @@ AvatarSpirit::AvatarSpirit(int id) : Avatar(id), mychannel(NULL), memhandler(NUL
         learning_mode = Agent::ONLINE;
         g_config.setValue("AvatarSpirit/GAMCSParams/LearningMode", QString("Online"));
     }
-
-    qDebug() << "discount rate is " << discount_rate << "accuracy is " << accuracy << "lm is" << lm;
 
     myagent = new CSOSAgent(id, discount_rate, accuracy);
     myagent->setMode(learning_mode);

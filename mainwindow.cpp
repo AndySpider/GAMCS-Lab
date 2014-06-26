@@ -1,9 +1,10 @@
 #include <QDebug>
+#include <QDir>
+#include <QStringList>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QCloseEvent>
 #include "mainwindow.h"
-#include "config.h"
 #include "configdialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -183,27 +184,31 @@ void MainWindow::initUi()
 
     menuScene = new QMenu(menuBar);
     menuScene->setObjectName("menuScene");
-    menuScene->setTitle("Scene");
+    menuScene->setTitle(tr("&Scene"));
 
-    // File actions
+    // Scene actions
     actionNew = new QAction(this);
+    actionNew->setShortcut(tr("CTRL+N"));
     actionNew->setObjectName(QStringLiteral("actionNew"));
     actionOpen = new QAction(this);
+    actionOpen->setShortcut(tr("CTRL+O"));
     actionOpen->setObjectName(QStringLiteral("actionOpen"));
     actionSave = new QAction(this);
+    actionSave->setShortcut(tr("CTRL+S"));
     actionSave->setObjectName(QStringLiteral("actionSave"));
     actionSave_as = new QAction(this);
     actionSave_as->setObjectName(QStringLiteral("actionSave_as"));
     actionQuit = new QAction(this);
+    actionQuit->setShortcut(tr("CTRL+Q"));
     actionQuit->setObjectName(QStringLiteral("actionQuit"));
-    actionNew->setText("New");
-    actionOpen->setText("Open");
-    actionSave->setText("Save");
+    actionNew->setText("&New");
+    actionOpen->setText(tr("&Open"));
+    actionSave->setText("&Save");
     actionSave_as->setText("Save as");
-    actionQuit->setText("Quit");
+    actionQuit->setText("&Quit");
 
     menuDemo = new QMenu(this);
-    menuDemo->setTitle("Demo Scenes");
+    menuDemo->setTitle(tr("&Demo Scenes"));
     for (int i = 0; i < MaxDemoScenes; ++i)
     {
         demoSceneActs[i] = new QAction(this);
@@ -227,19 +232,21 @@ void MainWindow::initUi()
     // Options Menu
     menuOptions = new QMenu(menuBar);
     menuOptions->setObjectName("menuOptions");
-    menuOptions->setTitle("Options");
+    menuOptions->setTitle(tr("&Options"));
 
     // Options actions
-    actionGenRand = menuOptions->addAction("Generate 30 Spirits Randomly");
+    actionGenRand = menuOptions->addAction("&Generate 30 Spirits Randomly");
+    actionGenRand->setShortcut(tr("CTRL+G"));
     actionGenRand->setObjectName("actionGenRand");
 
-    actionConfigure = menuOptions->addAction("Configure");
+    actionConfigure = menuOptions->addAction(tr("&Configure"));
+    actionConfigure->setShortcut(tr("CTRL+C"));
     actionConfigure->setObjectName("actionConfigure");
 
     // About Menu
     menuAbout = new QMenu(menuBar);
     menuAbout->setObjectName("menuAbout");
-    menuAbout->setTitle("About");
+    menuAbout->setTitle(tr("&About"));
     // About actions
     actionAbout_App = new QAction(this);
     actionAbout_App->setObjectName(QStringLiteral("actionAbout_App"));
@@ -407,7 +414,7 @@ void MainWindow::on_actionNew_triggered()
 {
     if (confirmClose())
     {
-        scene->clean();
+        scene->build();
         setCurrentFileName(QString());
     }
 }
@@ -555,14 +562,25 @@ void MainWindow::on_actionConfigure_triggered()
 void MainWindow::updateDemoSceneActions()
 {
     // get file list in the demo directory
-    int num_demo_scenes = 0;
-    QString scene;
+    QDir demo_dir;
+    demo_dir.setPath("./demos");
+    if (!demo_dir.exists())
+    {
+        qWarning() << "Demo path" << demo_dir.path() << "not exists!";
+        return;
+    }
 
+    QStringList filter;
+    filter << "*.scene" << "*.sce";
+    QStringList scene_files;
+    scene_files = demo_dir.entryList(filter, QDir::Files);
+
+    int num_demo_scenes = scene_files.size() > MaxDemoScenes ? MaxDemoScenes : scene_files.size();
     for (int i = 0; i < num_demo_scenes; ++i)
     {
-        QString text = tr("%1").arg(scene);
+        QString text = tr("%1").arg(QFileInfo(scene_files.at(i)).baseName());
         demoSceneActs[i]->setText(text);
-        demoSceneActs[i]->setData(scene);
+        demoSceneActs[i]->setData(demo_dir.absoluteFilePath(scene_files.at(i)));
         demoSceneActs[i]->setVisible(true);
     }
 }

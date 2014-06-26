@@ -108,7 +108,6 @@ void Configure::save()
     QSettings settings(config_file, QSettings::IniFormat);
     for (QMap<QString, QVariant>::iterator it = config_map.begin(); it != config_map.end(); ++it)
     {
-        qDebug() << "save " << it.key() << ":" << it.value().toString();
         settings.setValue(it.key(), it.value());
     }
 }

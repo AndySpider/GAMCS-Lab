@@ -36,7 +36,7 @@ public:
     int load(const QString &file);
     void save(const QString &file);
 
-    void clean();
+    void build(int width = -1, int height = -1);
 
     void pause();
     void resume();

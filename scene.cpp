@@ -20,8 +20,8 @@ Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(T_NONE), mouse_
 {
     setItemIndexMethod(BspTreeIndex);   // NoIndex is slow!
 
-    // clean scene
-    this->clean();
+    // build scene
+    this->build();
 
     // initialize channel
     channel = new Channel();
@@ -100,11 +100,8 @@ int Scene::load(const QString &file)
     QDomElement root = doc.documentElement();
     int scene_width = root.attribute("width").toInt(NULL);
     int scene_height = root.attribute("height").toInt(NULL);
-    // check size
-    if (scene_width > _width || scene_height > _height)
-    {
-        qWarning() << "Size of the scene to be loaded is bigger than current size, some items may be cut off!";
-    }
+
+    this->build(scene_width, scene_height);		// clear scene and resize
 
     // scene meta-info
     QDomNode first_node = root.firstChild();
@@ -352,7 +349,7 @@ void Scene::save(const QString &file)
         resume();
 }
 
-void Scene::clean()
+void Scene::build(int width, int height)
 {
     // clean spirits
     spirits.clear(); // clear spirits
@@ -370,27 +367,36 @@ void Scene::clean()
 
     // set scene size
     this->clear();  // clear items
-    bool ok;
-    int val = g_config.getValue("Scene/Size/Width").toInt(&ok);
-    if (ok && val > 0)
-    {
-        _width = val;
-    }
-    else
-    {
-        _width = 512;
-        g_config.setValue("Scene/Size/Width", 512);
-    }
 
-    val = g_config.getValue("Scene/Size/Height").toInt(&ok);
-    if (ok && val > 0)
+    if (width == -1 || height == -1)	// load size from config file
     {
-        _height = val;
+        bool ok;
+        int val = g_config.getValue("Scene/Size/Width").toInt(&ok);
+        if (ok && val > 0)
+        {
+            _width = val;
+        }
+        else
+        {
+            _width = 512;
+            g_config.setValue("Scene/Size/Width", 512);
+        }
+
+        val = g_config.getValue("Scene/Size/Height").toInt(&ok);
+        if (ok && val > 0)
+        {
+            _height = val;
+        }
+        else
+        {
+            _height = 256;
+            g_config.setValue("Scene/Size/Height", 256);
+        }
     }
-    else
+    else	// temporarily set size
     {
-        _height = 256;
-        g_config.setValue("Scene/Size/Height", 256);
+        _width = width;
+        _height = height;
     }
 
     this->setSceneRect(-40, -40, _width * GRID_SIZE + 80, _height * GRID_SIZE + 80);

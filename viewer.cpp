@@ -3,7 +3,6 @@
 #include <QPixmap>
 #include "viewer.h"
 #include "scene.h"
-#include "config.h"
 
 Viewer::Viewer(QWidget *parent) : QGraphicsView(parent)
 {

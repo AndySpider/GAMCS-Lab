@@ -3,7 +3,6 @@
 #include <QGraphicsSceneMouseEvent>
 #include "scene.h"
 #include "block.h"
-#include "config.h"
 
 Block::Block()
 {
