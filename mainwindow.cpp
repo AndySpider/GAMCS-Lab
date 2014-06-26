@@ -196,18 +196,28 @@ void MainWindow::initUi()
     actionSave_as->setObjectName(QStringLiteral("actionSave_as"));
     actionQuit = new QAction(this);
     actionQuit->setObjectName(QStringLiteral("actionQuit"));
-    actionRecent_Scenes = new QAction(this);
-    actionRecent_Scenes->setObjectName(QStringLiteral("actionRecent_Files"));
     actionNew->setText("New");
     actionOpen->setText("Open");
     actionSave->setText("Save");
     actionSave_as->setText("Save as");
     actionQuit->setText("Quit");
-    actionRecent_Scenes->setText("Recent Scenes");
+
+    menuDemo = new QMenu(this);
+    menuDemo->setTitle("Demo Scenes");
+    for (int i = 0; i < MaxDemoScenes; ++i)
+    {
+        demoSceneActs[i] = new QAction(this);
+        demoSceneActs[i]->setVisible(false);
+        connect(demoSceneActs[i], SIGNAL(triggered()), this, SLOT(openDemoScene()));
+
+        menuDemo->addAction(demoSceneActs[i]);
+    }
+
+    updateDemoSceneActions();
 
     menuScene->addAction(actionNew);
     menuScene->addAction(actionOpen);
-    menuScene->addAction(actionRecent_Scenes);
+    menuScene->addMenu(menuDemo);
     menuScene->addSeparator();
     menuScene->addAction(actionSave);
     menuScene->addAction(actionSave_as);
@@ -219,16 +229,7 @@ void MainWindow::initUi()
     menuOptions->setObjectName("menuOptions");
     menuOptions->setTitle("Options");
 
-    menuDeadMode = menuOptions->addMenu("Dead Mode");
     // Options actions
-    actionDeadMode_Dead = menuDeadMode->addAction("Dead");
-    actionDeadMode_Dead->setObjectName("actionDeadMode_Dead");
-    actionDeadMode_Dead->setCheckable(true);
-    actionDeadMode_Dead->setChecked(true);
-    actionDeadMode_Undead = menuDeadMode->addAction("Undead");
-    actionDeadMode_Undead->setObjectName("actionDeadMode_Undead");
-    actionDeadMode_Undead->setCheckable(true);
-
     actionGenRand = menuOptions->addAction("Generate 30 Spirits Randomly");
     actionGenRand->setObjectName("actionGenRand");
 
@@ -419,10 +420,15 @@ void MainWindow::on_actionOpen_triggered()
                                               tr("Scene Files (*.scene);;All Files(*)"));
     if (!fn.isEmpty())
     {
-        int re = scene->load(fn);
-        if (re == 0)    // load successfully
-            setCurrentFileName(fn);
+        openScene(fn);
     }
+}
+
+void MainWindow::openScene(const QString &file)
+{
+    int ret = scene->load(file);
+    if (ret == 0)   // load successfully
+        setCurrentFileName(file);
 }
 
 void MainWindow::on_actionSave_triggered()
@@ -442,19 +448,19 @@ void MainWindow::on_actionSave_as_triggered()
        if (!fn.endsWith(".scene", Qt::CaseInsensitive))
            fn += ".scene";  // default
 
-       scene->save(fn);
-       filename = fn;
+       saveScene(fn);
     }
+}
+
+void MainWindow::saveScene(const QString &file)
+{
+    scene->save(file);
+    filename = file;
 }
 
 void MainWindow::on_actionQuit_triggered()
 {
     close();
-}
-
-void MainWindow::on_actionRecent_Files_triggered()
-{
-
 }
 
 void MainWindow::on_actionAbout_App_triggered()
@@ -535,20 +541,6 @@ void MainWindow::closeEvent(QCloseEvent *e)
         e->ignore();
 }
 
-void MainWindow::on_actionDeadMode_Dead_triggered()
-{
-    scene->setGameMode(Scene::DEAD);
-    actionDeadMode_Dead->setChecked(true);
-    actionDeadMode_Undead->setChecked(false);
-}
-
-void MainWindow::on_actionDeadMode_Undead_triggered()
-{
-    scene->setGameMode(Scene::UNDEAD);
-    actionDeadMode_Undead->setChecked(true);
-    actionDeadMode_Dead->setChecked(false);
-}
-
 void MainWindow::on_actionGenRand_triggered()
 {
     scene->genRandSpirit(30);
@@ -558,4 +550,26 @@ void MainWindow::on_actionConfigure_triggered()
 {
     ConfigDialog dialog;
     dialog.exec();
+}
+
+void MainWindow::updateDemoSceneActions()
+{
+    // get file list in the demo directory
+    int num_demo_scenes = 0;
+    QString scene;
+
+    for (int i = 0; i < num_demo_scenes; ++i)
+    {
+        QString text = tr("%1").arg(scene);
+        demoSceneActs[i]->setText(text);
+        demoSceneActs[i]->setData(scene);
+        demoSceneActs[i]->setVisible(true);
+    }
+}
+
+void MainWindow::openDemoScene()
+{
+    QAction *action = qobject_cast<QAction *>(sender());
+    if (action)
+        openScene(action->data().toString());
 }

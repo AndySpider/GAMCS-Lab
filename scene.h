@@ -33,12 +33,6 @@ public:
         T_ELEPHANT
     };
 
-    enum GameMode
-    {
-        DEAD = 0,
-        UNDEAD
-    };
-
     int load(const QString &file);
     void save(const QString &file);
 
@@ -50,7 +44,6 @@ public:
     void setCurTool(Tool);
     void speedUp();
     void speedDown();
-    void setGameMode(GameMode);
     bool empty();
     int width();
     int height();
@@ -95,7 +88,6 @@ private:
     int num_mice;
     int num_cats;
     int num_elephants;
-    GameMode game_mode;
     Channel *channel;
     int _width;
     int _height;

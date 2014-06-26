@@ -12,7 +12,10 @@ Cat::Cat(int id) : AvatarSpirit(id)
     if (ok)
         _life = fval;
     else
+    {
         _life = 50;		// default
+        g_config.setValue("AvatarSpirit/Life/Cat", _life);
+    }
 }
 
 Cat::~Cat()

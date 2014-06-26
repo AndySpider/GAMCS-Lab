@@ -16,6 +16,9 @@ ConfigPage::ConfigPage(QWidget *parent) :
 GeneralPage::GeneralPage(QWidget *parent) :
     ConfigPage(parent)
 {
+    // note banner
+    QLabel *noteLabel = new QLabel(tr("<small><i>Note:: All the changes are applied only to new Scene or Spirits</i></small>"));
+
     // scene size
     QGroupBox *sizeGroup = new QGroupBox(tr("Scene Size"));
     QLabel *widthLabel = new QLabel(tr("width"));
@@ -44,6 +47,8 @@ GeneralPage::GeneralPage(QWidget *parent) :
     defaultLayout->addWidget(defaultButton, 0, Qt::AlignRight);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
+    mainLayout->addWidget(noteLabel);
+    mainLayout->addSpacing(10);
     mainLayout->addWidget(sizeGroup);
     mainLayout->setSpacing(10);
     mainLayout->addWidget(huntGroup);

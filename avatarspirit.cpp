@@ -16,8 +16,8 @@
 
 AvatarSpirit::AvatarSpirit(int id) : Avatar(id), mychannel(NULL), memhandler(NULL), myagent(NULL),
     learning_mode(Agent::ONLINE), tmp_delta_grid_x(0), tmp_delta_grid_y(0),
-    radar_range(5), is_awake(true), is_sending(false), storage(""), com_freq(5),
-    com_count(qrand() % (com_freq * 2)), discount_rate(0.9), accuracy(0.001)
+    radar_range(0), is_awake(true), is_sending(false), storage(""), com_freq(0),
+    com_count(0), discount_rate(0), accuracy(0)
 {
     _category = AVATARSPIRIT;
 
@@ -26,6 +26,11 @@ AvatarSpirit::AvatarSpirit(int id) : Avatar(id), mychannel(NULL), memhandler(NUL
     int val = g_config.getValue("AvatarSpirit/ComParams/RadarRange").toInt(&ok);
     if (ok)
         radar_range = val;
+    else    // default value
+    {
+        radar_range = 0;
+        g_config.setValue("AvatarSpirit/ComParams/RadarRange", radar_range);
+    }
 
     val = g_config.getValue("AvatarSpirit/ComParams/ComFreq").toInt(&ok);
     if (ok)
@@ -33,18 +38,39 @@ AvatarSpirit::AvatarSpirit(int id) : Avatar(id), mychannel(NULL), memhandler(NUL
         com_freq = val;
         com_count = qrand() % (com_freq * 2);
     }
+    else    // default value
+    {
+        com_freq = 5;
+        com_count = qrand() % (com_freq * 2);
+        g_config.setValue("AvatarSpirit/ComParams/ComFreq", com_freq);
+    }
 
-    float fval = g_config.getValue("AvatarSpirit/GAMCSParams/DiscountRat").toFloat(&ok);
+    float fval = g_config.getValue("AvatarSpirit/GAMCSParams/DiscountRate").toFloat(&ok);
     if (ok && fval >= 0 && fval < 1)
         discount_rate = fval;
+    else    // default value
+    {
+        discount_rate = 0.9;
+        g_config.setValue("AvatarSpirit/GAMCSParams/DiscountRate", discount_rate);
+    }
 
     fval = g_config.getValue("AvatarSpirit/GAMCSParams/Accuracy").toFloat(&ok);
     if (ok)
         accuracy = fval;
+    else    // default value
+    {
+        accuracy = 0.001;
+        g_config.setValue("AvatarSpirit/GAMCSParams/Accuracy", accuracy);
+    }
 
     QString lm = g_config.getValue("AvatarSpirit/GAMCSParams/LearningMode").toString();
-    if (!lm.isEmpty() && lm == "Explore")
+    if (lm == "Explore")
         learning_mode = Agent::EXPLORE;
+    else // default value
+    {
+        learning_mode = Agent::ONLINE;
+        g_config.setValue("AvatarSpirit/GAMCSParams/LearningMode", QString("Online"));
+    }
 
     qDebug() << "discount rate is " << discount_rate << "accuracy is " << accuracy << "lm is" << lm;
 
@@ -775,7 +801,7 @@ bool AvatarSpirit::timeToCom()
     bool re = false;
     if (com_count <= 0)
     {
-        com_count = qrand() % com_freq * 2;	// [0, 2 * com_freq)    // set a new value
+        com_count = qrand() % com_freq * 2;	// [0, 2 * com_freq)  restart count
         re = true;
     }
     else

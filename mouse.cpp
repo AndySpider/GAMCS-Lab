@@ -12,7 +12,10 @@ Mouse::Mouse(int id) : AvatarSpirit(id)
     if (ok)
         _life = fval;
     else
+    {
         _life = 30;		// default
+        g_config.setValue("AvatarSpirit/Life/Mouse", _life);
+    }
 }
 
 Mouse::~Mouse()

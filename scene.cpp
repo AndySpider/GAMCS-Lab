@@ -15,26 +15,10 @@
 #include "configure.h"
 
 Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(T_NONE), mouse_id(0), cat_id(0), elephant_id(0), timer_interval(100),
-    num_blocks(0), num_cheeses(0), num_nails(0), num_bombs(0), num_mice(0), num_cats(0), num_elephants(0), game_mode(DEAD),
+    num_blocks(0), num_cheeses(0), num_nails(0), num_bombs(0), num_mice(0), num_cats(0), num_elephants(0),
     channel(NULL), _width(0), _height(0)
 {
     setItemIndexMethod(BspTreeIndex);   // NoIndex is slow!
-
-    // set scene size
-    bool ok;
-    int val = g_config.getValue("Scene/Size/Width").toInt(&ok);
-    if (ok && val > 0)
-        _width = val;
-    else
-        _width = 512;
-
-    val = g_config.getValue("Scene/Size/Height").toInt(&ok);
-    if (ok && val > 0)
-        _height = val;
-    else
-        _height = 256;
-
-    this->setSceneRect(-40, -40, _width * GRID_SIZE + 80, _height * GRID_SIZE + 80);
 
     // clean scene
     this->clean();
@@ -63,12 +47,9 @@ void Scene::step()
     {
         (*it)->act();
 
-        if (game_mode == DEAD)  // collect dead bodies
+        if ((*it)->life() <= 0)	// remove spirit if it's dead
         {
-            if ((*it)->life() <= 0)	// remove spirit if it's dead
-            {
-                dead_spirits.append(*it);   // record dead spirits
-            }
+            dead_spirits.append(*it);   // record dead spirits
         }
     }
 
@@ -117,6 +98,13 @@ int Scene::load(const QString &file)
     infile.close();
 
     QDomElement root = doc.documentElement();
+    int scene_width = root.attribute("width").toInt(NULL);
+    int scene_height = root.attribute("height").toInt(NULL);
+    // check size
+    if (scene_width > _width || scene_height > _height)
+    {
+        qWarning() << "Size of the scene to be loaded is bigger than current size, some items may be cut off!";
+    }
 
     // scene meta-info
     QDomNode first_node = root.firstChild();
@@ -366,10 +354,8 @@ void Scene::save(const QString &file)
 
 void Scene::clean()
 {
-    // spirits
+    // clean spirits
     spirits.clear(); // clear spirits
-    this->clear();  // clear items
-
     num_blocks = 0;
     num_cats = 0;
     num_cheeses = 0;
@@ -381,6 +367,33 @@ void Scene::clean()
     elephant_id = 0;
     mouse_id = 0;
     cat_id = 0;
+
+    // set scene size
+    this->clear();  // clear items
+    bool ok;
+    int val = g_config.getValue("Scene/Size/Width").toInt(&ok);
+    if (ok && val > 0)
+    {
+        _width = val;
+    }
+    else
+    {
+        _width = 512;
+        g_config.setValue("Scene/Size/Width", 512);
+    }
+
+    val = g_config.getValue("Scene/Size/Height").toInt(&ok);
+    if (ok && val > 0)
+    {
+        _height = val;
+    }
+    else
+    {
+        _height = 256;
+        g_config.setValue("Scene/Size/Height", 256);
+    }
+
+    this->setSceneRect(-40, -40, _width * GRID_SIZE + 80, _height * GRID_SIZE + 80);
 
     // draw boundary
     drawAxis();
@@ -535,12 +548,6 @@ void Scene::speedDown()
         timer->start(timer_interval);
 
     emit currentSpeedLevel(level);
-}
-
-void Scene::setGameMode(GameMode mode)
-{
-    game_mode = mode;
-    qDebug() << "+++ Scene - change game mode to " << game_mode;
 }
 
 bool Scene::empty()

@@ -12,7 +12,10 @@ Elephant::Elephant(int id) : AvatarSpirit(id)
     if (ok)
         _life = fval;
     else
+    {
         _life = 100;		// default
+        g_config.setValue("AvatarSpirit/Life/Elephant", _life);
+    }
 }
 
 Elephant::~Elephant()

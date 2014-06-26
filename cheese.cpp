@@ -13,7 +13,10 @@ Cheese::Cheese()
     if (ok)
         _life = fval;
     else
+    {
         _life = 15;		// default
+        g_config.setValue("StaticSpirit/Life/Cheese", _life);
+    }
 }
 
 Cheese::~Cheese()

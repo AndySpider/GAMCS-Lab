@@ -52,15 +52,14 @@ private:
     QMenu *menuScene;
     QAction *actionNew;
     QAction *actionOpen;
+    QMenu *menuDemo;
+    enum { MaxDemoScenes = 10};
+    QAction *demoSceneActs[MaxDemoScenes];
     QAction *actionSave;
     QAction *actionSave_as;
     QAction *actionQuit;
-    QAction *actionRecent_Scenes;
 
     QMenu *menuOptions;
-    QMenu *menuDeadMode;
-    QAction *actionDeadMode_Undead;
-    QAction *actionDeadMode_Dead;
     QAction *actionGenRand;
     QAction *actionConfigure;
 
@@ -102,10 +101,6 @@ private slots:
     void on_actionSave_triggered();
     void on_actionSave_as_triggered();
     void on_actionQuit_triggered();
-    void on_actionRecent_Files_triggered();
-
-    void on_actionDeadMode_Dead_triggered();
-    void on_actionDeadMode_Undead_triggered();
 
     void on_actionGenRand_triggered();
     void on_actionConfigure_triggered();
@@ -113,11 +108,16 @@ private slots:
     void on_actionAbout_App_triggered();
     void on_actionAbout_GAMCS_triggered();
 
+    void openDemoScene();
+
 private:
     QString filename;
 
     bool confirmClose();
+    void openScene(const QString &file);
+    void saveScene(const QString &file);
     void setCurrentFileName(const QString &file);
+    void updateDemoSceneActions();
 
 };
 

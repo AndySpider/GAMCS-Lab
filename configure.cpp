@@ -16,42 +16,91 @@ void Configure::load()
     config_map.clear();
 
     QSettings settings(config_file, QSettings::IniFormat);
-    QString key = "Scene/Size/Width";
-    qDebug() << "load " << key << settings.value(key).toString();
-    config_map.insert(key, settings.value(key));
+    QString key;
+    QVariant val;
+    key = "Scene/Size/Width";
+    val = settings.value(key);
+    if (!val.isNull())  // only check null, may be invalid
+        config_map.insert(key, val);
+    else
+        config_map.insert(key, 512);
+
     key = "Scene/Size/Height";
-    qDebug() << "load " << key << settings.value(key).toString();
-    config_map.insert(key, settings.value(key));
+    val = settings.value(key);
+    if (!val.isNull())
+        config_map.insert(key, val);
+    else
+        config_map.insert(key, 256);
+
     key = "AvatarSpirit/Life/Mouse";
-    qDebug() << "load " << key << settings.value(key).toString();
-    config_map.insert(key, settings.value(key));
+    val = settings.value(key);
+    if (!val.isNull())
+        config_map.insert(key, val);
+    else
+        config_map.insert(key, 30);
+
     key = "AvatarSpirit/Life/Cat";
-    qDebug() << "load " << key << settings.value(key).toString();
-    config_map.insert(key, settings.value(key));
+    val = settings.value(key);
+    if (!val.isNull())
+        config_map.insert(key, val);
+    else
+        config_map.insert(key, 50);
+
     key = "AvatarSpirit/Life/Elephant";
-    qDebug() << "load " << key << settings.value(key).toString();
-    config_map.insert(key, settings.value(key));
+    val = settings.value(key);
+    if (!val.isNull())
+        config_map.insert(key, val);
+    else
+        config_map.insert(key, 100);
+
     key = "AvatarSpirit/ComParams/RadarRange";
-    qDebug() << "load " << key << settings.value(key).toString();
-    config_map.insert(key, settings.value(key));
+    val = settings.value(key);
+    if (!val.isNull())
+        config_map.insert(key, val);
+    else
+        config_map.insert(key, 0);
+
     key = "AvatarSpirit/ComParams/ComFreq";
-    qDebug() << "load " << key << settings.value(key).toString();
-    config_map.insert(key, settings.value(key));
+    val = settings.value(key);
+    if (!val.isNull())
+        config_map.insert(key, val);
+    else
+        config_map.insert(key, 5);
+
     key = "AvatarSpirit/GAMCSParams/DiscountRate";
-    qDebug() << "load " << key << settings.value(key).toString();
-    config_map.insert(key, settings.value(key));
+    val = settings.value(key);
+    if (!val.isNull())
+        config_map.insert(key, val);
+    else
+        config_map.insert(key, 0.9);
+
     key = "AvatarSpirit/GAMCSParams/Accuracy";
-    qDebug() << "load " << key << settings.value(key).toString();
-    config_map.insert(key, settings.value(key));
+    val = settings.value(key);
+    if (!val.isNull())
+        config_map.insert(key, val);
+    else
+        config_map.insert(key, 0.001);
+
     key = "AvatarSpirit/GAMCSParams/LearningMode";
-    qDebug() << "load " << key << settings.value(key).toString();
-    config_map.insert(key, settings.value(key));
+    val = settings.value(key);
+    if (!val.isNull())
+        config_map.insert(key, val);
+    else
+        config_map.insert(key, QString("Online"));
+
     key = "StaticSpirit/Life/Cheese";
-    qDebug() << "load " << key << settings.value(key).toString();
-    config_map.insert(key, settings.value(key));
+    val = settings.value(key);
+    if (!val.isNull())
+        config_map.insert(key, val);
+    else
+        config_map.insert(key, 15);
+
     key = "StaticSpirit/Life/Nail";
-    qDebug() << "load " << key << settings.value(key).toString();
-    config_map.insert(key, settings.value(key));
+    val = settings.value(key);
+    if (!val.isNull())
+        config_map.insert(key, val);
+    else
+        config_map.insert(key, 1.5);
 }
 
 void Configure::save()

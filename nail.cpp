@@ -13,7 +13,10 @@ Nail::Nail()
    if (ok)
        _life = fval;
    else
+   {
        _life = 1.5;		// default
+        g_config.setValue("StaticAvatar/Life/Nail", _life);
+   }
 }
 
 Nail::~Nail()
