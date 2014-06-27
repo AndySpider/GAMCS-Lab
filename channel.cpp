@@ -6,7 +6,11 @@ Channel::Channel()
 {
 }
 
-void Channel::putMsg(AvatarSpirit *sender, AvatarSpirit *receiver, State_Info_Header *stif)
+Channel::~Channel()
+{
+}
+
+void Channel::putMsg(AvatarSpirit *sender, AvatarSpirit *receiver, const State_Info_Header *stif)
 {
     struct Message msg;
     msg.sender = sender;

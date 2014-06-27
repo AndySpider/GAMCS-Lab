@@ -46,16 +46,16 @@ public:
 
     int initialize();	// initialize scene and grid_x, grid_y
 
-    SType spiritType();
-    SCategory spiritCategory();
-    float life();
+    SType spiritType() const;
+    SCategory spiritCategory() const;
+    float life() const;
     void setLife(float l);
     void injured(float l);
     void healed(float l);
-    QPoint gridPos();
+    QPoint gridPos() const;
 
     void setMarked(bool val);
-    bool isMarked();
+    bool isMarked() const;
 
     virtual void act();
     virtual void postAct();

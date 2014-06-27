@@ -6,6 +6,7 @@ class Block : public StaticSpirit
 {
 public:
     Block();
+    ~Block();
 };
 
 #endif // BLOCK_H

@@ -11,8 +11,9 @@ class Channel
 {
 public:
     Channel();
+    ~Channel();
 
-    void putMsg(AvatarSpirit *sender, AvatarSpirit *receiver, State_Info_Header *stif);
+    void putMsg(AvatarSpirit *sender, AvatarSpirit *receiver, const State_Info_Header *stif);
     void dispatchMsg();
 
 private:

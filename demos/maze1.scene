@@ -1,0 +1,1586 @@
+<!DOCTYPE Scene>
+<Scene grid_size="10" height="50" width="50">
+    <Scene_Infomation>
+        <Spirit_Statistics total_num="262">
+            <Block>249</Block>
+            <Cheese>1</Cheese>
+            <Nail>12</Nail>
+            <Bomb>0</Bomb>
+            <Mouse>0</Mouse>
+            <Cat>0</Cat>
+            <Elephant>0</Elephant>
+        </Spirit_Statistics>
+    </Scene_Infomation>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>16</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>17</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>18</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>19</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>20</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>21</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>22</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>23</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>26</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>27</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>28</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>29</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>30</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>31</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>32</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>33</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>34</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>13</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>14</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>15</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>16</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>17</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>18</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>19</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>20</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>22</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>23</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>24</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>25</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>26</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>27</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>28</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>29</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>30</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>31</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>15</xpos>
+        <ypos>32</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>16</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>17</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>18</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>19</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>20</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>21</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>22</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>23</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>24</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>26</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>27</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>28</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>29</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>30</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>31</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>32</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>33</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>34</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>33</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>15</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>16</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>17</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>14</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>18</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>19</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>22</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>23</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>24</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>25</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>26</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>27</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>29</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>28</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>30</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>31</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>35</xpos>
+        <ypos>32</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>23</xpos>
+        <ypos>14</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>23</xpos>
+        <ypos>15</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>22</xpos>
+        <ypos>15</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>21</xpos>
+        <ypos>15</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>20</xpos>
+        <ypos>15</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>19</xpos>
+        <ypos>15</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>17</xpos>
+        <ypos>15</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>17</xpos>
+        <ypos>16</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>17</xpos>
+        <ypos>17</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>18</xpos>
+        <ypos>17</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>19</xpos>
+        <ypos>17</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>19</xpos>
+        <ypos>16</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>21</xpos>
+        <ypos>17</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>22</xpos>
+        <ypos>17</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>23</xpos>
+        <ypos>17</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>21</xpos>
+        <ypos>18</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>21</xpos>
+        <ypos>19</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>21</xpos>
+        <ypos>20</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>20</xpos>
+        <ypos>19</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>19</xpos>
+        <ypos>19</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>17</xpos>
+        <ypos>19</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>17</xpos>
+        <ypos>20</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>17</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>18</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>19</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>20</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>21</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>22</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>23</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>24</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>26</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>27</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>28</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>29</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>30</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>31</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>32</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>33</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>31</xpos>
+        <ypos>20</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>31</xpos>
+        <ypos>19</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>32</xpos>
+        <ypos>19</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>33</xpos>
+        <ypos>19</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>34</xpos>
+        <ypos>19</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>19</xpos>
+        <ypos>22</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>19</xpos>
+        <ypos>23</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>14</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>15</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>16</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>17</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>18</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>19</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>24</xpos>
+        <ypos>19</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>23</xpos>
+        <ypos>19</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>20</xpos>
+        <ypos>23</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>21</xpos>
+        <ypos>23</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>22</xpos>
+        <ypos>23</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>23</xpos>
+        <ypos>23</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>24</xpos>
+        <ypos>23</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>23</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>16</xpos>
+        <ypos>23</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>17</xpos>
+        <ypos>23</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>17</xpos>
+        <ypos>24</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>17</xpos>
+        <ypos>25</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>18</xpos>
+        <ypos>25</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>19</xpos>
+        <ypos>25</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>24</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>25</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>26</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>23</xpos>
+        <ypos>25</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>23</xpos>
+        <ypos>26</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>23</xpos>
+        <ypos>27</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>23</xpos>
+        <ypos>28</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>23</xpos>
+        <ypos>29</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>23</xpos>
+        <ypos>30</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>31</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>24</xpos>
+        <ypos>31</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>23</xpos>
+        <ypos>31</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>22</xpos>
+        <ypos>31</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>21</xpos>
+        <ypos>31</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>20</xpos>
+        <ypos>31</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>19</xpos>
+        <ypos>31</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>18</xpos>
+        <ypos>31</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>17</xpos>
+        <ypos>31</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>17</xpos>
+        <ypos>30</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>17</xpos>
+        <ypos>29</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>17</xpos>
+        <ypos>28</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>17</xpos>
+        <ypos>27</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>19</xpos>
+        <ypos>30</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>19</xpos>
+        <ypos>29</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>19</xpos>
+        <ypos>28</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>19</xpos>
+        <ypos>27</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>19</xpos>
+        <ypos>26</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>20</xpos>
+        <ypos>25</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>21</xpos>
+        <ypos>25</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>21</xpos>
+        <ypos>26</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>21</xpos>
+        <ypos>27</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>21</xpos>
+        <ypos>28</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>21</xpos>
+        <ypos>29</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>28</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>29</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>27</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>26</xpos>
+        <ypos>29</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>27</xpos>
+        <ypos>29</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>27</xpos>
+        <ypos>30</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>27</xpos>
+        <ypos>31</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>28</xpos>
+        <ypos>31</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>29</xpos>
+        <ypos>31</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>30</xpos>
+        <ypos>31</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>31</xpos>
+        <ypos>31</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>33</xpos>
+        <ypos>32</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>33</xpos>
+        <ypos>31</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>33</xpos>
+        <ypos>30</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>33</xpos>
+        <ypos>29</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>31</xpos>
+        <ypos>30</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>31</xpos>
+        <ypos>29</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>30</xpos>
+        <ypos>29</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>29</xpos>
+        <ypos>29</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>29</xpos>
+        <ypos>28</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>29</xpos>
+        <ypos>27</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>29</xpos>
+        <ypos>26</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>29</xpos>
+        <ypos>25</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>29</xpos>
+        <ypos>24</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>27</xpos>
+        <ypos>23</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>28</xpos>
+        <ypos>23</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>29</xpos>
+        <ypos>23</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>30</xpos>
+        <ypos>23</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>31</xpos>
+        <ypos>23</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>27</xpos>
+        <ypos>24</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>27</xpos>
+        <ypos>25</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>26</xpos>
+        <ypos>27</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>27</xpos>
+        <ypos>27</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>34</xpos>
+        <ypos>27</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>33</xpos>
+        <ypos>27</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>32</xpos>
+        <ypos>27</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>31</xpos>
+        <ypos>27</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>31</xpos>
+        <ypos>26</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>31</xpos>
+        <ypos>25</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>32</xpos>
+        <ypos>25</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>33</xpos>
+        <ypos>25</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>33</xpos>
+        <ypos>24</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>33</xpos>
+        <ypos>23</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>27</xpos>
+        <ypos>20</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>27</xpos>
+        <ypos>19</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>27</xpos>
+        <ypos>18</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>27</xpos>
+        <ypos>17</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>27</xpos>
+        <ypos>15</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>28</xpos>
+        <ypos>15</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>29</xpos>
+        <ypos>15</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>29</xpos>
+        <ypos>16</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>29</xpos>
+        <ypos>17</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>29</xpos>
+        <ypos>18</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>29</xpos>
+        <ypos>19</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>30</xpos>
+        <ypos>17</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>31</xpos>
+        <ypos>17</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>32</xpos>
+        <ypos>17</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>33</xpos>
+        <ypos>17</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>33</xpos>
+        <ypos>16</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>33</xpos>
+        <ypos>15</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>31</xpos>
+        <ypos>14</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>31</xpos>
+        <ypos>15</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>23</xpos>
+        <ypos>12</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>23</xpos>
+        <ypos>11</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>24</xpos>
+        <ypos>11</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>11</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>25</xpos>
+        <ypos>12</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>36</xpos>
+        <ypos>19</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>37</xpos>
+        <ypos>19</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>37</xpos>
+        <ypos>20</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>37</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Block">
+        <life>1</life>
+        <xpos>36</xpos>
+        <ypos>21</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Nail">
+        <life>149.5</life>
+        <xpos>22</xpos>
+        <ypos>14</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Nail">
+        <life>148.5</life>
+        <xpos>18</xpos>
+        <ypos>16</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Nail">
+        <life>149.3</life>
+        <xpos>20</xpos>
+        <ypos>20</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Nail">
+        <life>149.7</life>
+        <xpos>18</xpos>
+        <ypos>30</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Nail">
+        <life>149.4</life>
+        <xpos>20</xpos>
+        <ypos>26</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Nail">
+        <life>150</life>
+        <xpos>30</xpos>
+        <ypos>30</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Nail">
+        <life>149.7</life>
+        <xpos>32</xpos>
+        <ypos>26</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Nail">
+        <life>149.1</life>
+        <xpos>34</xpos>
+        <ypos>32</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Nail">
+        <life>150</life>
+        <xpos>26</xpos>
+        <ypos>28</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Nail">
+        <life>150</life>
+        <xpos>28</xpos>
+        <ypos>24</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Nail">
+        <life>149.6</life>
+        <xpos>16</xpos>
+        <ypos>24</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Nail">
+        <life>149.9</life>
+        <xpos>20</xpos>
+        <ypos>22</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+    <Spirit type="Cheese">
+        <life>1e+06</life>
+        <xpos>36</xpos>
+        <ypos>20</ypos>
+        <isMarked>false</isMarked>
+    </Spirit>
+</Scene>

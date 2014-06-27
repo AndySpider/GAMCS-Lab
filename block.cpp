@@ -10,3 +10,7 @@ Block::Block()
     _color = QColor(186, 95, 38);
     _life = 1;
 }
+
+Block::~Block()
+{
+}

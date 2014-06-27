@@ -13,7 +13,7 @@ class SetDialog : public QDialog
     Q_OBJECT
 
 public:
-    SetDialog(QString lab, QString oldVal);
+    SetDialog(const QString &lab, const QString &oldVal);
 
     QString getValue();
 

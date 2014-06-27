@@ -38,17 +38,17 @@ int Spirit::initialize()
     }
 }
 
-Spirit::SType Spirit::spiritType()
+Spirit::SType Spirit::spiritType() const
 {
     return _type;
 }
 
-Spirit::SCategory Spirit::spiritCategory()
+Spirit::SCategory Spirit::spiritCategory() const
 {
     return _category;
 }
 
-float Spirit::life()
+float Spirit::life() const
 {
     return _life;
 }
@@ -72,7 +72,7 @@ void Spirit::healed(float l)
     _life_mutex.unlock();
 }
 
-QPoint Spirit::gridPos()
+QPoint Spirit::gridPos() const
 {
     return QPoint(grid_x, grid_y);
 }
@@ -82,7 +82,7 @@ void Spirit::setMarked(bool val)
     is_marked = val;
 }
 
-bool Spirit::isMarked()
+bool Spirit::isMarked() const
 {
     return is_marked;
 }

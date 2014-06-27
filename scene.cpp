@@ -1,5 +1,6 @@
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
+#include <QApplication>
 #include <QFile>
 #include <QDomDocument>
 #include <assert.h>
@@ -97,6 +98,9 @@ int Scene::load(const QString &file)
     }
     infile.close();
 
+    // show busy cursor
+    QApplication::setOverrideCursor(Qt::BusyCursor);
+
     QDomElement root = doc.documentElement();
     int scene_width = root.attribute("width").toInt(NULL);
     int scene_height = root.attribute("height").toInt(NULL);
@@ -116,15 +120,15 @@ int Scene::load(const QString &file)
     while (!node.isNull())
     {
         Spirit::SType type;
-        int life;
+        int life = 0;
         QPoint grid_pos;
-        bool is_marked;
-        int id;
-        int radar_range;
-        bool is_awake;
-        int com_freq;
-        Agent::Mode lm;
-        bool ok;
+        bool is_marked = true;
+        int id = -1;
+        int radar_range = 5;
+        bool is_awake = false;
+        int com_freq = 5;
+        Agent::Mode lm = Agent::ONLINE;
+        bool ok = false;
         bool is_avatar = false;
 
         if (node.isElement())
@@ -222,6 +226,7 @@ int Scene::load(const QString &file)
         node = node.nextSibling();
     }
 
+    QApplication::restoreOverrideCursor();  // restore cursor
     return 0;
 }
 
@@ -237,6 +242,9 @@ void Scene::save(const QString &file)
         qDebug() << "Error: can not open file for saving scene" << file;
         return;
     }
+
+    // show busy cursor
+    QApplication::setOverrideCursor(Qt::BusyCursor);
 
     QDomDocument doc("Scene");
     QDomElement root = doc.createElement("Scene");
@@ -344,6 +352,7 @@ void Scene::save(const QString &file)
     doc.save(out, 4);
     of.close();
 
+    QApplication::restoreOverrideCursor();
     // restore timer
     if (timer_active == true)
         resume();
@@ -465,7 +474,6 @@ void Scene::drawLimitLine()
 void Scene::setCurTool(Tool t)
 {
     cur_tool = t;
-    qDebug() << "+++ Scene - change tool to " << cur_tool;
 }
 
 void Scene::speedUp()

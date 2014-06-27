@@ -6,7 +6,7 @@
 #include <QVBoxLayout>
 #include "setdialog.h"
 
-SetDialog::SetDialog(QString lab, QString oldVal)
+SetDialog::SetDialog(const QString &lab, const QString &oldVal)
 {
     label = new QLabel(lab);
     okButton = new QPushButton("OK");

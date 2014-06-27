@@ -19,18 +19,18 @@ public:
     void postAct();
 
     void setId(int i);
-    int getId();
+    int getId() const;
     void setRadarRange(int range);
-    int getRadarRange();
+    int getRadarRange() const;
     void setAwake(bool val);
-    bool isAwake();
+    bool isAwake() const;
     void setLearningMode(Agent::Mode lm);
-    Agent::Mode getLearningMode();
+    Agent::Mode getLearningMode() const;
     void setChannel(Channel *c);
     void setComFreq(int f);
-    int getComFreq();
+    int getComFreq() const;
 
-    void sendMsg(AvatarSpirit *receiver, State_Info_Header *stif);
+    void sendMsg(AvatarSpirit *receiver, const State_Info_Header *stif);
     void recvMsg(const State_Info_Header *recstif);
 
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
@@ -49,7 +49,7 @@ protected:
     void moveLeft();
     void moveRight();
 
-    QList<AvatarSpirit *> getNeighbors();	// the area is a rectangle
+    QList<AvatarSpirit *> getNeighbors() const;	// the area is a rectangle
     bool timeToCom();
 
     Channel *mychannel;
@@ -59,6 +59,7 @@ protected:
 
 private:
     QPoint changePos();
+    State_Info_Header *mergeStateInfo(const State_Info_Header *stif1, const State_Info_Header *stif2);
 
     int tmp_delta_grid_x;   // this is used to postporn the moving action
     int tmp_delta_grid_y;
