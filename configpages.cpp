@@ -101,21 +101,21 @@ AvatarSpiritPage::AvatarSpiritPage(QWidget *parent) :
     lifeLayout->addWidget(elephantLifeEdit, 2, 1);
     lifeGroup->setLayout(lifeLayout);
 
-    // communication
-    QGroupBox *comGroup = new QGroupBox(tr("Default Communication Params"));
-    QLabel *rangeLabel = new QLabel(tr("Radar Range"));
-    rangeEdit = new QLineEdit(g_config.getValue("AvatarSpirit/ComParams/RadarRange").toString());
-    rangeEdit->setToolTip(tr("int (>=0, 0 to turn off radar)"));
-    QLabel *freqLabel = new QLabel(tr("Com Freq"));
-    freqEdit = new QLineEdit(g_config.getValue("AvatarSpirit/ComParams/ComFreq").toString());
+    // sharing
+    QGroupBox *shareGroup = new QGroupBox(tr("Default Sharing Params"));
+    QLabel *rangeLabel = new QLabel(tr("Share Range"));
+    rangeEdit = new QLineEdit(g_config.getValue("AvatarSpirit/ShareParams/ShareRange").toString());
+    rangeEdit->setToolTip(tr("int (>=0, 0 to turn off sharing)"));
+    QLabel *freqLabel = new QLabel(tr("Share Freq"));
+    freqEdit = new QLineEdit(g_config.getValue("AvatarSpirit/ShareParams/ShareFreq").toString());
     freqEdit->setToolTip(tr("int (>0)"));
 
-    QGridLayout *comLayout = new QGridLayout;
-    comLayout->addWidget(rangeLabel, 0, 0);
-    comLayout->addWidget(rangeEdit, 0, 1);
-    comLayout->addWidget(freqLabel, 1, 0);
-    comLayout->addWidget(freqEdit, 1, 1);
-    comGroup->setLayout(comLayout);
+    QGridLayout *shareLayout = new QGridLayout;
+    shareLayout->addWidget(rangeLabel, 0, 0);
+    shareLayout->addWidget(rangeEdit, 0, 1);
+    shareLayout->addWidget(freqLabel, 1, 0);
+    shareLayout->addWidget(freqEdit, 1, 1);
+    shareGroup->setLayout(shareLayout);
 
     // gamcs params
     QGroupBox *paramsGroup = new QGroupBox(tr("Default GAMCS Parameters"));
@@ -151,7 +151,7 @@ AvatarSpiritPage::AvatarSpiritPage(QWidget *parent) :
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(lifeGroup);
     mainLayout->addSpacing(10);
-    mainLayout->addWidget(comGroup);
+    mainLayout->addWidget(shareGroup);
     mainLayout->addSpacing(10);
     mainLayout->addWidget(paramsGroup);
     mainLayout->addStretch(1);
@@ -174,13 +174,13 @@ void AvatarSpiritPage::applyConfig()
     if (ok)
         g_config.setValue("AvatarSpirit/Life/Elephant", elephant_life);
 
-    int radar_range = rangeEdit->text().toInt(&ok);
+    int share_range = rangeEdit->text().toInt(&ok);
     if (ok)
-        g_config.setValue("AvatarSpirit/ComParams/RadarRange", radar_range);
+        g_config.setValue("AvatarSpirit/ShareParams/ShareRange", share_range);
 
-    int com_freq = freqEdit->text().toInt(&ok);
+    int share_freq = freqEdit->text().toInt(&ok);
     if (ok)
-        g_config.setValue("AvatarSpirit/ComParams/ComFreq", com_freq);
+        g_config.setValue("AvatarSpirit/ShareParams/ShareFreq", share_freq);
 
     float dr = drEdit->text().toFloat(&ok);
     if (ok)

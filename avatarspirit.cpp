@@ -16,33 +16,33 @@
 
 AvatarSpirit::AvatarSpirit(int id) : Avatar(id), mychannel(NULL), memhandler(NULL), myagent(NULL),
     learning_mode(Agent::ONLINE), tmp_delta_grid_x(0), tmp_delta_grid_y(0),
-    radar_range(0), is_awake(true), is_sending(false), storage(""), com_freq(0),
-    com_count(0), discount_rate(0), accuracy(0)
+    share_range(0), is_awake(true), is_sending(false), storage(""), share_freq(0),
+    _counter(0), discount_rate(0), accuracy(0)
 {
     _category = AVATARSPIRIT;
 
     // read config
     bool ok;
-    int val = g_config.getValue("AvatarSpirit/ComParams/RadarRange").toInt(&ok);
+    int val = g_config.getValue("AvatarSpirit/ShareParams/ShareRange").toInt(&ok);
     if (ok)
-        radar_range = val;
+        share_range = val;
     else    // default value
     {
-        radar_range = 0;
-        g_config.setValue("AvatarSpirit/ComParams/RadarRange", radar_range);
+        share_range = 0;
+        g_config.setValue("AvatarSpirit/ShareParams/ShareRange", share_range);
     }
 
-    val = g_config.getValue("AvatarSpirit/ComParams/ComFreq").toInt(&ok);
+    val = g_config.getValue("AvatarSpirit/ShareParams/ShareFreq").toInt(&ok);
     if (ok)
     {
-        com_freq = val;
-        com_count = qrand() % (com_freq * 2);
+        share_freq = val;
+        _counter = qrand() % (share_freq * 2);
     }
     else    // default value
     {
-        com_freq = 5;
-        com_count = qrand() % (com_freq * 2);
-        g_config.setValue("AvatarSpirit/ComParams/ComFreq", com_freq);
+        share_freq = 5;
+        _counter = qrand() % (share_freq * 2);
+        g_config.setValue("AvatarSpirit/ShareParams/ShareFreq", share_freq);
     }
 
     float fval = g_config.getValue("AvatarSpirit/GAMCSParams/DiscountRate").toFloat(&ok);
@@ -92,14 +92,14 @@ int AvatarSpirit::getId() const
     return id;
 }
 
-void AvatarSpirit::setRadarRange(int range)
+void AvatarSpirit::setShareRange(int range)
 {
-    radar_range = range;
+    share_range = range;
 }
 
-int AvatarSpirit::getRadarRange() const
+int AvatarSpirit::getShareRange() const
 {
-    return radar_range;
+    return share_range;
 }
 
 void AvatarSpirit::setAwake(bool val)
@@ -128,23 +128,23 @@ void AvatarSpirit::setChannel(Channel *c)
     mychannel = c;
 }
 
-void AvatarSpirit::setComFreq(int f)
+void AvatarSpirit::setShareFreq(int f)
 {
-    com_freq = f;
+    share_freq = f;
 }
 
-int AvatarSpirit::getComFreq() const
+int AvatarSpirit::getShareFreq() const
 {
-    return com_freq;
+    return share_freq;
 }
 
 QList<AvatarSpirit *> AvatarSpirit::getNeighbors() const
 {
-    if (radar_range <= 0)	// radar is off
+    if (share_range <= 0)	// share is off
         return QList<AvatarSpirit *>();
 
     QList<AvatarSpirit *>neighs;
-    qreal pix_rang = (qreal) radar_range * GRID_SIZE;
+    qreal pix_rang = (qreal) share_range * GRID_SIZE;
     QRectF neigh_area = this->mapRectToScene(-pix_rang, -pix_rang, pix_rang * 2 + GRID_SIZE, pix_rang * 2 + GRID_SIZE);
 
     QList<QGraphicsItem *> items = myscene->items(neigh_area, Qt::IntersectsItemShape, Qt::DescendingOrder);
@@ -253,12 +253,12 @@ void AvatarSpirit::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
         painter->drawPath(path);
     }
 
-    if (is_sending && radar_range > 0)	// draw radar range for avatars that are sending msg
+    if (is_sending && share_range > 0)	// draw share range for avatars that are sending msg
     {
-        QPen radar_pen(_color);
-        radar_pen.setStyle(Qt::DashLine);
-        painter->setPen(radar_pen);
-        qreal pix_rang = (qreal) radar_range * GRID_SIZE;
+        QPen share_pen(_color);
+        share_pen.setStyle(Qt::DashLine);
+        painter->setPen(share_pen);
+        qreal pix_rang = (qreal) share_range * GRID_SIZE;
         painter->setBrush(Qt::NoBrush);
         painter->drawRect(-pix_rang, -pix_rang, pix_rang * 2 + GRID_SIZE, pix_rang * 2 + GRID_SIZE);
 
@@ -297,10 +297,10 @@ void AvatarSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     else
         toggle_awake = menu.addAction("Wake up");
 
-    // radar
-    QMenu *radar = menu.addMenu("Radar");
-    QAction *radar_range = radar->addAction("Set Range");
-    QAction *radar_freq = radar->addAction("Set Freq");
+    // share
+    QMenu *share = menu.addMenu("Share");
+    QAction *set_share_range = share->addAction("Set Range");
+    QAction *set_share_freq = share->addAction("Set Freq");
 
     // learning mode
     QMenu *lmode = menu.addMenu("Learning Mode");
@@ -334,39 +334,39 @@ void AvatarSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     {
         this->setAwake(!this->isAwake());
     }
-    else if (selectedAction == radar_range)
+    else if (selectedAction == set_share_range)
     {
-        SetDialog dialog("Radar Range", QString::number(getRadarRange()));
+        SetDialog dialog("Share Range", QString::number(getShareRange()));
         if (dialog.exec())
         {
             bool ok;
-            int new_radar_range = dialog.getValue().toInt(&ok, 10);
+            int new_share_range = dialog.getValue().toInt(&ok, 10);
             if (ok)
             {
-                this->setRadarRange(new_radar_range);
-                qDebug() << "+++ Radar range set to" << new_radar_range;
+                this->setShareRange(new_share_range);
+                qDebug() << "+++ Share range set to" << new_share_range;
             }
             else
             {
-                qDebug() << "--- invalid radar range, should be integers!";
+                qDebug() << "--- invalid share range, should be integers!";
             }
         }
     }
-    else if (selectedAction == radar_freq)
+    else if (selectedAction == set_share_freq)
     {
-        SetDialog dialog("Radar Freq", QString::number(getComFreq()));
+        SetDialog dialog("Share Freq", QString::number(getShareFreq()));
         if (dialog.exec())
         {
             bool ok;
-            int new_radar_freq = dialog.getValue().toInt(&ok, 10);
-            if (ok && new_radar_freq > 0)
+            int new_share_freq = dialog.getValue().toInt(&ok, 10);
+            if (ok && new_share_freq > 0)
             {
-                this->setComFreq(new_radar_freq);
-                qDebug() << "+++ Average freq set to" << new_radar_freq;
+                this->setShareFreq(new_share_freq);
+                qDebug() << "+++ Share freq set to" << new_share_freq;
             }
             else
             {
-                qDebug() << "--- invalid radar freq, should be intergers > 0!";
+                qDebug() << "--- invalid share freq, should be intergers > 0!";
             }
         }
     }
@@ -600,9 +600,9 @@ void AvatarSpirit::act()
     {
         Avatar::step();
 
-        // handle communication
-        bool com = timeToCom();
-        if (com && getRadarRange() > 0)     // send state info
+        // handle sharing
+        bool to_share = timeToShare();
+        if (to_share && getShareRange() > 0)     // send state info
         {
             Agent::State st = myagent->nextState();
             if (st == Agent::INVALID_STATE)	// wrap
@@ -806,17 +806,17 @@ void AvatarSpirit::recvMsg(const State_Info_Header *recstif)
     free(mystif);
 }
 
-bool AvatarSpirit::timeToCom()
+bool AvatarSpirit::timeToShare()
 {
     bool re = false;
-    if (com_count <= 0)
+    if (_counter <= 0)
     {
-        com_count = qrand() % com_freq * 2;	// [0, 2 * com_freq)  restart count
+        _counter = qrand() % share_freq * 2;	// [0, 2 * com_freq)  restart count
         re = true;
     }
     else
     {
-        com_count--;
+        _counter--;
         re = false;
     }
 

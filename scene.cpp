@@ -124,9 +124,9 @@ int Scene::load(const QString &file)
         QPoint grid_pos;
         bool is_marked = true;
         int id = -1;
-        int radar_range = 5;
+        int share_range = 5;
         bool is_awake = false;
-        int com_freq = 5;
+        int share_freq = 5;
         Agent::Mode lm = Agent::ONLINE;
         bool ok = false;
         bool is_avatar = false;
@@ -175,9 +175,9 @@ int Scene::load(const QString &file)
                         assert(ok);
                         is_avatar = true;
                     }
-                    else if (ele.tagName() == "Radar_Range")
+                    else if (ele.tagName() == "Share_Range")
                     {
-                        radar_range = ele.text().toInt(&ok, 10);
+                        share_range = ele.text().toInt(&ok, 10);
                         assert(ok);
                     }
                     else if (ele.tagName() == "isAwake")
@@ -187,9 +187,9 @@ int Scene::load(const QString &file)
                         else
                             is_awake = false;
                     }
-                    else if (ele.tagName() == "Com_Freq")
+                    else if (ele.tagName() == "Share_Freq")
                     {
-                        com_freq = ele.text().toInt(&ok, 10);
+                        share_freq = ele.text().toInt(&ok, 10);
                         assert(ok);
                     }
                     else if (ele.tagName() == "Learning_Mode")
@@ -216,9 +216,9 @@ int Scene::load(const QString &file)
                 assert(avaspt != NULL);
 
                 avaspt->setId(id);
-                avaspt->setRadarRange(radar_range);
+                avaspt->setShareRange(share_range);
                 avaspt->setAwake(is_awake);
-                avaspt->setComFreq(com_freq);
+                avaspt->setShareFreq(share_freq);
                 avaspt->setLearningMode(lm);
             }
         }
@@ -315,11 +315,11 @@ void Scene::save(const QString &file)
             QDomText id_val = doc.createTextNode(QString::number(avaspt->getId()));
             id.appendChild(id_val);
             spirit.appendChild(id);
-            // radar range
-            QDomElement radar_range = doc.createElement("Radar_Range");
-            QDomText range_val = doc.createTextNode(QString::number(avaspt->getRadarRange()));
-            radar_range.appendChild(range_val);
-            spirit.appendChild(radar_range);
+            // share range
+            QDomElement share_range = doc.createElement("Share_Range");
+            QDomText range_val = doc.createTextNode(QString::number(avaspt->getShareRange()));
+            share_range.appendChild(range_val);
+            spirit.appendChild(share_range);
             // awake?
             QDomElement isawake = doc.createElement("isAwake");
             QDomText isawake_val;
@@ -330,8 +330,8 @@ void Scene::save(const QString &file)
             isawake.appendChild(isawake_val);
             spirit.appendChild(isawake);
             // avgfreq
-            QDomElement freq = doc.createElement("Com_Freq");
-            QDomText freq_val = doc.createTextNode(QString::number(avaspt->getComFreq()));
+            QDomElement freq = doc.createElement("Share_Freq");
+            QDomText freq_val = doc.createTextNode(QString::number(avaspt->getShareFreq()));
             freq.appendChild(freq_val);
             spirit.appendChild(freq);
             // learning mode
@@ -872,7 +872,7 @@ Spirit *Scene::newSpiritAt(Spirit::SType type, const QPoint &grid_pos)
         return NULL;
     }
 
-    // avatars use channel to communicate
+    // avatars use channel to share memory
     if (spt->spiritCategory() == Spirit::AVATARSPIRIT)
     {
         AvatarSpirit *ava = dynamic_cast<AvatarSpirit *>(spt);

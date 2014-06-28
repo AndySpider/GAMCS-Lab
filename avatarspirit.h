@@ -20,15 +20,15 @@ public:
 
     void setId(int i);
     int getId() const;
-    void setRadarRange(int range);
-    int getRadarRange() const;
+    void setShareRange(int range);
+    int getShareRange() const;
     void setAwake(bool val);
     bool isAwake() const;
     void setLearningMode(Agent::Mode lm);
     Agent::Mode getLearningMode() const;
     void setChannel(Channel *c);
-    void setComFreq(int f);
-    int getComFreq() const;
+    void setShareFreq(int f);
+    int getShareFreq() const;
 
     void sendMsg(AvatarSpirit *receiver, const State_Info_Header *stif);
     void recvMsg(const State_Info_Header *recstif);
@@ -50,7 +50,7 @@ protected:
     void moveRight();
 
     QList<AvatarSpirit *> getNeighbors() const;	// the area is a rectangle
-    bool timeToCom();
+    bool timeToShare();
 
     Channel *mychannel;
     MemHandler *memhandler;
@@ -63,12 +63,12 @@ private:
 
     int tmp_delta_grid_x;   // this is used to postporn the moving action
     int tmp_delta_grid_y;
-    int radar_range;
+    int share_range;
     bool is_awake;
     bool is_sending;
     QString storage;
-    int com_freq;
-    long com_count;
+    int share_freq;
+    long _counter;
     float discount_rate;
     float accuracy;
 };

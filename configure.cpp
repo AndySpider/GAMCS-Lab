@@ -53,14 +53,14 @@ void Configure::load()
     else
         config_map.insert(key, 100);
 
-    key = "AvatarSpirit/ComParams/RadarRange";
+    key = "AvatarSpirit/ShareParams/ShareRange";
     val = settings.value(key);
     if (!val.isNull())
         config_map.insert(key, val);
     else
         config_map.insert(key, 0);
 
-    key = "AvatarSpirit/ComParams/ComFreq";
+    key = "AvatarSpirit/ShareParams/ShareFreq";
     val = settings.value(key);
     if (!val.isNull())
         config_map.insert(key, val);

@@ -312,7 +312,6 @@ void MainWindow::spiritsNumChanged(int num)
 void MainWindow::scenePaused()
 {
     QIcon icon;
-    qDebug() << "+++ pause mice";
     icon.addFile(QStringLiteral(":/images/pause.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionPause_Resume->setIcon(icon);
     actionPause_Resume->setChecked(true);
@@ -321,7 +320,6 @@ void MainWindow::scenePaused()
 void MainWindow::sceneResumed()
 {
     QIcon icon;
-    qDebug() << "+++ resume mice";
     icon.addFile(QStringLiteral(":/images/resume.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionPause_Resume->setIcon(icon);
 }
