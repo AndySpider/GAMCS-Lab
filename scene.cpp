@@ -937,6 +937,7 @@ QPoint Scene::calGridPos(const QPointF &pos)
     int x = (int) pos.x();
     int y = (int) pos.y();
 
+
     x /= GRID_SIZE;
     y /= GRID_SIZE;
 

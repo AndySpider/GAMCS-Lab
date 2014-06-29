@@ -11,7 +11,7 @@
 Spirit::Spirit() : _life(1), _type(BLOCK), _color(Qt::black), myscene(NULL), grid_x(-1), grid_y(-1),
     is_marked(false)
 {
-    setFlags(ItemIsSelectable | ItemIsMovable);
+    setFlags(ItemIsSelectable | ItemIsMovable | ItemSendsGeometryChanges);
     setAcceptHoverEvents(true);
 }
 
@@ -198,6 +198,9 @@ void Spirit::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QW
         fillColor = _color;
 
     painter->setBrush(fillColor);
+    if (isSelected())
+        painter->setPen(Qt::red);
+
     painter->drawRect(0, 0, GRID_SIZE, GRID_SIZE);
 
     // draw decorations
@@ -235,29 +238,23 @@ bool Spirit::collidesWithItem(const QGraphicsItem *other, Qt::ItemSelectionMode 
         return (spt->grid_x == this->grid_x && spt->grid_y == this->grid_y); // collide if at the same grid
 }
 
-void Spirit::mousePressEvent(QGraphicsSceneMouseEvent *event)
+QVariant Spirit::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-    QGraphicsItem::mousePressEvent(event);
-    update();
-}
-
-void Spirit::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    QPoint pos = myscene->calGridPos(event->scenePos());
-
-    if (!myscene->outOfLimitLine(pos))    // update position only if not out of limit line
+    if (change == ItemPositionChange && myscene)
     {
-        grid_x = pos.x();
-        grid_y = pos.y();
+        QPointF newPos = value.toPointF();	// in item coord
+        newPos += QPointF(GRID_SIZE / 2, GRID_SIZE / 2);	// move pos to item center
 
-        this->setPos(grid_x * GRID_SIZE, grid_y * GRID_SIZE);
+        QPoint gridPos = myscene->calGridPos(newPos);
+        if (myscene->outOfLimitLine(gridPos))	// out of limit line
+        {
+            // keep spirit inside the scene
+            gridPos.setX(qMin(myscene->width() - 1, qMax(gridPos.x(), 0)));
+            gridPos.setY(qMin(myscene->height() - 1, qMax(gridPos.y(), 0)));
+        }
+
+        return gridPos * GRID_SIZE;
     }
 
-    update();
-}
-
-void Spirit::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    QGraphicsItem::mouseReleaseEvent(event);
-    update();
+    return QGraphicsItem::itemChange(change, value);
 }
