@@ -796,11 +796,15 @@ void AvatarSpirit::recvMsg(const State_Info_Header *recstif)
     {
         myagent->addStateInfo(recstif);
     }
-    else    // merge and update
+    else if (recstif->count > mystif->count)   // more experienced, merge and accept
     {
         State_Info_Header *merged_stif = mergeStateInfo(mystif, recstif);
         myagent->updateStateInfo(merged_stif);
         free(merged_stif);  // free memory
+    }
+    else	// less experienced, do not accept
+    {
+
     }
 
     free(mystif);

@@ -24,7 +24,7 @@ Mouse::~Mouse()
 
 float Mouse::originalPayoff(Agent::State st)
 {
-    Q_UNUSED(st);
+//    Q_UNUSED(st);
 
     float pf = 0.0;
     QList<Spirit *> colliding_spirits = collidingSpirits();
@@ -74,9 +74,17 @@ float Mouse::originalPayoff(Agent::State st)
         }
     }
 
-#ifdef SURVIVE_MODE
-    return 1.0;
-#else
+    if (pf == 0.0)	// curiosity counts only when no direct payoffs
+    {
+        bool experienced = myagent->hasState(st);
+        if (experienced)
+        {
+            State_Info_Header *stif = myagent->getStateInfo(st);
+            pf = -0.1 * stif->count;
+            qDebug() << id << ":" << st << "is experienced" << stif->count << "times";
+            free(stif);
+        }
+    }
+
     return pf;
-#endif
 }
