@@ -253,6 +253,10 @@ QVariant Spirit::itemChange(GraphicsItemChange change, const QVariant &value)
             gridPos.setY(qMin(myscene->height() - 1, qMax(gridPos.y(), 0)));
         }
 
+        // update grid pos
+        grid_x = gridPos.x();
+        grid_y = gridPos.y();
+
         return gridPos * GRID_SIZE;
     }
 
