@@ -13,7 +13,6 @@ MemHandler::MemHandler(AvatarSpirit *avspt, gamcs::CSOSAgent *agent, const QStri
 
 MemHandler::~MemHandler()
 {
-    qDebug() << "MemHandler deleted!";
 }
 
 void MemHandler::run()

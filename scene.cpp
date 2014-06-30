@@ -1,5 +1,6 @@
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
+#include <QKeyEvent>
 #include <QApplication>
 #include <QFile>
 #include <QDomDocument>
@@ -15,7 +16,7 @@
 #include "scene.h"
 #include "configure.h"
 
-Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(T_NONE), mouse_id(0), cat_id(0), elephant_id(0), timer_interval(100),
+Scene::Scene(QObject *parent) : QGraphicsScene(parent), cur_tool(T_NONE), teach_spirit(NULL), mouse_id(0), cat_id(0), elephant_id(0), timer_interval(100),
     num_blocks(0), num_cheeses(0), num_nails(0), num_bombs(0), num_mice(0), num_cats(0), num_elephants(0),
     channel(NULL), _width(0), _height(0)
 {
@@ -600,6 +601,32 @@ void Scene::genRandSpirit(int num, const QList<Spirit::SType> &types)
         resume();
 }
 
+void Scene::setTeachSpirit(AvatarSpirit *spt)
+{
+    clearTeachSpirit();	// clear old one first
+
+    Spirit *tmp = dynamic_cast<Spirit *>(spt);
+    if (spirits.indexOf(tmp) == -1)	// not found
+    {
+        qDebug() << "The teach spirit can not be found!";
+        return;
+    }
+
+    spirits.removeOne(tmp);	// remove it from spirits
+    teach_spirit = spt;
+    teach_spirit->setLearningMode(Agent::TEACH);	// set to teach mode
+}
+
+void Scene::clearTeachSpirit()
+{
+    if (teach_spirit == NULL)
+        return;
+
+    teach_spirit->setLearningMode(Agent::ONLINE);	// set back to the default Online mode
+    spirits.append(dynamic_cast<Spirit *>(teach_spirit));	// restore it to spirits
+    teach_spirit = NULL;
+}
+
 QList<SpiritInfo> Scene::statistics()
 {
     QList<SpiritInfo> infos;
@@ -991,4 +1018,42 @@ bool Scene::outOfLimitLine(const QPoint &grid_pos)
         return true;
     else
         return false;
+}
+
+void Scene::keyPressEvent(QKeyEvent *keyEvent)
+{
+    if (teach_spirit != NULL)
+    {
+        if (keyEvent->key() == Qt::Key_Up)
+        {
+            teach_spirit->teach(1);		// teach must be called before action performed
+            teach_spirit->moveUp();
+        }
+        else if (keyEvent->key() == Qt::Key_Down)
+        {
+            teach_spirit->teach(2);		// the action numbers must be the same with that used in performAction()
+            teach_spirit->moveDown();
+        }
+        else if (keyEvent->key() == Qt::Key_Left)
+        {
+            teach_spirit->teach(3);
+            teach_spirit->moveLeft();
+        }
+        else if (keyEvent->key() == Qt::Key_Right)
+        {
+            teach_spirit->teach(4);
+            teach_spirit->moveRight();
+        }
+        else if (keyEvent->key() == Qt::Key_Space)
+        {
+            teach_spirit->teach(5);
+        }
+
+        // now update position
+        teach_spirit->postAct();
+    }
+    else
+    {
+        QGraphicsScene::keyPressEvent(keyEvent);
+    }
 }

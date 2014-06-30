@@ -33,6 +33,11 @@ public:
     void sendMsg(AvatarSpirit *receiver, const State_Info_Header *stif);
     void recvMsg(const State_Info_Header *recstif);
 
+    void moveUp();
+    void moveDown();
+    void moveLeft();
+    void moveRight();
+
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
 
 protected:
@@ -44,11 +49,6 @@ protected:
     OSpace availableActions(Agent::State);
     float originalPayoff(Agent::State);
 
-    void moveUp();
-    void moveDown();
-    void moveLeft();
-    void moveRight();
-
     QList<AvatarSpirit *> getNeighbors() const;	// the area is a rectangle
     bool timeToShare();
 
@@ -58,7 +58,7 @@ protected:
     Agent::Mode learning_mode;
 
 private:
-    QPoint changePos();
+    QPoint updatePos();
     State_Info_Header *mergeStateInfo(const State_Info_Header *stif1, const State_Info_Header *stif2);
 
     int tmp_delta_grid_x;   // this is used to postporn the moving action

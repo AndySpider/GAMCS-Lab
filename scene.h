@@ -8,9 +8,11 @@
 
 QT_BEGIN_NAMESPACE
 class QGraphicsSceneMouseEvent;
+class QKeyEvent;
 QT_END_NAMESPACE
 
 struct SpiritInfo;
+class AvatarSpirit;
 
 class Scene : public QGraphicsScene
 {
@@ -49,6 +51,8 @@ public:
     int height();
 
     void genRandSpirit(int num, const QList<Spirit::SType> &types);
+    void setTeachSpirit(AvatarSpirit *spt);
+    void clearTeachSpirit();
 
     QList<SpiritInfo> statistics();
 
@@ -71,6 +75,7 @@ private:
 
     // mice
     QList<Spirit *> spirits;
+    AvatarSpirit *teach_spirit;
 
     int mouse_id;
     int cat_id;
@@ -105,6 +110,7 @@ private:
 
     void mousePressEvent(QGraphicsSceneMouseEvent  *event);
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    void keyPressEvent(QKeyEvent *keyEvent);
 };
 
 struct SpiritInfo

@@ -66,7 +66,7 @@ AvatarSpirit::AvatarSpirit(int id) : Avatar(id), mychannel(NULL), memhandler(NUL
     QString lm = g_config.getValue("AvatarSpirit/GAMCSParams/LearningMode").toString();
     if (lm == "Explore")
         learning_mode = Agent::EXPLORE;
-    else // default value
+    else // default value, Note: the TEACH mode is not stored in configure, since it needs support from scene
     {
         learning_mode = Agent::ONLINE;
         g_config.setValue("AvatarSpirit/GAMCSParams/LearningMode", QString("Online"));
@@ -224,7 +224,7 @@ void AvatarSpirit::moveRight()
     }
 }
 
-QPoint AvatarSpirit::changePos()
+QPoint AvatarSpirit::updatePos()
 {
     grid_x += tmp_delta_grid_x;
     grid_y += tmp_delta_grid_y;
@@ -308,10 +308,14 @@ void AvatarSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     online->setCheckable(true);
     QAction *explore = lmode->addAction("Explore mode");
     explore->setCheckable(true);
+    QAction *teach = lmode->addAction("Teach mode");
+    teach->setCheckable(true);
     if (learning_mode == Agent::ONLINE)
         online->setChecked(true);
-    else
+    else if (learning_mode == Agent::EXPLORE)
         explore->setChecked(true);
+    else
+        teach->setChecked(true);
 
     // memory
     QMenu *memory = menu.addMenu("Memory");
@@ -373,14 +377,23 @@ void AvatarSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     else if (selectedAction == online)
     {
         qDebug() << "mouse change mode to ONLINE";
-        myagent->setMode(Agent::ONLINE);
-        learning_mode = Agent::ONLINE;
+        if (learning_mode == Agent::TEACH)
+            myscene->clearTeachSpirit();
+
+        setLearningMode(Agent::ONLINE);
     }
     else if (selectedAction == explore)
     {
+        if (learning_mode == Agent::TEACH)
+            myscene->clearTeachSpirit();
+
         qDebug() << "mouse change mode to EXPLORE";
-        myagent->setMode(Agent::EXPLORE);
-        learning_mode = Agent::EXPLORE;
+        setLearningMode(Agent::EXPLORE);
+    }
+    else if (selectedAction == teach)
+    {
+        qDebug() << "mouse change mode to TEACH";
+        myscene->setTeachSpirit(this);
     }
     else if (selectedAction == save)
     {
@@ -629,7 +642,7 @@ void AvatarSpirit::act()
 
 void AvatarSpirit::postAct()
 {
-    changePos();
+    updatePos();
 }
 
 void AvatarSpirit::sendMsg(AvatarSpirit *receiver, const State_Info_Header *stif)

@@ -129,10 +129,10 @@ AvatarSpiritPage::AvatarSpiritPage(QWidget *parent) :
     lmCombo = new QComboBox;
     lmCombo->addItem(tr("Online"));
     lmCombo->addItem(tr("Explore"));
-    if (g_config.getValue("AvatarSpirit/GAMCSParams/LearningMode").toString() == "Online")
-        lmCombo->setCurrentIndex(0);
-    else
+    if (g_config.getValue("AvatarSpirit/GAMCSParams/LearningMode").toString() == "Explore")
         lmCombo->setCurrentIndex(1);
+    else	// online is the default
+        lmCombo->setCurrentIndex(0);
 
     QGridLayout *paramsLayout = new QGridLayout;
     paramsLayout->addWidget(drLabel, 0, 0);
