@@ -60,8 +60,10 @@ private:
     QAction *actionQuit;
 
     QMenu *menuOptions;
-    QAction *actionGenRand;
     QAction *actionConfigure;
+
+    QMenu *menuTools;
+    QAction *actionGenRand;
 
     QMenu *menuAbout;
     QAction *actionAbout_App;

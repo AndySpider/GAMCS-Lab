@@ -579,19 +579,20 @@ int Scene::height()
     return _height;
 }
 
-void Scene::genRandSpirit(int num)
+void Scene::genRandSpirit(int num, const QList<Spirit::SType> &types)
 {
     bool timer_status = timer->isActive();  // save status
     pause();    // pause the scene
 
+    int t_num = types.size();
     while (num > 0)
     {
         // find a random grid position inside SCENE
         int gx = qrand() % _width;
         int gy = qrand() % _height;
-        int type = qrand() % Spirit::SPIRIT_NUM;
+        Spirit::SType type = types.at(qrand() % t_num);
 
-        addSpiritAt((Spirit::SType) type, QPoint(gx, gy));
+        addSpiritAt(type, QPoint(gx, gy));
         num--;
     }
 

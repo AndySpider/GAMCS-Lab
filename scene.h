@@ -48,7 +48,7 @@ public:
     int width();
     int height();
 
-    void genRandSpirit(int num);
+    void genRandSpirit(int num, const QList<Spirit::SType> &types);
 
     QList<SpiritInfo> statistics();
 

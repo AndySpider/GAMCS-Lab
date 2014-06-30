@@ -21,8 +21,8 @@ SetDialog::SetDialog(const QString &lab, const QString &oldVal)
     gLayout->addWidget(valText, 0, 1);
 
     QHBoxLayout *buttonLayout = new QHBoxLayout;
-    buttonLayout->addWidget(okButton);
     buttonLayout->addWidget(cancelButton);
+    buttonLayout->addWidget(okButton);
 
     gLayout->addLayout(buttonLayout, 2, 1, Qt::AlignRight);
 

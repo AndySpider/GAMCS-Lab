@@ -37,7 +37,8 @@ SOURCES += main.cpp\
     memhandler.cpp \
     configdialog.cpp \
     configpages.cpp \
-    configure.cpp
+    configure.cpp \
+    randdialog.cpp
 
 HEADERS  += mainwindow.h \
     scene.h \
@@ -57,7 +58,8 @@ HEADERS  += mainwindow.h \
     memhandler.h \
     configdialog.h \
     configpages.h \
-    configure.h
+    configure.h \
+    randdialog.h
 
 unix:!macx|win32: LIBS += -lgamcs
 

@@ -1,10 +1,10 @@
 <!DOCTYPE Scene>
-<Scene grid_size="10" height="50" width="50">
+<Scene height="50" grid_size="10" width="50">
     <Scene_Infomation>
-        <Spirit_Statistics total_num="260">
+        <Spirit_Statistics total_num="249">
             <Block>248</Block>
             <Cheese>1</Cheese>
-            <Nail>11</Nail>
+            <Nail>0</Nail>
             <Bomb>0</Bomb>
             <Mouse>0</Mouse>
             <Cat>0</Cat>
@@ -1437,72 +1437,6 @@
         <life>1e+06</life>
         <xpos>34</xpos>
         <ypos>20</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>14</xpos>
-        <ypos>10</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>20</xpos>
-        <ypos>12</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>30</xpos>
-        <ypos>10</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>16</xpos>
-        <ypos>18</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>18</xpos>
-        <ypos>22</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>24</xpos>
-        <ypos>22</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>26</xpos>
-        <ypos>22</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>30</xpos>
-        <ypos>26</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>24</xpos>
-        <ypos>28</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>18</xpos>
-        <ypos>28</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>27</xpos>
-        <ypos>10</ypos>
         <isMarked>false</isMarked>
     </Spirit>
     <Spirit type="Block">

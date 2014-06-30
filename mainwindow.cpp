@@ -6,6 +6,7 @@
 #include <QCloseEvent>
 #include "mainwindow.h"
 #include "configdialog.h"
+#include "randdialog.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -235,13 +236,19 @@ void MainWindow::initUi()
     menuOptions->setTitle(tr("&Options"));
 
     // Options actions
-    actionGenRand = menuOptions->addAction("&Generate 30 Spirits Randomly");
-    actionGenRand->setShortcut(tr("CTRL+G"));
-    actionGenRand->setObjectName("actionGenRand");
-
     actionConfigure = menuOptions->addAction(tr("&Configure"));
     actionConfigure->setShortcut(tr("CTRL+C"));
     actionConfigure->setObjectName("actionConfigure");
+
+    // Tools Menu
+    menuTools = new QMenu(menuBar);
+    menuTools->setObjectName("menuTools");
+    menuTools->setTitle(tr("&Tools"));
+
+    // Tools actions
+    actionGenRand = menuTools->addAction(tr("&Random Spirits"));
+    actionGenRand->setObjectName("actionGenRand");
+    actionGenRand->setShortcut(tr("CTRL+G"));
 
     // About Menu
     menuAbout = new QMenu(menuBar);
@@ -258,9 +265,10 @@ void MainWindow::initUi()
     menuAbout->addAction(actionAbout_App);
     menuAbout->addAction(actionAbout_GAMCS);
 
-    // add to menuBar
+    // add menus to menuBar
     menuBar->addAction(menuScene->menuAction());
     menuBar->addAction(menuOptions->menuAction());
+    menuBar->addAction(menuTools->menuAction());
     menuBar->addAction(menuAbout->menuAction());
     this->setMenuBar(menuBar);
 
@@ -431,9 +439,14 @@ void MainWindow::on_actionOpen_triggered()
 
 void MainWindow::openScene(const QString &file)
 {
-    int ret = scene->load(file);
-    if (ret == 0)   // load successfully
-        setCurrentFileName(file);
+    if (confirmClose())
+    {
+        int ret = scene->load(file);
+        if (ret == 0)   // load successfully
+            setCurrentFileName(file);
+
+        statusBar->showMessage(tr("scene opened"), 1000);
+    }
 }
 
 void MainWindow::on_actionSave_triggered()
@@ -441,7 +454,7 @@ void MainWindow::on_actionSave_triggered()
     if (filename.isEmpty())
         on_actionSave_as_triggered();
     else
-        scene->save(filename);
+        saveScene(filename);
 }
 
 void MainWindow::on_actionSave_as_triggered()
@@ -460,7 +473,9 @@ void MainWindow::on_actionSave_as_triggered()
 void MainWindow::saveScene(const QString &file)
 {
     scene->save(file);
-    filename = file;
+    if (filename.isEmpty())
+        filename = file;
+    statusBar->showMessage(tr("scene saved"), 1000);
 }
 
 void MainWindow::on_actionQuit_triggered()
@@ -548,7 +563,10 @@ void MainWindow::closeEvent(QCloseEvent *e)
 
 void MainWindow::on_actionGenRand_triggered()
 {
-    scene->genRandSpirit(30);
+    RandDialog dia;
+    dia.exec();
+
+    scene->genRandSpirit(dia.getNum(), dia.getTypes());
 }
 
 void MainWindow::on_actionConfigure_triggered()

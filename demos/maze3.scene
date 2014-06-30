@@ -1,10 +1,10 @@
 <!DOCTYPE Scene>
 <Scene height="50" grid_size="10" width="50">
     <Scene_Infomation>
-        <Spirit_Statistics total_num="269">
+        <Spirit_Statistics total_num="251">
             <Block>250</Block>
             <Cheese>1</Cheese>
-            <Nail>18</Nail>
+            <Nail>0</Nail>
             <Bomb>0</Bomb>
             <Mouse>0</Mouse>
             <Cat>0</Cat>
@@ -1515,114 +1515,6 @@
         <life>1e+06</life>
         <xpos>26</xpos>
         <ypos>34</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>20</xpos>
-        <ypos>16</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>26</xpos>
-        <ypos>14</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>16</xpos>
-        <ypos>14</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>30</xpos>
-        <ypos>16</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>34</xpos>
-        <ypos>18</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>24</xpos>
-        <ypos>20</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>26</xpos>
-        <ypos>22</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>32</xpos>
-        <ypos>22</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>22</xpos>
-        <ypos>22</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>16</xpos>
-        <ypos>24</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>22</xpos>
-        <ypos>28</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>18</xpos>
-        <ypos>28</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>24</xpos>
-        <ypos>32</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>28</xpos>
-        <ypos>30</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>34</xpos>
-        <ypos>32</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>28</xpos>
-        <ypos>26</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>28</xpos>
-        <ypos>32</ypos>
-        <isMarked>false</isMarked>
-    </Spirit>
-    <Spirit type="Nail">
-        <life>150</life>
-        <xpos>16</xpos>
-        <ypos>32</ypos>
         <isMarked>false</isMarked>
     </Spirit>
 </Scene>
