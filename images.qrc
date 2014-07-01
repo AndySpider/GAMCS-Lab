@@ -15,5 +15,13 @@
         <file>images/elephant.png</file>
         <file>images/gamcs-logo-small.png</file>
         <file>images/bomb.png</file>
+        <file>images/aboutGAMCS.png</file>
+        <file>images/application-exit.png</file>
+        <file>images/configure.png</file>
+        <file>images/help-contents.png</file>
+        <file>images/scene-new.png</file>
+        <file>images/scene-open.png</file>
+        <file>images/scene-save-as.png</file>
+        <file>images/scene-save.png</file>
     </qresource>
 </RCC>

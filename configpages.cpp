@@ -17,16 +17,16 @@ GeneralPage::GeneralPage(QWidget *parent) :
     ConfigPage(parent)
 {
     // note banner
-    QLabel *noteLabel = new QLabel(tr("<i>Note:: All the changes are applied only to new Scene or Spirits</i>"));
+    QLabel *noteLabel = new QLabel(tr("<i>Note:: All the changes are applied only to new created Scenes or Spirits.</i>"));
 
     // scene size
     QGroupBox *sizeGroup = new QGroupBox(tr("Scene Size"));
     QLabel *widthLabel = new QLabel(tr("width"));
     widthEdit = new QLineEdit(g_config.getValue("Scene/Size/Width").toString());
-    widthEdit->setToolTip(tr("int (>0)"));
+    widthEdit->setToolTip(tr("int (>0), unit: grid"));
     QLabel *heightLabel = new QLabel(tr("height"));
     heightEdit = new QLineEdit(g_config.getValue("Scene/Size/Height").toString());
-    heightEdit->setToolTip(tr("int (>0)"));
+    heightEdit->setToolTip(tr("int (>0), unit: grid"));
 
     QGridLayout *sizeLayout = new QGridLayout;
     sizeLayout->addWidget(widthLabel, 0, 0);

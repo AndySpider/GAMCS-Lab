@@ -190,17 +190,22 @@ void MainWindow::initUi()
     // Scene actions
     actionNew = new QAction(this);
     actionNew->setShortcut(tr("CTRL+N"));
+    actionNew->setIcon(QIcon(":/images/scene-new.png"));
     actionNew->setObjectName(QStringLiteral("actionNew"));
     actionOpen = new QAction(this);
     actionOpen->setShortcut(tr("CTRL+O"));
+    actionOpen->setIcon(QIcon(":/images/scene-open.png"));
     actionOpen->setObjectName(QStringLiteral("actionOpen"));
     actionSave = new QAction(this);
     actionSave->setShortcut(tr("CTRL+S"));
+    actionSave->setIcon(QIcon(":/images/scene-save.png"));
     actionSave->setObjectName(QStringLiteral("actionSave"));
     actionSave_as = new QAction(this);
+    actionSave_as->setIcon(QIcon(":/images/scene-save-as.png"));
     actionSave_as->setObjectName(QStringLiteral("actionSave_as"));
     actionQuit = new QAction(this);
     actionQuit->setShortcut(tr("CTRL+Q"));
+    actionQuit->setIcon(QIcon(":/images/application-exit.png"));
     actionQuit->setObjectName(QStringLiteral("actionQuit"));
     actionNew->setText("&New");
     actionOpen->setText(tr("&Open"));
@@ -238,6 +243,7 @@ void MainWindow::initUi()
     // Options actions
     actionConfigure = menuOptions->addAction(tr("&Configure"));
     actionConfigure->setShortcut(tr("CTRL+C"));
+    actionConfigure->setIcon(QIcon(":/images/configure.png"));
     actionConfigure->setObjectName("actionConfigure");
 
     // Tools Menu
@@ -248,28 +254,34 @@ void MainWindow::initUi()
     // Tools actions
     actionGenRand = menuTools->addAction(tr("&Random Spirits"));
     actionGenRand->setObjectName("actionGenRand");
-    actionGenRand->setShortcut(tr("CTRL+G"));
+    actionGenRand->setShortcut(tr("CTRL+R"));
 
-    // About Menu
-    menuAbout = new QMenu(menuBar);
-    menuAbout->setObjectName("menuAbout");
-    menuAbout->setTitle(tr("&About"));
-    // About actions
+    // Help Menu
+    menuHelp = new QMenu(menuBar);
+    menuHelp->setObjectName("menuHelp");
+    menuHelp->setTitle(tr("&Help"));
+    // Help actions
+    actionHelp_App = new QAction(this);
+    actionHelp_App->setObjectName(QStringLiteral("actionHelp_App"));
+    actionHelp_App->setIcon(QIcon(":/images/help-contents.png"));
     actionAbout_App = new QAction(this);
     actionAbout_App->setObjectName(QStringLiteral("actionAbout_App"));
     actionAbout_GAMCS = new QAction(this);
     actionAbout_GAMCS->setObjectName(QStringLiteral("actionAbout_GAMCS"));
+    actionAbout_GAMCS->setIcon(QIcon(":/images/aboutGAMCS.png"));
+    actionHelp_App->setText(tr("Help"));
     actionAbout_App->setText(QString("About %1").arg(APP));
     actionAbout_GAMCS->setText("About GAMCS");
 
-    menuAbout->addAction(actionAbout_App);
-    menuAbout->addAction(actionAbout_GAMCS);
+    menuHelp->addAction(actionHelp_App);
+    menuHelp->addAction(actionAbout_App);
+    menuHelp->addAction(actionAbout_GAMCS);
 
     // add menus to menuBar
     menuBar->addAction(menuScene->menuAction());
     menuBar->addAction(menuOptions->menuAction());
     menuBar->addAction(menuTools->menuAction());
-    menuBar->addAction(menuAbout->menuAction());
+    menuBar->addAction(menuHelp->menuAction());
     this->setMenuBar(menuBar);
 
     // toolbar
@@ -481,6 +493,11 @@ void MainWindow::saveScene(const QString &file)
 void MainWindow::on_actionQuit_triggered()
 {
     close();
+}
+
+void MainWindow::on_actionHelp_App_triggered()
+{
+
 }
 
 void MainWindow::on_actionAbout_App_triggered()

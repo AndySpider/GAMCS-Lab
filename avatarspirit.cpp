@@ -594,30 +594,7 @@ OSpace AvatarSpirit::availableActions(Agent::State st)
     Q_UNUSED(st);
 
     OSpace acts;
-
-    Spirit *spt;
-    // check upper grid
-    spt = myscene->getSpiritAt(grid_x, grid_y -1);
-    if (spt == NULL || spt->spiritType() != BLOCK)
-        acts.add(1);
-
-    // down
-    spt = myscene->getSpiritAt(grid_x, grid_y + 1);
-    if (spt == NULL || spt->spiritType() != BLOCK)
-        acts.add(2);
-
-    // left
-    spt = myscene->getSpiritAt(grid_x - 1, grid_y);
-    if (spt == NULL || spt->spiritType() != BLOCK)
-        acts.add(3);
-
-    // right
-    spt = myscene->getSpiritAt(grid_x + 1, grid_y);
-    if (spt == NULL || spt->spiritType() != BLOCK)
-        acts.add(4);
-
-    // stop
-    acts.add(5);
+    acts.add(1, 5, 1);	// the actions are always the same, no matter if there're blocks surrounded
     return acts;
 }
 

@@ -81,6 +81,7 @@ float Mouse::originalPayoff(Agent::State st)
         {
             State_Info_Header *stif = myagent->getStateInfo(st);
             pf = -0.05 * stif->count;
+            if (pf <= -1.0) pf = -1.0;	// minimum
             qDebug() << id << ":" << st << "is experienced" << stif->count << "times";
             free(stif);
         }

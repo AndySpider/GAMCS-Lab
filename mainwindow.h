@@ -65,7 +65,8 @@ private:
     QMenu *menuTools;
     QAction *actionGenRand;
 
-    QMenu *menuAbout;
+    QMenu *menuHelp;
+    QAction *actionHelp_App;
     QAction *actionAbout_App;
     QAction *actionAbout_GAMCS;
 
@@ -107,6 +108,7 @@ private slots:
     void on_actionGenRand_triggered();
     void on_actionConfigure_triggered();
 
+    void on_actionHelp_App_triggered();
     void on_actionAbout_App_triggered();
     void on_actionAbout_GAMCS_triggered();
 
