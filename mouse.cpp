@@ -53,7 +53,7 @@ float Mouse::originalPayoff(Agent::State st)
                 qDebug() << "Mouse" << id << ": BOMB, dead!";
                 this->injured(this->life());    // instant death
                 this->setAwake(false);  // be blown up unconscious
-                pf += -9999999.0;
+                pf += -99.0;
             }
             else if ((*it)->spiritType() == CAT && dynamic_cast<AvatarSpirit *>(*it)->isAwake())    // a sleeping cat is harmless
             {
@@ -80,7 +80,7 @@ float Mouse::originalPayoff(Agent::State st)
         if (experienced)
         {
             State_Info_Header *stif = myagent->getStateInfo(st);
-            pf = -0.1 * stif->count;
+            pf = -0.05 * stif->count;
             qDebug() << id << ":" << st << "is experienced" << stif->count << "times";
             free(stif);
         }

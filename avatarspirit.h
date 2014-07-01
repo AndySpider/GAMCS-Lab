@@ -24,6 +24,8 @@ public:
     int getShareRange() const;
     void setAwake(bool val);
     bool isAwake() const;
+    void setTeach(bool val);
+    bool isTeach();
     void setLearningMode(Agent::Mode lm);
     Agent::Mode getLearningMode() const;
     void setChannel(Channel *c);
@@ -71,6 +73,7 @@ private:
     long _counter;
     float discount_rate;
     float accuracy;
+    bool is_teach;
 };
 
 #endif // AVATARSPIRIT_H

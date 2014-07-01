@@ -53,7 +53,7 @@ float Elephant::originalPayoff(Agent::State st)
                 qDebug() << "Elephant" << id << ": BOMB, dead!";
                 this->injured(this->life());    // instant death
                 this->setAwake(false);  // be blown up unconscious
-                pf += -9999999.0;
+                pf += -99.0;
             }
             else if ((*it)->spiritType() == CAT && dynamic_cast<AvatarSpirit *>(*it)->isAwake())
             {

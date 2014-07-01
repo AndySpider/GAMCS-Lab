@@ -38,7 +38,7 @@ void StaticSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
        toggle_mark = menu.addAction("Mark");
 
    // life
-   QAction *setlife = menu.addAction("Set life");
+   QAction *setlife = menu.addAction("Set life...");
 
    // show the menu
    QAction *selectedAction = menu.exec(event->screenPos());

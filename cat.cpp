@@ -53,7 +53,7 @@ float Cat::originalPayoff(Agent::State st)
                 qDebug() << "Cat" << id << ": BOMB, dead!";
                 this->injured(this->life());    // instant death
                 this->setAwake(false);  // be blown up unconscious
-                pf += -9999999.0;
+                pf += -99.0;
             }
             else if ((*it)->spiritType() == MOUSE && dynamic_cast<AvatarSpirit *>(*it)->isAwake())
             {

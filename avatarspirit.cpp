@@ -17,7 +17,7 @@
 AvatarSpirit::AvatarSpirit(int id) : Avatar(id), mychannel(NULL), memhandler(NULL), myagent(NULL),
     learning_mode(Agent::ONLINE), tmp_delta_grid_x(0), tmp_delta_grid_y(0),
     share_range(0), is_awake(true), is_sending(false), storage(""), share_freq(0),
-    _counter(0), discount_rate(0), accuracy(0)
+    _counter(0), discount_rate(0), accuracy(0), is_teach(false)
 {
     _category = AVATARSPIRIT;
 
@@ -110,6 +110,16 @@ void AvatarSpirit::setAwake(bool val)
 bool AvatarSpirit::isAwake() const
 {
     return is_awake;
+}
+
+void AvatarSpirit::setTeach(bool val)
+{
+    is_teach = val;
+}
+
+bool AvatarSpirit::isTeach()
+{
+    return is_teach;
 }
 
 void AvatarSpirit::setLearningMode(Agent::Mode lm)
@@ -253,6 +263,13 @@ void AvatarSpirit::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
         painter->drawPath(path);
     }
 
+    if (is_teach)
+    {
+        QRectF boundary(-GRID_SIZE / 4, -GRID_SIZE / 4, GRID_SIZE / 2, GRID_SIZE / 2);
+        painter->setBrush(Qt::red);
+        painter->drawEllipse(boundary);
+    }
+
     if (is_sending && share_range > 0)	// draw share range for avatars that are sending msg
     {
         QPen share_pen(_color);
@@ -297,10 +314,20 @@ void AvatarSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     else
         toggle_awake = menu.addAction("Wake up");
 
+    // teach
+    QAction *toggle_teach;
+    if (is_teach)
+        toggle_teach = menu.addAction("Un-teach");
+    else
+        toggle_teach = menu.addAction("Teach");
+
+    // life
+    QAction *setlife = menu.addAction("Set life...");
+
     // share
     QMenu *share = menu.addMenu("Share");
-    QAction *set_share_range = share->addAction("Set Range");
-    QAction *set_share_freq = share->addAction("Set Freq");
+    QAction *set_share_range = share->addAction("Set Range...");
+    QAction *set_share_freq = share->addAction("Set Freq...");
 
     // learning mode
     QMenu *lmode = menu.addMenu("Learning Mode");
@@ -308,23 +335,16 @@ void AvatarSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     online->setCheckable(true);
     QAction *explore = lmode->addAction("Explore mode");
     explore->setCheckable(true);
-    QAction *teach = lmode->addAction("Teach mode");
-    teach->setCheckable(true);
     if (learning_mode == Agent::ONLINE)
         online->setChecked(true);
-    else if (learning_mode == Agent::EXPLORE)
-        explore->setChecked(true);
     else
-        teach->setChecked(true);
+        explore->setChecked(true);
 
     // memory
     QMenu *memory = menu.addMenu("Memory");
     QAction *save = memory->addAction("Save...");
     QAction *save_as = memory->addAction("Save As...");
     QAction *load = memory->addAction("Load...");
-
-    // life
-    QAction *setlife = menu.addAction("Set life");
 
     // show the menu
     QAction *selectedAction = menu.exec(event->screenPos());
@@ -337,6 +357,17 @@ void AvatarSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     else if (selectedAction == toggle_awake)
     {
         this->setAwake(!this->isAwake());
+    }
+    else if (selectedAction == toggle_teach)
+    {
+        if (is_teach)
+        {
+            myscene->clearTeachSpirit();
+        }
+        else
+        {
+            myscene->setTeachSpirit(this);
+        }
     }
     else if (selectedAction == set_share_range)
     {
@@ -377,23 +408,12 @@ void AvatarSpirit::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     else if (selectedAction == online)
     {
         qDebug() << "mouse change mode to ONLINE";
-        if (learning_mode == Agent::TEACH)
-            myscene->clearTeachSpirit();
-
         setLearningMode(Agent::ONLINE);
     }
     else if (selectedAction == explore)
     {
-        if (learning_mode == Agent::TEACH)
-            myscene->clearTeachSpirit();
-
         qDebug() << "mouse change mode to EXPLORE";
         setLearningMode(Agent::EXPLORE);
-    }
-    else if (selectedAction == teach)
-    {
-        qDebug() << "mouse change mode to TEACH";
-        myscene->setTeachSpirit(this);
     }
     else if (selectedAction == save)
     {

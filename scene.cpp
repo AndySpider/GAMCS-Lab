@@ -612,9 +612,10 @@ void Scene::setTeachSpirit(AvatarSpirit *spt)
         return;
     }
 
-    spirits.removeOne(tmp);	// remove it from spirits
     teach_spirit = spt;
-    teach_spirit->setLearningMode(Agent::TEACH);	// set to teach mode
+    spirits.removeOne(tmp);	// remove it from spirits
+    teach_spirit->setLearningMode(Agent::EXPLORE);	// set to EXPLORE mode for efficience
+    teach_spirit->setTeach(true);
 }
 
 void Scene::clearTeachSpirit()
@@ -622,6 +623,7 @@ void Scene::clearTeachSpirit()
     if (teach_spirit == NULL)
         return;
 
+    teach_spirit->setTeach(false);
     teach_spirit->setLearningMode(Agent::ONLINE);	// set back to the default Online mode
     spirits.append(dynamic_cast<Spirit *>(teach_spirit));	// restore it to spirits
     teach_spirit = NULL;
