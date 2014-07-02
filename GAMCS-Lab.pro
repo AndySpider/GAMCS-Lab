@@ -64,7 +64,7 @@ HEADERS  += mainwindow.h \
 unix:!macx|win32: LIBS += -lgamcs
 
 RESOURCES += \
-    images.qrc
+    GAMCS-Lab.qrc
 
 FORMS +=
 
@@ -74,3 +74,5 @@ DEFINES += GLOBAL_SENSE #	\
 VERSTR = '\\"$${VERSION}\\"'
 APPSTR = '\\"$${APPNAME}\\"'
 DEFINES += VER=\"$${VERSTR}\" APP=\"$${APPSTR}\"
+
+OTHER_FILES +=

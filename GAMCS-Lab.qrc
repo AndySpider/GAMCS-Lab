@@ -23,5 +23,6 @@
         <file>images/scene-open.png</file>
         <file>images/scene-save-as.png</file>
         <file>images/scene-save.png</file>
+        <file>help.html</file>
     </qresource>
 </RCC>

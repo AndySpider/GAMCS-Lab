@@ -497,7 +497,19 @@ void MainWindow::on_actionQuit_triggered()
 
 void MainWindow::on_actionHelp_App_triggered()
 {
+    QFile help_file;
+    help_file.setFileName(":/help.html");
 
+    if (!help_file.open(QIODevice::ReadOnly))
+    {
+        qWarning("Failed to open help.html");
+        return;
+    }
+
+    QTextStream ts(&help_file);
+    ts.setCodec("UTF-8");
+    QString text = ts.readAll();
+    QMessageBox::information(this, "Help", text);
 }
 
 void MainWindow::on_actionAbout_App_triggered()
@@ -512,11 +524,11 @@ void MainWindow::on_actionAbout_GAMCS_triggered()
     QString translatedTextAboutGAMCSCaption;
     translatedTextAboutGAMCSCaption = QMessageBox::tr(
                 "<h3> About GAMCS</h3>"
-                "<p> The avatars in this program are powered by GAMCS.");
+                "<p> The Mouse/Cat/Elephant spirits in this program are powered by GAMCS.");
 
     QString translatedTextAboutGAMCSText;
     translatedTextAboutGAMCSText = QMessageBox::tr(
-                "<p> GAMCS is a computer implementation of <b>GAM</b>, which is a new, generalized (machine) learning algorithm..</p>"
+                "<p> <i>Generalized Agent Model and Computer Simulation</i>(GAMCS) is a computer implementation of <b>GAM</b>, which is a new, generalized (machine) learning algorithm..</p>"
                 "<p> GAMCS provides a very easy to use as well as complete interface. It is very fast and stable. </p>"
                 "<p> GAMCS is licensed under Mozilla Public License (MPL). </p>"
                 "<p> Please see <a href=\"http://gamcs.andy87.com\">gamcs.andy87.com</a> for more details about GAMCS. </p>"
