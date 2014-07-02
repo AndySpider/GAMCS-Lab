@@ -657,15 +657,22 @@ void AvatarSpirit::sendMsg(AvatarSpirit *receiver, const State_Info_Header *stif
 State_Info_Header *AvatarSpirit::mergeStateInfo(const State_Info_Header *stif1, const State_Info_Header *stif2)
 {
     // merge stif1 with stif2, make a copy first
-    char stif1_buf[stif1->size];
-    char stif2_buf[stif2->size];
+    char *stif1_buf = (char *) malloc(stif1->size);
+    char *stif2_buf = (char *) malloc(stif2->size);
     memcpy(stif1_buf, stif1, stif1->size);
     memcpy(stif2_buf, stif2, stif2->size);
     State_Info_Header *copy_stif1 = (State_Info_Header *) stif1;
     State_Info_Header *copy_stif2 = (State_Info_Header *) stif2;
 
-    char act_buffer[copy_stif1->act_num + copy_stif2->act_num][copy_stif1->size
-            + copy_stif2->size]; //buffer for manipulaing act infos, make sure it's big enough
+    // malloc a big enough buffer for manipulating actions
+    int nrows = copy_stif1->act_num + copy_stif2->act_num;
+    int ncolumns = copy_stif1->size + copy_stif2->size;
+    char **act_buffer = (char **) malloc(nrows * sizeof(char *));
+    for (int i = 0; i < ncolumns; i++)
+    {
+        act_buffer[i] = (char *)malloc(sizeof(*act_buffer));
+    }
+
     int act_num = 0;
 
     /****** halve eat count first ********/
@@ -794,6 +801,11 @@ State_Info_Header *AvatarSpirit::mergeStateInfo(const State_Info_Header *stif1, 
         memcpy(ptr, buf_achd, act_size);
         ptr += act_size;
     }
+
+    // free memory
+    free(stif1_buf);
+    free(stif2_buf);
+    free(act_buffer);
 
     return sthd;
 }

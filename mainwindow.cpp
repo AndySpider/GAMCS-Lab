@@ -24,7 +24,7 @@ void MainWindow::initUi()
     this->setWindowTitle(QString("%1 v%2").arg(APP).arg(VER));
     this->setObjectName("MainWindow");
     QIcon icon;
-    icon.addFile(QStringLiteral(":/images/mouse.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon.addFile(tr(":/images/mouse.png"), QSize(), QIcon::Normal, QIcon::Off);
     this->setWindowIcon(icon);
 
     this->resize(800, 600);
@@ -41,7 +41,7 @@ void MainWindow::initUi()
     actionCursor->setObjectName("actionCursor");
     actionCursor->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_1));
     QIcon icon0;
-    icon0.addFile(QStringLiteral(":/images/cursor.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon0.addFile(tr(":/images/cursor.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionCursor->setIcon(icon0);
     actionCursor->setCheckable(true);
     actionCursor->setChecked(true);
@@ -52,7 +52,7 @@ void MainWindow::initUi()
     actionEraser->setObjectName("actionEraser");
     actionEraser->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_2));
     QIcon icon1;
-    icon1.addFile(QStringLiteral(":/images/eraser.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon1.addFile(tr(":/images/eraser.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionEraser->setIcon(icon1);
     actionEraser->setCheckable(true);
     toolGroup->addAction(actionEraser);
@@ -62,7 +62,7 @@ void MainWindow::initUi()
     actionBlock->setObjectName("actionBlock");
     actionBlock->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_3));
     QIcon icon2;
-    icon2.addFile(QStringLiteral(":/images/block.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon2.addFile(tr(":/images/block.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionBlock->setIcon(icon2);
     actionBlock->setCheckable(true);
     toolGroup->addAction(actionBlock);
@@ -72,7 +72,7 @@ void MainWindow::initUi()
     actionCheese->setObjectName("actionCheese");
     actionCheese->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_4));
     QIcon icon3;
-    icon3.addFile(QStringLiteral(":/images/cheese.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon3.addFile(tr(":/images/cheese.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionCheese->setIcon(icon3);
     actionCheese->setCheckable(true);
     toolGroup->addAction(actionCheese);
@@ -82,7 +82,7 @@ void MainWindow::initUi()
     actionNail->setObjectName("actionNail");
     actionNail->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_5));
     QIcon icon4;
-    icon4.addFile(QStringLiteral(":/images/nail.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon4.addFile(tr(":/images/nail.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionNail->setIcon(icon4);
     actionNail->setCheckable(true);
     toolGroup->addAction(actionNail);
@@ -92,7 +92,7 @@ void MainWindow::initUi()
     actionBomb->setObjectName("actionBomb");
     actionBomb->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_6));
     QIcon iconbomb;
-    iconbomb.addFile(QStringLiteral(":/images/bomb.png"), QSize(), QIcon::Normal, QIcon::Off);
+    iconbomb.addFile(tr(":/images/bomb.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionBomb->setIcon(iconbomb);
     actionBomb->setCheckable(true);
     toolGroup->addAction(actionBomb);
@@ -102,7 +102,7 @@ void MainWindow::initUi()
     actionMouse->setObjectName("actionMouse");
     actionMouse->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_7));
     QIcon icon5;
-    icon5.addFile(QStringLiteral(":/images/mouse.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon5.addFile(tr(":/images/mouse.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionMouse->setIcon(icon5);
     actionMouse->setCheckable(true);
     toolGroup->addAction(actionMouse);
@@ -112,7 +112,7 @@ void MainWindow::initUi()
     actionCat->setObjectName("actionCat");
     actionCat->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_8));
     QIcon iconCat;
-    iconCat.addFile(QStringLiteral(":/images/cat.png"), QSize(), QIcon::Normal, QIcon::Off);
+    iconCat.addFile(tr(":/images/cat.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionCat->setIcon(iconCat);
     actionCat->setCheckable(true);
     toolGroup->addAction(actionCat);
@@ -122,7 +122,7 @@ void MainWindow::initUi()
     actionElephant->setObjectName("actionElephant");
     actionElephant->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_9));
     QIcon iconEle;
-    iconEle.addFile(QStringLiteral(":/images/elephant.png"), QSize(), QIcon::Normal, QIcon::Off);
+    iconEle.addFile(tr(":/images/elephant.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionElephant->setIcon(iconEle);
     actionElephant->setCheckable(true);
     toolGroup->addAction(actionElephant);
@@ -132,7 +132,7 @@ void MainWindow::initUi()
     actionPause_Resume->setObjectName("actionPause_Resume");
     actionPause_Resume->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_P));
     QIcon icon6;
-    icon6.addFile(QStringLiteral(":/images/resume.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon6.addFile(tr(":/images/resume.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionPause_Resume->setIcon(icon6);
     actionPause_Resume->setCheckable(true);
 
@@ -141,7 +141,7 @@ void MainWindow::initUi()
     actionSpeedUp->setObjectName("actionSpeedUp");
     actionSpeedUp->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Up));
     QIcon icon7;
-    icon7.addFile(QStringLiteral(":/images/speedup.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon7.addFile(tr(":/images/speedup.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionSpeedUp->setIcon(icon7);
 
     actionSpeedDown = new QAction(this);
@@ -149,7 +149,7 @@ void MainWindow::initUi()
     actionSpeedDown->setObjectName("actionSpeedDown");
     actionSpeedDown->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Down));
     QIcon icon8;
-    icon8.addFile(QStringLiteral(":/images/speeddown.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon8.addFile(tr(":/images/speeddown.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionSpeedDown->setIcon(icon8);
 
     // viewer
@@ -160,10 +160,10 @@ void MainWindow::initUi()
     verticalLayout = new QVBoxLayout(centralWidget);
     verticalLayout->setSpacing(6);
     verticalLayout->setContentsMargins(11, 11, 11, 11);
-    verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+    verticalLayout->setObjectName(tr("verticalLayout"));
 
     viewer = new Viewer(centralWidget);
-    viewer->setObjectName(QStringLiteral("viewer"));
+    viewer->setObjectName(tr("viewer"));
 
     verticalLayout->addWidget(viewer);
 
@@ -191,22 +191,22 @@ void MainWindow::initUi()
     actionNew = new QAction(this);
     actionNew->setShortcut(tr("CTRL+N"));
     actionNew->setIcon(QIcon(":/images/scene-new.png"));
-    actionNew->setObjectName(QStringLiteral("actionNew"));
+    actionNew->setObjectName(tr("actionNew"));
     actionOpen = new QAction(this);
     actionOpen->setShortcut(tr("CTRL+O"));
     actionOpen->setIcon(QIcon(":/images/scene-open.png"));
-    actionOpen->setObjectName(QStringLiteral("actionOpen"));
+    actionOpen->setObjectName(tr("actionOpen"));
     actionSave = new QAction(this);
     actionSave->setShortcut(tr("CTRL+S"));
     actionSave->setIcon(QIcon(":/images/scene-save.png"));
-    actionSave->setObjectName(QStringLiteral("actionSave"));
+    actionSave->setObjectName(tr("actionSave"));
     actionSave_as = new QAction(this);
     actionSave_as->setIcon(QIcon(":/images/scene-save-as.png"));
-    actionSave_as->setObjectName(QStringLiteral("actionSave_as"));
+    actionSave_as->setObjectName(tr("actionSave_as"));
     actionQuit = new QAction(this);
     actionQuit->setShortcut(tr("CTRL+Q"));
     actionQuit->setIcon(QIcon(":/images/application-exit.png"));
-    actionQuit->setObjectName(QStringLiteral("actionQuit"));
+    actionQuit->setObjectName(tr("actionQuit"));
     actionNew->setText("&New");
     actionOpen->setText(tr("&Open"));
     actionSave->setText("&Save");
@@ -262,12 +262,12 @@ void MainWindow::initUi()
     menuHelp->setTitle(tr("&Help"));
     // Help actions
     actionHelp_App = new QAction(this);
-    actionHelp_App->setObjectName(QStringLiteral("actionHelp_App"));
+    actionHelp_App->setObjectName(tr("actionHelp_App"));
     actionHelp_App->setIcon(QIcon(":/images/help-contents.png"));
     actionAbout_App = new QAction(this);
-    actionAbout_App->setObjectName(QStringLiteral("actionAbout_App"));
+    actionAbout_App->setObjectName(tr("actionAbout_App"));
     actionAbout_GAMCS = new QAction(this);
-    actionAbout_GAMCS->setObjectName(QStringLiteral("actionAbout_GAMCS"));
+    actionAbout_GAMCS->setObjectName(tr("actionAbout_GAMCS"));
     actionAbout_GAMCS->setIcon(QIcon(":/images/aboutGAMCS.png"));
     actionHelp_App->setText(tr("Help"));
     actionAbout_App->setText(QString("About %1").arg(APP));
@@ -332,7 +332,7 @@ void MainWindow::spiritsNumChanged(int num)
 void MainWindow::scenePaused()
 {
     QIcon icon;
-    icon.addFile(QStringLiteral(":/images/pause.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon.addFile(tr(":/images/pause.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionPause_Resume->setIcon(icon);
     actionPause_Resume->setChecked(true);
 }
@@ -340,7 +340,7 @@ void MainWindow::scenePaused()
 void MainWindow::sceneResumed()
 {
     QIcon icon;
-    icon.addFile(QStringLiteral(":/images/resume.png"), QSize(), QIcon::Normal, QIcon::Off);
+    icon.addFile(tr(":/images/resume.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionPause_Resume->setIcon(icon);
 }
 
@@ -539,7 +539,7 @@ void MainWindow::on_actionAbout_GAMCS_triggered()
     aboutBox->setText(translatedTextAboutGAMCSCaption);
     aboutBox->setInformativeText(translatedTextAboutGAMCSText);
 
-    QPixmap logo(QStringLiteral(":/images/gamcs-logo-small.png"));
+    QPixmap logo(tr(":/images/gamcs-logo-small.png"));
     aboutBox->setIconPixmap(logo);
     aboutBox->setDefaultButton(aboutBox->addButton(QMessageBox::Ok));
 
