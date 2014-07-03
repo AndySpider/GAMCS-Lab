@@ -61,7 +61,8 @@ HEADERS  += mainwindow.h \
     configure.h \
     randdialog.h
 
-unix:!macx|win32: LIBS += -lgamcs
+unix|macx|win32: LIBS += -lgamcs
+win32: LIBS += -lsqlite3    # windows still needs sqlite3.lib?
 
 RESOURCES += \
     GAMCS-Lab.qrc

@@ -14,6 +14,15 @@
 #include "setdialog.h"
 #include "memhandler.h"
 
+#if defined(_WIN32)
+inline double round( double d )
+{
+return floor( d + 0.5 );
+}
+#endif
+
+
+
 AvatarSpirit::AvatarSpirit(int id) : Avatar(id), mychannel(NULL), memhandler(NULL), myagent(NULL),
     learning_mode(Agent::ONLINE), tmp_delta_grid_x(0), tmp_delta_grid_y(0),
     share_range(0), is_awake(true), is_sending(false), storage(""), share_freq(0),
