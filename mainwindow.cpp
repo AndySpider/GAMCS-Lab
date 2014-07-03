@@ -241,8 +241,8 @@ void MainWindow::initUi()
     menuOptions->setTitle(tr("&Options"));
 
     // Options actions
-    actionConfigure = menuOptions->addAction(tr("&Configure"));
-    actionConfigure->setShortcut(tr("CTRL+C"));
+    actionConfigure = menuOptions->addAction(tr("Confi&gure"));
+    actionConfigure->setShortcut(tr("CTRL+G"));
     actionConfigure->setIcon(QIcon(":/images/configure.png"));
     actionConfigure->setObjectName("actionConfigure");
 

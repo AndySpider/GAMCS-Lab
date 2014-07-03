@@ -6,7 +6,7 @@
 #include <QMenu>
 #include <QAction>
 #include <QFileDialog>
-#include <gamcs/Sqlite.h>   // FIXME: check existing
+#include <gamcs/Sqlite.h>
 #include <gamcs/StateInfoParser.h>
 #include "avatarspirit.h"
 #include "scene.h"
@@ -15,13 +15,11 @@
 #include "memhandler.h"
 
 #if defined(_WIN32)
-inline double round( double d )
+inline double round(double d)
 {
-return floor( d + 0.5 );
+return floor(d + 0.5);
 }
 #endif
-
-
 
 AvatarSpirit::AvatarSpirit(int id) : Avatar(id), mychannel(NULL), memhandler(NULL), myagent(NULL),
     learning_mode(Agent::ONLINE), tmp_delta_grid_x(0), tmp_delta_grid_y(0),
@@ -676,10 +674,10 @@ State_Info_Header *AvatarSpirit::mergeStateInfo(const State_Info_Header *stif1, 
     // malloc a big enough buffer for manipulating actions
     int nrows = copy_stif1->act_num + copy_stif2->act_num;
     int ncolumns = copy_stif1->size + copy_stif2->size;
-    char **act_buffer = (char **) malloc(nrows * sizeof(char *));
-    for (int i = 0; i < ncolumns; i++)
+    char **acts_buffer = (char **) malloc(nrows * sizeof(char *));
+    for (int i = 0; i < nrows; i++)
     {
-        act_buffer[i] = (char *)malloc(sizeof(*act_buffer));
+        acts_buffer[i] = (char *)malloc(ncolumns * sizeof(char));
     }
 
     int act_num = 0;
@@ -713,7 +711,7 @@ State_Info_Header *AvatarSpirit::mergeStateInfo(const State_Info_Header *stif1, 
             eaif->count = round(eaif->count / 2.0);
             eaif = stif2_parser.nextEat();
         }
-        memcpy(act_buffer[act_num], achd, sizeof(Action_Info_Header) + achd->eat_num * sizeof(EnvAction_Info));
+        memcpy(acts_buffer[act_num], achd, sizeof(Action_Info_Header) + achd->eat_num * sizeof(EnvAction_Info));
         act_num++;	// increase act count
         achd = stif2_parser.nextAct();
     }
@@ -732,7 +730,7 @@ State_Info_Header *AvatarSpirit::mergeStateInfo(const State_Info_Header *stif1, 
         // traverse all acts in buffer
         for (i = 0; i < tmp_act_num; i++)
         {
-            buf_acpt = (unsigned char *) act_buffer[i];
+            buf_acpt = (unsigned char *) acts_buffer[i];
             buf_achd = (Action_Info_Header *) buf_acpt;
             if (buf_achd->act == achd->act)
             {
@@ -774,7 +772,7 @@ State_Info_Header *AvatarSpirit::mergeStateInfo(const State_Info_Header *stif1, 
         if (i >= tmp_act_num) // act not found, it's a new act in copy_stif1
         {
             // append it to act buffer
-            memcpy(act_buffer[act_num], achd,
+            memcpy(acts_buffer[act_num], achd,
                    sizeof(Action_Info_Header)
                    + achd->eat_num * sizeof(EnvAction_Info));
             act_num++;
@@ -786,7 +784,7 @@ State_Info_Header *AvatarSpirit::mergeStateInfo(const State_Info_Header *stif1, 
     sthd_size += sizeof(State_Info_Header);
     for (int i = 0; i < act_num; i++)
     {
-        buf_achd = (Action_Info_Header *) act_buffer[i];
+        buf_achd = (Action_Info_Header *) acts_buffer[i];
         sthd_size += sizeof(Action_Info_Header)
                 + buf_achd->eat_num * sizeof(EnvAction_Info);
     }
@@ -804,7 +802,7 @@ State_Info_Header *AvatarSpirit::mergeStateInfo(const State_Info_Header *stif1, 
     unsigned int act_size = 0;
     for (int i = 0; i < act_num; i++)
     {
-        buf_achd = (Action_Info_Header *) act_buffer[i];
+        buf_achd = (Action_Info_Header *) acts_buffer[i];
         act_size = sizeof(Action_Info_Header)
                 + buf_achd->eat_num * sizeof(EnvAction_Info);
         memcpy(ptr, buf_achd, act_size);
@@ -814,7 +812,11 @@ State_Info_Header *AvatarSpirit::mergeStateInfo(const State_Info_Header *stif1, 
     // free memory
     free(stif1_buf);
     free(stif2_buf);
-    free(act_buffer);
+    for (int i = 0; i < nrows; i++)
+    {
+        free(acts_buffer[i]);
+    }
+    free(acts_buffer);
 
     return sthd;
 }

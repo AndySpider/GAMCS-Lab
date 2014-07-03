@@ -46,6 +46,7 @@ protected:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
+    // here comes Avatar stuff
     Agent::State perceiveState();
     void performAction(Agent::Action);
     OSpace availableActions(Agent::State);

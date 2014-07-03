@@ -36,12 +36,12 @@ GeneralPage::GeneralPage(QWidget *parent) :
     sizeGroup->setLayout(sizeLayout);
 
     // hunt diagram
-    QGroupBox *huntGroup = new QGroupBox(tr("Hunting Diagram"));
-    HuntDia *huntDia = new HuntDia(this);
+//    QGroupBox *huntGroup = new QGroupBox(tr("Hunting Diagram"));
+//    HuntDia *huntDia = new HuntDia(this);
 
-    QVBoxLayout *huntLayout = new QVBoxLayout;
-    huntLayout->addWidget(huntDia);
-    huntGroup->setLayout(huntLayout);
+//    QVBoxLayout *huntLayout = new QVBoxLayout;
+//    huntLayout->addWidget(huntDia);
+//    huntGroup->setLayout(huntLayout);
 
     QPushButton *defaultButton = new QPushButton(tr("Default"));
     connect(defaultButton, SIGNAL(clicked()), this, SLOT(resetDefault()));
@@ -52,8 +52,8 @@ GeneralPage::GeneralPage(QWidget *parent) :
     mainLayout->addWidget(noteLabel);
     mainLayout->addSpacing(10);
     mainLayout->addWidget(sizeGroup);
-    mainLayout->setSpacing(10);
-    mainLayout->addWidget(huntGroup);
+//    mainLayout->setSpacing(10);
+//    mainLayout->addWidget(huntGroup);
     mainLayout->addStretch(1);
     mainLayout->addLayout(defaultLayout);
     setLayout(mainLayout);
