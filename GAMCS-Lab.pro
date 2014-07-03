@@ -7,9 +7,9 @@
 APPNAME = GAMCS-Lab
 VERSION = 0.1.0
 
-QT       += core gui
+QT       += core gui xml
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets xml
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = $${APPNAME}
 TEMPLATE = app

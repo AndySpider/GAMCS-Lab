@@ -867,8 +867,8 @@ float AvatarSpirit::payoffByCuriosity(Agent::State st)
     if (experienced)
     {
         State_Info_Header *stif = myagent->getStateInfo(st);
-        pf = -0.05 * stif->count;
-        if (pf <= -1.0) pf = -1.0;	// set a minimum
+        pf = -accuracy * stif->count;
+        if (pf <= -100 * accuracy) pf = -100 * accuracy;	// set a minimum
         qDebug() << "On Curiosity, Avatar" << id << ":" << st << "is experienced" << stif->count << "times";
         free(stif);
     }

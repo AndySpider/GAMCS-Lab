@@ -39,7 +39,7 @@ void MainWindow::initUi()
     actionCursor = new QAction(this);
     actionCursor->setText("Cursor");
     actionCursor->setObjectName("actionCursor");
-    actionCursor->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_1));
+    actionCursor->setShortcut(QKeySequence(Qt::Key_Escape));
     QIcon icon0;
     icon0.addFile(tr(":/images/cursor.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionCursor->setIcon(icon0);
@@ -50,7 +50,7 @@ void MainWindow::initUi()
     actionEraser = new QAction(this);
     actionEraser->setText("Eraser");
     actionEraser->setObjectName("actionEraser");
-    actionEraser->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_2));
+    actionEraser->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_0));
     QIcon icon1;
     icon1.addFile(tr(":/images/eraser.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionEraser->setIcon(icon1);
@@ -60,7 +60,7 @@ void MainWindow::initUi()
     actionBlock = new QAction(this);
     actionBlock->setText("Block");
     actionBlock->setObjectName("actionBlock");
-    actionBlock->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_3));
+    actionBlock->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_1));
     QIcon icon2;
     icon2.addFile(tr(":/images/block.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionBlock->setIcon(icon2);
@@ -70,7 +70,7 @@ void MainWindow::initUi()
     actionCheese = new QAction(this);
     actionCheese->setText("Cheese");
     actionCheese->setObjectName("actionCheese");
-    actionCheese->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_4));
+    actionCheese->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_2));
     QIcon icon3;
     icon3.addFile(tr(":/images/cheese.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionCheese->setIcon(icon3);
@@ -80,7 +80,7 @@ void MainWindow::initUi()
     actionNail = new QAction(this);
     actionNail->setText("Nail");
     actionNail->setObjectName("actionNail");
-    actionNail->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_5));
+    actionNail->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_3));
     QIcon icon4;
     icon4.addFile(tr(":/images/nail.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionNail->setIcon(icon4);
@@ -90,7 +90,7 @@ void MainWindow::initUi()
     actionBomb = new QAction(this);
     actionBomb->setText("Bomb");
     actionBomb->setObjectName("actionBomb");
-    actionBomb->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_6));
+    actionBomb->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_4));
     QIcon iconbomb;
     iconbomb.addFile(tr(":/images/bomb.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionBomb->setIcon(iconbomb);
@@ -100,7 +100,7 @@ void MainWindow::initUi()
     actionMouse = new QAction(this);
     actionMouse->setText("Mouse");
     actionMouse->setObjectName("actionMouse");
-    actionMouse->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_7));
+    actionMouse->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_5));
     QIcon icon5;
     icon5.addFile(tr(":/images/mouse.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionMouse->setIcon(icon5);
@@ -110,7 +110,7 @@ void MainWindow::initUi()
     actionCat = new QAction(this);
     actionCat->setText("Cat");
     actionCat->setObjectName("actionCat");
-    actionCat->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_8));
+    actionCat->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_6));
     QIcon iconCat;
     iconCat.addFile(tr(":/images/cat.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionCat->setIcon(iconCat);
@@ -120,7 +120,7 @@ void MainWindow::initUi()
     actionElephant = new QAction(this);
     actionElephant->setText("Elephant");
     actionElephant->setObjectName("actionElephant");
-    actionElephant->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_9));
+    actionElephant->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_7));
     QIcon iconEle;
     iconEle.addFile(tr(":/images/elephant.png"), QSize(), QIcon::Normal, QIcon::Off);
     actionElephant->setIcon(iconEle);
