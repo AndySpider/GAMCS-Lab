@@ -859,3 +859,23 @@ bool AvatarSpirit::timeToShare()
 
     return re;
 }
+
+float AvatarSpirit::payoffByCuriosity(Agent::State st)
+{
+    float pf = 0.0;
+    bool experienced = myagent->hasState(st);
+    if (experienced)
+    {
+        State_Info_Header *stif = myagent->getStateInfo(st);
+        pf = -0.05 * stif->count;
+        if (pf <= -1.0) pf = -1.0;	// set a minimum
+        qDebug() << "On Curiosity, Avatar" << id << ":" << st << "is experienced" << stif->count << "times";
+        free(stif);
+    }
+    else
+    {
+        pf = 0.0;
+    }
+
+    return pf;
+}

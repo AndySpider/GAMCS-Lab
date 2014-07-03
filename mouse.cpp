@@ -76,15 +76,7 @@ float Mouse::originalPayoff(Agent::State st)
 
     if (pf == 0.0)	// curiosity counts only when no direct payoffs
     {
-        bool experienced = myagent->hasState(st);
-        if (experienced)
-        {
-            State_Info_Header *stif = myagent->getStateInfo(st);
-            pf = -0.05 * stif->count;
-            if (pf <= -1.0) pf = -1.0;	// minimum
-            qDebug() << id << ":" << st << "is experienced" << stif->count << "times";
-            free(stif);
-        }
+        pf = payoffByCuriosity(st);
     }
 
     return pf;

@@ -74,5 +74,10 @@ float Elephant::originalPayoff(Agent::State st)
         }
     }
 
+    if (pf == 0.0)	// curiosity counts only when no direct payoffs
+    {
+        pf = payoffByCuriosity(st);
+    }
+
     return pf;
 }

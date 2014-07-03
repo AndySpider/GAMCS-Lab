@@ -52,6 +52,7 @@ protected:
     OSpace availableActions(Agent::State);
     float originalPayoff(Agent::State);
 
+    float payoffByCuriosity(Agent::State st);
     QList<AvatarSpirit *> getNeighbors() const;	// the area is a rectangle
     bool timeToShare();
 

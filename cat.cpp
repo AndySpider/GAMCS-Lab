@@ -74,9 +74,10 @@ float Cat::originalPayoff(Agent::State st)
         }
     }
 
-#ifdef SURVIVE_MODE
-    return 1.0;
-#else
+    if (pf == 0.0)	// curiosity counts only when no direct payoffs
+    {
+        pf = payoffByCuriosity(st);
+    }
+
     return pf;
-#endif
 }
