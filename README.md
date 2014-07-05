@@ -9,6 +9,8 @@ GAMCS驱动的，分别是`老鼠，猫，大象`，它们在GAMCS-Lab中被称�
 
 GAMCS-Lab的基本界面，中间是一块带有网格的场景画布，右侧是元素列表和几个控制按钮，上方是菜单栏，下面是状态栏。
 
+![mainwindow](ftp://gamcs.andy87.com/GAMCS-Lab/screenshots/mainwindow.png)
+
 ### 场景 (Scene)
 首先看场景，场景是由网格构成的，网格的大小和元素的大小相同，每个元素只能被添加到某个网格里，如果是可以移动的化身元素，也是以网格为基本步长。
 
@@ -16,11 +18,13 @@ GAMCS-Lab的基本界面，中间是一块带有网格的场景画布，右侧�
 
 通过鼠标拖拽和滚动条可以移动场景的视窗，通过鼠标滚轮可以放大、缩小场景。
 
-通过右侧工具栏中最下方的三个按钮可以停止/运行，以及加速和减速场景。
+通过右侧工具栏中最下方的三个按钮可以停止![pause](ftp://gamcs.andy87.com/GAMCS-Lab/screenshots/pause.png)/运行![resume](ftp://gamcs.andy87.com/GAMCS-Lab/screenshots/resume.png)，以及加速![speedup](ftp://gamcs.andy87.com/GAMCS-Lab/screenshots/speedup.png)和减速![speeddown](ftp://gamcs.andy87.com/GAMCS-Lab/screenshots/speeddown.png)场景。
 
 #### 演示场景
 GAMCS-Lab 默认提供了几种绘好的场景作为演示，可以通过[Scene]->[Demo Scenes]菜单来加载。
 绘制好的场景可以保存成文件，方便多次使用或分享。
+
+![maze](ftp://gamcs.andy87.com/GAMCS-Lab/screenshots/maze.png)
 
 ### 元素 (Spirits)
 v0.1.0版本的GAMCS-Lab里有7种元素，分别是：砖块(Block)、奶酪(Cheese)、刺钉(Nail)、炸弹(Bomb)、老鼠（Mouse）、猫（Cat）和大象(Elephant)。
@@ -28,13 +32,13 @@ v0.1.0版本的GAMCS-Lab里有7种元素，分别是：砖块(Block)、奶酪(Ch
 
 它们的作用分别是：
 
-1. **砖块(Block)**：放在某个网格中可以阻止化身通过，起到墙的作用。
-2. **奶酪(Cheese)**：一种非常可口的食物，化身们都喜欢吃，它可以用来对化身进行奖励。
-3. **刺钉(Nail)**：扎人的东西，化身们碰到它会被扎痛，可以用来对化身进行惩罚。
-4. **炸弹(Bomb)**：非常致命的东西，化身们碰到它会立刻被炸死，可以用来瞬间消灭化身。
-5. **老鼠(Mouse)**：由GAMCS驱动的化身中的一种。除了上面说过的喜欢奶酪，害怕刺钉之外，还害怕猫，喜欢咬大象。
-6. **猫(Cat)**：也是一种化身，也喜欢奶酪，害怕刺钉。另外还喜欢吃老鼠，害怕大象。
-7. **大象(Elephant)**：第三种化身，同样喜欢奶酪，害怕刺钉。另外还喜欢吃猫，害怕老鼠。
+1. ![block](ftp://gamcs.andy87.com/GAMCS-Lab/screenshots/block.png)**砖块(Block)**：放在某个网格中可以阻止化身通过，起到墙的作用。
+2. ![cheese](ftp://gamcs.andy87.com/GAMCS-Lab/screenshots/cheese.png)**奶酪(Cheese)**：一种非常可口的食物，化身们都喜欢吃，它可以用来对化身进行奖励。
+3. ![nail](ftp://gamcs.andy87.com/GAMCS-Lab/screenshots/nail.png)**刺钉(Nail)**：扎人的东西，化身们碰到它会被扎痛，可以用来对化身进行惩罚。
+4. ![bomb](ftp://gamcs.andy87.com/GAMCS-Lab/screenshots/bomb.png)**炸弹(Bomb)**：非常致命的东西，化身们碰到它会立刻被炸死，可以用来瞬间消灭化身。
+5. ![mouse](ftp://gamcs.andy87.com/GAMCS-Lab/screenshots/mouse.png)**老鼠(Mouse)**：由GAMCS驱动的化身中的一种。除了上面说过的喜欢奶酪，害怕刺钉之外，还害怕猫，喜欢咬大象。
+6. ![cat](ftp://gamcs.andy87.com/GAMCS-Lab/screenshots/cat.png)**猫(Cat)**：也是一种化身，也喜欢奶酪，害怕刺钉。另外还喜欢吃老鼠，害怕大象。
+7. ![elephant](ftp://gamcs.andy87.com/GAMCS-Lab/screenshots/elephant.png)**大象(Elephant)**：第三种化身，同样喜欢奶酪，害怕刺钉。另外还喜欢吃猫，害怕老鼠。
 
 其中，作为化身的三种元素具有感觉和运动功能。每个化身都**能且仅能**知道自己当前所处的位置，即`(x,y)`网格坐标。
 每个化身都有有五个可以选择的动作，分别是：`向上一格、向下一格、向左一格、向右一格以及原地不动`。
@@ -47,9 +51,9 @@ v0.1.0版本的GAMCS-Lab里有7种元素，分别是：砖块(Block)、奶酪(Ch
 要添加某个元素到场景中，首先点击工具栏上的元素图标，然后在场景上需要添加的位置处单击添加，或者在点击图标后，按住CTRL键，移动鼠标，进行批量添加。
 每个元素在场景中显示为一个填满网格的方块，颜色和它的图标颜色一致。
 
-要移动场景上的元素，首先点击工具栏上的光标图标，然后就可以对元素进行拖拽。在元素上右键鼠标会弹出菜单，可以对每个元素进行设置。
+要移动场景上的元素，首先点击工具栏上的光标图标![cursor](ftp://gamcs.andy87.com/GAMCS-Lab/screenshots/cursor.png)，然后就可以对元素进行拖拽。在元素上右键鼠标会弹出菜单，可以对每个元素进行设置。
 
-工具栏上的第二个图标是擦除按钮，点击之后可以用来擦除场景上的元素，使用方法与添加元素相同。
+工具栏上的第二个图标是擦除按钮![eraser](ftp://gamcs.andy87.com/GAMCS-Lab/screenshots/eraser.png)，点击之后可以用来擦除场景上的元素，使用方法与添加元素相同。
 
 
 ## 参数解释与配置
@@ -57,6 +61,8 @@ v0.1.0版本的GAMCS-Lab里有7种元素，分别是：砖块(Block)、奶酪(Ch
 ### 配置对话框
 通过菜单的[Options]->[Configure]可以打开配置对话框，这里可以对场景和元素的参数进行设置。**需要注意的是**，参数的修改仅对_新创建_的场景和元素生效，
 已经存在于场景中的元素参数不会被修改。
+
+![configure](ftp://gamcs.andy87.com/GAMCS-Lab/screenshots/configure.png)
 
 在配置对话框里，对于场景目前可以设置场景长和宽（单位网格）。对于化身，可以设置每种化身的初始生命值，交流相关的参数，以及GAM模型的内部参数。对于静态元素，
 可以设置它们的初始生命值。
@@ -86,6 +92,8 @@ v0.1.0版本的GAMCS-Lab里有7种元素，分别是：砖块(Block)、奶酪(Ch
 ### 右击菜单配置
 上面说过，在配置对话框中的设置仅对新创建的元素有效，对于已经存在与场景的元素，可以通过右击弹出菜单来设置。
 
+![popmenu](ftp://gamcs.andy87.com/GAMCS-Lab/screenshots/popmenu.png)
+
 对于静态元素，菜单项很简单，就是标记和设置生命值，功能显而易见。对于化身元素，菜单项稍微复杂一些，下面化身特有的几项作些解释：
 
 1. **睡眠(Sleep)/唤醒(Wake up)**，表示将化身置于睡眠/唤醒状态，处于睡眠的化身不会吃东西，也不会被其他化身咬。正常状态为唤醒。
@@ -112,7 +120,7 @@ GAMCS-Lab 的主要功能就是作为一个试验场来研究GAM模型中化身�
 可以用中的`maze`试验，在起点放置10个老鼠，打开交流功能，范围设置大一点，频率调高，观察它们的行为。
 - _好奇心_，化身具有探索未知环境的好奇心，它会选择优先探索自己未去过的地方。
 这一点是在GAMCS-Lab中对每种化身硬编码进去的，说明用GAMCS来实现动物的某些本能行为是如此简单（可以查看源代码，实现就几行）。
-好奇心可以画一个经典的`T-Maze`场景来验证。或者从`maze`中的老鼠的行为也可以清楚的看到。
+好奇心可以画一个经典的[`T-Maze`](http://en.wikipedia.org/wiki/T-maze)场景来验证。或者从`maze`中的老鼠的行为也可以清楚的看到。
 - 等等，其他很多有趣的行为等待你来发现～
 
 能模拟出这些基本但简单的学习和行为能力本身并不太让人吃惊，你可以在代码里面针对每种化身的特点写满各种条件判断，也许同样可以表现出类似的甚至更有趣的学习现象。
