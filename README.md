@@ -5,6 +5,8 @@ GAMCS-Lab 是一个用于试验和演示GAMCS学习模型的小软件。它提�
 GAMCS驱动的，分别是`老鼠，猫，大象`，它们在GAMCS-Lab中被称为`Avatar`即`化身`。通过往场景中添加不同的元素以及设置不同的环境，可以观察化身们的行为。
 在GAMCS的驱动下，虽然每个化身的功能都很简单，但是它们的行为却表现的很有意思。
 
+Linux/Windows二进制版本**下载地址**:[ftp://gamcs.andy87.com/GAMCS-Lab](ftp://gamcs.andy87.com/GAMCS-Lab)
+
 ## 基本界面和操作
 
 GAMCS-Lab的基本界面，中间是一块带有网格的场景画布，右侧是元素列表和几个控制按钮，上方是菜单栏，下面是状态栏。
